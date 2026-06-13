@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0f1a">
+<title>Dapcor BCO</title>
+<style>
+:root {
+  --primary:#f97316; --primary-dk:#ea580c; --primary-bg:rgba(249,115,22,0.12);
+  --bg:#0f0f1a; --bg2:#1a1a2e; --bg3:#16213e;
+  --card:#1e1e32; --card2:#252540; --card3:#2a2a48;
+  --border:#2d2d50; --border2:#3a3a60;
+  --text:#e2e8f0; --text2:#94a3b8; --text3:#64748b;
+  --green:#22c55e; --green-bg:rgba(34,197,94,0.12);
+  --red:#ef4444; --red-bg:rgba(239,68,68,0.12);
+  --yellow:#eab308; --blue:#3b82f6;
+  --r:12px; --r-sm:8px; --r-xs:6px;
+  --shadow:0 4px 24px rgba(0,0,0,0.5);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+#app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{background:var(--bg2);padding:12px 16px;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border)}
+.hdr-row{display:flex;align-items:center;gap:10px}
+.hdr-title{font-size:18px;font-weight:700;color:var(--primary);flex:1}
+.hdr-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.back-btn{background:none;border:none;color:var(--text2);cursor:pointer;padding:4px;display:flex;align-items:center}
+.back-btn svg{width:22px;height:22px}
+
+/* CONTENT */
+.content{flex:1;padding:14px;padding-bottom:80px}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:100}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:9px 4px 11px;gap:3px;cursor:pointer;border:none;background:none;color:var(--text3);font-size:10px;font-weight:500;position:relative;transition:color .15s}
+.nav-btn.active{color:var(--primary)}
+.nav-btn svg{width:22px;height:22px}
+.badge{position:absolute;top:5px;right:calc(50% - 20px);background:var(--primary);color:#fff;border-radius:10px;font-size:10px;font-weight:700;padding:1px 5px;min-width:16px;text-align:center}
+
+/* CARDS */
+.card{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:10px;border:1px solid var(--border)}
+.card-sm{background:var(--card2);border-radius:var(--r-sm);padding:12px;margin-bottom:8px}
+.card-click{cursor:pointer;transition:opacity .15s}
+.card-click:active{opacity:.8}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 18px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:active{background:var(--primary-dk)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:active{background:var(--card2)}
+.btn-green{background:var(--green);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-ghost{background:var(--card2);color:var(--text2);border:none}
+.btn-full{width:100%}
+.btn-sm{padding:7px 12px;font-size:13px;border-radius:8px}
+.btn-xs{padding:5px 9px;font-size:12px;border-radius:6px}
+
+/* INPUTS */
+.inp{width:100%;padding:11px 13px;background:var(--card2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--primary)}
+.inp::placeholder{color:var(--text3)}
+.inp-sm{padding:8px 11px;font-size:13px;border-radius:8px}
+label,.lbl{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px}
+.fg{margin-bottom:13px}
+select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+textarea.inp{resize:vertical;min-height:70px}
+
+/* CHIPS */
+.chip{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.chip-o{background:var(--primary-bg);color:var(--primary)}
+.chip-g{background:var(--green-bg);color:var(--green)}
+.chip-r{background:var(--red-bg);color:var(--red)}
+.chip-gray{background:var(--card2);color:var(--text2)}
+.chip-blue{background:rgba(59,130,246,.15);color:var(--blue)}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:14px}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--text3);pointer-events:none}
+.search-wrap .inp{padding-left:37px}
+
+/* CATEGORY SCROLL */
+.cat-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px}
+.cat-scroll::-webkit-scrollbar{display:none}
+.cat-chip{flex-shrink:0;padding:6px 13px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--text2);white-space:nowrap}
+.cat-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* PRODUCT CARD */
+.pc-name{font-size:15px;font-weight:600;margin-bottom:3px}
+.pc-meta{font-size:12px;color:var(--text2);display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.pc-prices{display:flex;gap:6px;flex-wrap:wrap}
+.pp{background:var(--card2);border-radius:7px;padding:5px 9px;font-size:12px;min-width:60px}
+.pp-name{color:var(--text3);font-size:10px;margin-bottom:1px}
+.pp-val{font-weight:700}
+.pp.best{border:1px solid var(--green)}
+.pp.best .pp-val{color:var(--green)}
+
+/* ROW UTILS */
+.row{display:flex;align-items:center;gap:8px}
+.row-between{display:flex;justify-content:space-between;align-items:center}
+.col{display:flex;flex-direction:column;gap:6px}
+.mt4{margin-top:4px}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+.mb4{margin-bottom:4px}.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+.sec-title{font-size:15px;font-weight:700;margin-bottom:10px}
+.t-sm{font-size:13px}.t-xs{font-size:12px}.t-muted{color:var(--text2)}.t-dim{color:var(--text3)}
+.t-green{color:var(--green)}.t-orange{color:var(--primary)}.t-red{color:var(--red)}
+.bold{font-weight:700}.semi{font-weight:600}
+
+/* INFO ROW */
+.info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.info-row:last-child{border-bottom:none}
+.info-label{color:var(--text2)}.info-val{font-weight:500}
+
+/* COST BREAKDOWN */
+.cost-box{background:var(--bg3);border-radius:8px;padding:10px;margin-top:8px}
+.cost-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:3px}
+.cost-row.total{font-size:14px;font-weight:700;color:var(--text);padding-top:6px;margin-top:4px;border-top:1px solid var(--border);margin-bottom:0}
+
+/* QTY CONTROL */
+.qty-ctrl{display:flex;align-items:center;gap:8px}
+.qty-btn{width:30px;height:30px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:300}
+.qty-val{font-size:15px;font-weight:700;min-width:22px;text-align:center}
+
+/* TOGGLE */
+.toggle-wrap{display:flex;background:var(--card2);border-radius:10px;padding:3px;margin-bottom:13px}
+.toggle-opt{flex:1;padding:8px;text-align:center;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .2s}
+.toggle-opt.active{background:var(--primary);color:#fff}
+
+/* ORDER TYPE TABS */
+.ot-tabs{display:flex;gap:6px;margin-bottom:12px}
+.ot-tab{flex:1;padding:8px 6px;border-radius:8px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:var(--card2)}
+.ot-tab.active{background:var(--primary-bg);color:var(--primary);border-color:var(--primary)}
+.ot-tab.disabled{opacity:.35;cursor:not-allowed}
+
+/* SUPPLIER CARD */
+.sup-card{background:var(--card2);border-radius:10px;padding:12px;margin-bottom:8px}
+.sup-name{font-size:14px;font-weight:600}
+.sup-price-big{font-size:22px;font-weight:700;color:var(--primary)}
+.sup-unit{font-size:12px;color:var(--text2)}
+
+/* FREIGHT BANNER */
+.freight-banner{background:var(--bg3);border:1px solid var(--primary);border-radius:10px;padding:12px;margin-bottom:12px}
+.freight-banner-title{font-size:12px;font-weight:600;color:var(--primary);margin-bottom:8px}
+
+/* COMPARE TABLE */
+.cmp-row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:var(--card2);border-radius:8px;margin-bottom:5px;font-size:13px}
+.cmp-row.winner{border:1px solid var(--green)}
+.cmp-name{font-weight:500}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:flex-end}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:92vh;overflow-y:auto}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:17px;font-weight:700;margin-bottom:14px}
+
+/* TOAST */
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:var(--card3);color:var(--text);padding:11px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:300;border:1px solid var(--border);white-space:nowrap;box-shadow:var(--shadow);animation:toastIn .25s ease}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* SYNC INDICATOR */
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);display:inline-block;margin-left:6px}
+.sync-dot.ok{background:var(--green)}
+.sync-dot.syncing{background:var(--yellow);animation:pulse .8s infinite}
+.sync-dot.err{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty svg{width:44px;height:44px;margin:0 auto 14px;display:block;opacity:.35}
+.empty p{font-size:15px;color:var(--text2);margin-bottom:6px}
+.empty small{font-size:13px}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+
+/* ADMIN TABS */
+.admin-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:14px}
+.admin-tabs::-webkit-scrollbar{display:none}
+.a-tab{flex-shrink:0;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--text2)}
+.a-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+/* CHECK */
+.check-row{display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;font-size:14px}
+.check-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary);cursor:pointer;flex-shrink:0}
+
+/* UNLOAD OPTIONS */
+.unload-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.unload-opt{padding:10px;border-radius:8px;border:1px solid var(--border);text-align:center;cursor:pointer;font-size:12px;font-weight:500;color:var(--text2);background:var(--card2);transition:all .2s}
+.unload-opt.active{border-color:var(--primary);color:var(--primary);background:var(--primary-bg)}
+
+/* CONTACT PILL */
+.cc-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:var(--primary-bg);color:var(--primary);font-size:12px;font-weight:500;cursor:pointer}
+.cc-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+
+/* WARNING */
+.warning{background:rgba(234,179,8,.1);border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="hdr">
+    <div class="hdr-row">
+      <button class="back-btn" id="back-btn" style="display:none" onclick="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div style="flex:1">
+        <div class="hdr-title" id="hdr-title">Dapcor BCO</div>
+        <div class="hdr-sub" id="hdr-sub">Browse · Compare · Order</div>
+      </div>
+      <span class="sync-dot" id="sync-dot" title="Sheets sync"></span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div id="page-browse" class="page active"></div>
+    <div id="page-detail" class="page"></div>
+    <div id="page-cart"   class="page"></div>
+    <div id="page-order"  class="page"></div>
+    <div id="page-admin"  class="page"></div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-btn active" id="nav-browse" onclick="nav('browse')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Browse
+    </button>
+    <button class="nav-btn" id="nav-cart" onclick="nav('cart')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Order
+      <span class="badge" id="cart-badge" style="display:none">0</span>
+    </button>
+    <button class="nav-btn" id="nav-order" onclick="nav('order')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Send
+    </button>
+    <button class="nav-btn" id="nav-admin" onclick="nav('admin')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>Admin
+    </button>
+  </nav>
+</div>
+
+<script>
+// ============================================================
+// DEFAULT DATA
+// ============================================================
+const COMPANY = {
+  name:'Dapcor', address:'16 Booralee St, Botany NSW 2019',
+  phone:'02 9316 7866', email:'sales@dapcor.com.au',
+  website:'https://dapcor.com.au', accountsEmail:'accounts@dapcor.com.au'
+};
+
+const DEFAULT_SETTINGS = {
+  companyName: COMPANY.name, companyAddress: COMPANY.address,
+  companyPhone: COMPANY.phone, companyEmail: COMPANY.email,
+  companyWebsite: COMPANY.website, accountsEmail: COMPANY.accountsEmail,
+  scriptUrl: '', defaultFreight: '150',
+  userName: 'Ben', userEmail: 'ben@dapcor.com.au', userPhone: '',
+  adminPass: 'admin123', yardEmail: ''
+};
+
+const SEED_SUPPLIERS = [
+  { id:'sup-sandhub', name:'Sandhub', phone:'02 9000 0001', email:'orders@sandhub.com.au',
+    website:'https://sandhub.com.au', repName:'', address:'Sydney NSW',
+    hasAccount:true, accountNumber:'', creditTerms:'30 days', tradingHours:'Mon–Fri 6am–4pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:10, maxLoadKg:10000,
+    hasCrane:false, hasForklift:true, notes:'' },
+  { id:'sup-kims', name:"Kim's Building Supplies", phone:'02 9000 0002', email:'orders@kimsbuilding.com.au',
+    website:'', repName:'Kim', address:'Sydney NSW',
+    hasAccount:false, accountNumber:'', creditTerms:'COD', tradingHours:'Mon–Sat 7am–5pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:8, maxLoadKg:8000,
+    hasCrane:false, hasForklift:false, notes:'Call Kim directly for pricing' },
+  { id:'sup-bcsand', name:'BC Sand', phone:'02 9000 0003', email:'orders@bcsand.com.au',
+    website:'', repName:'', address:'Sydney NSW',
+    hasAccount:false, accountNumber:'', creditTerms:'COD', tradingHours:'Mon–Fri 7am–4pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:10, maxLoadKg:10000,
+    hasCrane:false, hasForklift:true, notes:'' }
+];
+
+const SEED_PRODUCTS = [
+  { id:'prod-sand-syd', name:'Sydney Sand', category:'Sand', brand:'', description:'Fine washed river sand for brickwork, rendering and general fill.',
+    barcode:'', productUrl:'', hasLoose:false, hasPallet:false, hasBulka:true,
+    unitsPerPallet:0, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:1,
+    palletWeightKg:0, bagWeightKg:20, bulkaWeightKg:1000, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-cem-gp', name:'GP Cement', category:'Cement', brand:'', description:'General Purpose cement 20kg bags. Suits footings, slabs and general concrete.',
+    barcode:'', productUrl:'', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:84, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:20, bagWeightKg:20, bulkaWeightKg:0, palletL:1200, palletW:1200, palletH:1200, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-con-hi', name:'Hi-Strength Concrete', category:'Concrete', brand:'', description:'High-strength pre-mix concrete 20kg bags.',
+    barcode:'', productUrl:'', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:48, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:20, bagWeightKg:20, bulkaWeightKg:0, palletL:1200, palletW:1200, palletH:1200, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-con-rapid', name:'Rapid Set Concrete', category:'Concrete', brand:'', description:'Rapid setting pre-mix concrete 20kg bags.',
+    barcode:'', productUrl:'', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:48, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:20, bagWeightKg:20, bulkaWeightKg:0, palletL:1200, palletW:1200, palletH:1200, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-bluemetal', name:'Blue Metal 20mm', category:'Aggregate', brand:'', description:'Crushed blue metal aggregate 20mm, suits concrete, drainage and base course.',
+    barcode:'', productUrl:'', hasLoose:false, hasPallet:false, hasBulka:true,
+    unitsPerPallet:0, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:1,
+    palletWeightKg:0, bagWeightKg:20, bulkaWeightKg:1000, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'', imageUrl:'' }
+];
+
+// pricing: productId, supplierId, pricePerBag, pricePerPallet, pricePerBulka, freightType, freightCost, freightFreeThreshold
+const SEED_PRICING = [
+  // Sandhub
+  { id:'pr-1', productId:'prod-sand-syd', supplierId:'sup-sandhub', pricePerBag:0, pricePerPallet:0, pricePerBulka:115, freightType:'flat', freightCost:150, freightFreeThreshold:0 },
+  { id:'pr-2', productId:'prod-cem-gp',   supplierId:'sup-sandhub', pricePerBag:9.50, pricePerPallet:798, pricePerBulka:0, freightType:'flat', freightCost:150, freightFreeThreshold:0 },
+  { id:'pr-3', productId:'prod-con-hi',   supplierId:'sup-sandhub', pricePerBag:11.48, pricePerPallet:551.04, pricePerBulka:0, freightType:'flat', freightCost:150, freightFreeThreshold:0 },
+  // Kim's
+  { id:'pr-4', productId:'prod-sand-syd', supplierId:'sup-kims', pricePerBag:0, pricePerPallet:0, pricePerBulka:99, freightType:'flat', freightCost:250, freightFreeThreshold:0 },
+  { id:'pr-5', productId:'prod-cem-gp',   supplierId:'sup-kims', pricePerBag:9.60, pricePerPallet:806.40, pricePerBulka:0, freightType:'flat', freightCost:250, freightFreeThreshold:0 },
+  { id:'pr-6', productId:'prod-con-rapid', supplierId:'sup-kims', pricePerBag:11.50, pricePerPallet:552, pricePerBulka:0, freightType:'flat', freightCost:250, freightFreeThreshold:0 }
+];
+
+const SEED_CONTACTS = [
+  { id:'ct-1', name:'Accounts', email:'accounts@dapcor.com.au', phone:'02 9316 7866', role:'Accounts', isFavourite:true },
+  { id:'ct-2', name:'Yard Manager', email:'yard@dapcor.com.au', phone:'', role:'Yard', isFavourite:true }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let DB = { suppliers:[], products:[], pricing:[], contacts:[], orders:[], settings:[] };
+let SETTINGS = {};
+let cart = []; // [{id, productId, supplierId, orderType, qty}]
+let currentPage = 'browse';
+let pageHistory = [];
+let detailProductId = null;
+let detailOrderType = 'pallet';
+let adminTab = 'suppliers';
+let selectedCategory = 'All';
+let adminUnlocked = false;
+let toastTm = null;
+let syncState = 'idle'; // idle|syncing|ok|err
+
+// ============================================================
+// PERSISTENCE
+// ============================================================
+function loadLocal() {
+  try {
+    const d = localStorage.getItem('bco_db');
+    if (d) DB = JSON.parse(d);
+    else seedDefaults();
+    const c = localStorage.getItem('bco_cart');
+    if (c) cart = JSON.parse(c);
+    loadSettings();
+  } catch(e) { seedDefaults(); }
+}
+
+function seedDefaults() {
+  DB.suppliers = JSON.parse(JSON.stringify(SEED_SUPPLIERS));
+  DB.products  = JSON.parse(JSON.stringify(SEED_PRODUCTS));
+  DB.pricing   = JSON.parse(JSON.stringify(SEED_PRICING));
+  DB.contacts  = JSON.parse(JSON.stringify(SEED_CONTACTS));
+  DB.orders    = [];
+  DB.settings  = Object.entries(DEFAULT_SETTINGS).map(([k,v]) => ({key:k, value:v}));
+  saveLocal();
+}
+
+function saveLocal() {
+  localStorage.setItem('bco_db', JSON.stringify(DB));
+  localStorage.setItem('bco_cart', JSON.stringify(cart));
+}
+
+function saveCart() { localStorage.setItem('bco_cart', JSON.stringify(cart)); updateBadge(); }
+
+function loadSettings() {
+  SETTINGS = Object.assign({}, DEFAULT_SETTINGS);
+  (DB.settings || []).forEach(s => { SETTINGS[s.key] = s.value; });
+}
+
+function getSetting(k) { return SETTINGS[k] || DEFAULT_SETTINGS[k] || ''; }
+function setSetting(k, v) {
+  SETTINGS[k] = v;
+  const existing = DB.settings.find(s => s.key === k);
+  if (existing) existing.value = v; else DB.settings.push({key:k, value:v});
+  saveLocal();
+}
+
+// ============================================================
+// GOOGLE SHEETS SYNC
+// ============================================================
+function setSyncState(s) {
+  syncState = s;
+  const dot = document.getElementById('sync-dot');
+  if (dot) dot.className = 'sync-dot ' + s;
+}
+
+async function sheetsFetch(action, params = {}) {
+  const url = getSetting('scriptUrl');
+  if (!url) throw new Error('No script URL set');
+  const qs = new URLSearchParams({ action, ...params });
+  const res = await fetch(`${url}?${qs}`, { redirect:'follow' });
+  return res.json();
+}
+
+async function sheetsPost(body) {
+  const url = getSetting('scriptUrl');
+  if (!url) throw new Error('No script URL set');
+  const res = await fetch(url, {
+    method:'POST', redirect:'follow',
+    headers:{ 'Content-Type':'text/plain' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+async function syncFromSheets() {
+  const url = getSetting('scriptUrl');
+  if (!url) return;
+  setSyncState('syncing');
+  try {
+    const r = await sheetsFetch('readAll');
+    if (r.ok) {
+      // Merge — if sheets have data, use it; otherwise keep local seed
+      Object.keys(r.data).forEach(k => {
+        if (r.data[k] && r.data[k].length > 0) DB[k] = r.data[k];
+      });
+      saveLocal();
+      loadSettings();
+      setSyncState('ok');
+      showToast('Synced with Google Sheets ✓');
+      renderCurrentPage();
+    } else throw new Error(r.error);
+  } catch(e) {
+    setSyncState('err');
+    showToast('Sheets sync failed — working offline');
+  }
+}
+
+async function pushToSheets(sheetKey, action, data) {
+  const url = getSetting('scriptUrl');
+  if (!url) return;
+  setSyncState('syncing');
+  try {
+    const r = await sheetsPost({ action, sheet: sheetKey, ...data });
+    if (r.ok) setSyncState('ok'); else throw new Error(r.error);
+  } catch(e) { setSyncState('err'); }
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function fmt(n) { if(n==null||isNaN(n)) return '—'; return '$'+Number(n).toFixed(2); }
+function fmtR(n) { if(n==null||isNaN(n)) return '—'; return '$'+(Math.round(n*100)/100).toFixed(2); }
+function fmtW(kg) { if(!kg) return ''; return kg>=1000 ? (kg/1000).toFixed(1)+'t' : kg+'kg'; }
+function getProd(id)   { return DB.products.find(p => p.id === id); }
+function getSup(id)    { return DB.suppliers.find(s => s.id === id); }
+function getPricing(productId, supplierId) {
+  return DB.pricing.find(p => p.productId === productId && p.supplierId === supplierId);
+}
+function getProdPricings(productId) { return DB.pricing.filter(p => p.productId === productId); }
+function getCategories() { return ['All', ...[...new Set(DB.products.map(p => p.category))].sort()]; }
+
+function unitLabel(prod, ot) {
+  if (!prod) return '';
+  if (ot === 'bulka') return 'bulka bag';
+  if (ot === 'pallet') return `pallet of ${prod.unitsPerPallet} bags`;
+  return 'bag';
+}
+
+function packPrice(pricing, ot) {
+  if (!pricing) return null;
+  if (ot === 'bulka')  return +pricing.pricePerBulka  || null;
+  if (ot === 'pallet') return +pricing.pricePerPallet || null;
+  return +pricing.pricePerBag || null;
+}
+
+function unitsInPack(prod, ot) {
+  if (ot === 'bulka')  return 1;
+  if (ot === 'pallet') return +prod.unitsPerPallet || 1;
+  return 1; // single bag
+}
+
+function freightScore(prod, ot) {
+  if (ot === 'bulka')  return +prod.bulkaFreightScore  || 1;
+  if (ot === 'pallet') return +prod.palletFreightScore || 1;
+  return +prod.looseFreightScore || 0.1;
+}
+
+function packWeight(prod, ot) {
+  if (ot === 'bulka')  return +prod.bulkaWeightKg || 0;
+  if (ot === 'pallet') return (+prod.bagWeightKg || 0) * unitsInPack(prod, ot) + (+prod.palletWeightKg || 20);
+  return +prod.bagWeightKg || 0;
+}
+
+// ============================================================
+// FREIGHT CALCULATION
+// ============================================================
+function calcOrder(cartItems, freight) {
+  if (!cartItems || !cartItems.length) return [];
+  if (freight === undefined || freight === null) freight = parseFloat(getSetting('defaultFreight')) || 150;
+
+  const totalFU = cartItems.reduce((s, item) => {
+    const prod = getProd(item.productId);
+    return s + (prod ? freightScore(prod, item.orderType) * item.qty : 0);
+  }, 0);
+
+  const freightPerFU = totalFU > 0 ? freight / totalFU : 0;
+
+  return cartItems.map(item => {
+    const prod = getProd(item.productId);
+    const sup  = getSup(item.supplierId);
+    const pr   = getPricing(item.productId, item.supplierId);
+    if (!prod || !sup || !pr) return { ...item, error:true };
+
+    const pp     = packPrice(pr, item.orderType);
+    const uip    = unitsInPack(prod, item.orderType);
+    const fs     = freightScore(prod, item.orderType);
+    const fw     = packWeight(prod, item.orderType);
+
+    // Free freight check
+    const threshold = +pr.freightFreeThreshold || 0;
+    const lineMatCost = (pp || 0) * item.qty;
+    const freightFree = threshold > 0 && lineMatCost >= threshold;
+
+    const fpu    = freightFree ? 0 : freightPerFU;          // freight per freight-unit
+    const fShare = fpu * fs * item.qty;                      // total freight for this line
+    const fPerPack = fpu * fs;                               // freight per pack
+    const fPerUnit = fPerPack / uip;                         // freight per bag/tonne
+    const ppUnit   = (pp || 0) / uip;                        // material cost per unit
+    const totalUnit = ppUnit + fPerUnit;                     // all-up per unit
+    const lineTotal = (pp || 0) * item.qty + fShare;
+    const totalWeight = fw * item.qty;
+
+    return {
+      ...item, prod, sup, pr,
+      pp, uip, fs, fw,
+      freightFree, fShare, fPerPack, fPerUnit,
+      ppUnit, totalUnit, lineTotal, totalWeight,
+      totalFU, freightPerFU, freight
+    };
+  });
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function nav(page) {
+  if (page !== currentPage) pageHistory = [];
+  showPage(page, false);
+}
+
+function showPage(page, pushHist = true) {
+  if (pushHist && page !== currentPage) pageHistory.push(currentPage);
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const pg = document.getElementById('page-' + page);
+  if (pg) pg.classList.add('active');
+  const nb = document.getElementById('nav-' + page);
+  if (nb) nb.classList.add('active');
+  // Back button — show for sub-pages
+  const backPages = ['detail'];
+  document.getElementById('back-btn').style.display = backPages.includes(page) ? 'flex' : 'none';
+  // Render
+  renderCurrentPage();
+  window.scrollTo(0,0);
+}
+
+function goBack() {
+  if (pageHistory.length) showPage(pageHistory.pop(), false);
+  else showPage('browse', false);
+}
+
+function renderCurrentPage() {
+  if (currentPage === 'browse') renderBrowse();
+  else if (currentPage === 'detail') renderDetail();
+  else if (currentPage === 'cart')   renderCart();
+  else if (currentPage === 'order')  renderOrder();
+  else if (currentPage === 'admin')  renderAdmin();
+  updateHeader();
+  updateBadge();
+}
+
+function updateHeader() {
+  const titles = { browse:'Dapcor BCO', cart:'Order Builder', order:'Send Order', admin:'Admin', detail:'' };
+  const subs   = { browse:'Browse · Compare · Order', cart:'Select suppliers & calculate freight', order:'Review & send', admin:'Manage data & settings', detail:'' };
+  document.getElementById('hdr-title').textContent = titles[currentPage] || 'Dapcor BCO';
+  document.getElementById('hdr-sub').textContent   = subs[currentPage]  || '';
+}
+
+function updateBadge() {
+  const total = cart.reduce((s,i) => s + i.qty, 0);
+  const b = document.getElementById('cart-badge');
+  if (b) { b.style.display = total > 0 ? 'block' : 'none'; b.textContent = total; }
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  clearTimeout(toastTm);
+  let t = document.querySelector('.toast');
+  if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.style.display = 'block';
+  toastTm = setTimeout(() => { if(t) t.style.display = 'none'; }, 2500);
+}
+
+// ============================================================
+// BROWSE PAGE
+// ============================================================
+function renderBrowse() {
+  const el = document.getElementById('page-browse');
+  const cats = getCategories();
+  const query = el.querySelector('#browse-search')?.value || '';
+
+  let mats = DB.products;
+  if (selectedCategory !== 'All') mats = mats.filter(p => p.category === selectedCategory);
+  if (query) mats = mats.filter(p =>
+    p.name.toLowerCase().includes(query.toLowerCase()) ||
+    p.category.toLowerCase().includes(query.toLowerCase()) ||
+    (p.brand || '').toLowerCase().includes(query.toLowerCase())
+  );
+
+  el.innerHTML = `
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="inp" id="browse-search" placeholder="Search materials…" value="${query}" oninput="onBrowseSearch()" autocomplete="off">
+    </div>
+    <div class="cat-scroll" id="cat-scroll">
+      ${cats.map(c => `<div class="cat-chip ${c===selectedCategory?'active':''}" onclick="selectCat('${c}')">${c}</div>`).join('')}
+    </div>
+    ${mats.length === 0 ? `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p>Nothing found</p><small>Try a different search or category</small></div>` : ''}
+    ${mats.map(prod => renderProductCard(prod)).join('')}
+  `;
+}
+
+function onBrowseSearch() {
+  const q = document.getElementById('browse-search')?.value || '';
+  const el = document.getElementById('page-browse');
+  const cats = getCategories();
+  let mats = DB.products;
+  if (selectedCategory !== 'All') mats = mats.filter(p => p.category === selectedCategory);
+  if (q) mats = mats.filter(p =>
+    p.name.toLowerCase().includes(q.toLowerCase()) ||
+    p.category.toLowerCase().includes(q.toLowerCase())
+  );
+  const list = el.querySelector('#prod-list');
+  if (!list) { renderBrowse(); return; }
+  list.innerHTML = mats.map(prod => renderProductCard(prod)).join('');
+}
+
+function selectCat(cat) {
+  selectedCategory = cat;
+  renderBrowse();
+}
+
+function renderProductCard(prod) {
+  const pricings = getProdPricings(prod.id);
+  const inCart = cart.some(c => c.productId === prod.id);
+  const orderTypes = [];
+  if (prod.hasLoose)  orderTypes.push('bag');
+  if (prod.hasPallet) orderTypes.push('pallet');
+  if (prod.hasBulka)  orderTypes.push('bulka');
+
+  // Best prices per type
+  const bestPrices = orderTypes.map(ot => {
+    const prices = pricings.map(pr => ({ sup: getSup(pr.supplierId), price: packPrice(pr, ot) }))
+      .filter(x => x.price > 0);
+    if (!prices.length) return null;
+    prices.sort((a,b) => a.price - b.price);
+    return { ot, sup: prices[0].sup, price: prices[0].price };
+  }).filter(Boolean);
+
+  return `
+    <div class="card card-click" onclick="openDetail('${prod.id}')">
+      <div class="row-between mb4">
+        <div>
+          <div class="pc-name">${prod.name}</div>
+          <div class="pc-meta">
+            <span class="chip chip-gray">${prod.category}</span>
+            ${prod.brand ? `<span class="t-xs t-dim">${prod.brand}</span>` : ''}
+            ${inCart ? `<span class="chip chip-o">In Order</span>` : ''}
+          </div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+      <div class="pc-prices">
+        ${bestPrices.map(bp => `
+          <div class="pp best">
+            <div class="pp-name">${bp.ot === 'bulka' ? 'Bulka' : bp.ot === 'pallet' ? 'Pallet' : 'Bag'} · ${bp.sup?.name || '?'}</div>
+            <div class="pp-val t-green">${fmt(bp.price)}</div>
+          </div>`).join('')}
+        ${pricings.length === 0 ? `<span class="t-xs t-dim">No pricing yet</span>` : ''}
+      </div>
+    </div>`;
+}
+
+// ============================================================
+// PRODUCT DETAIL
+// ============================================================
+function openDetail(id) {
+  detailProductId = id;
+  const prod = getProd(id);
+  if (!prod) return;
+  const types = [];
+  if (prod.hasPallet) types.push('pallet');
+  if (prod.hasBulka)  types.push('bulka');
+  if (prod.hasLoose)  types.push('bag');
+  detailOrderType = types[0] || 'pallet';
+  showPage('detail');
+}
+
+function renderDetail() {
+  const prod = getProd(detailProductId);
+  if (!prod) return;
+  document.getElementById('hdr-title').textContent = prod.name;
+  document.getElementById('hdr-sub').textContent = prod.category + (prod.brand ? ' · ' + prod.brand : '');
+
+  const pricings = getProdPricings(prod.id);
+  const ot = detailOrderType;
+
+  const types = [];
+  if (prod.hasPallet) types.push({k:'pallet', label:'Pallet'});
+  if (prod.hasBulka)  types.push({k:'bulka',  label:'Bulka Bag'});
+  if (prod.hasLoose)  types.push({k:'bag',    label:'Loose Bag'});
+
+  const el = document.getElementById('page-detail');
+  el.innerHTML = `
+    <div class="card mb8">
+      <div class="t-xs chip chip-gray mb8">${prod.category}</div>
+      <p class="t-sm t-muted">${prod.description || 'No description.'}</p>
+      ${prod.productUrl ? `<a href="${prod.productUrl}" target="_blank" class="btn btn-outline btn-sm mt8" style="text-decoration:none">View Product Page</a>` : ''}
+    </div>
+
+    <div class="ot-tabs">
+      ${types.map(t => `<div class="ot-tab ${t.k===ot?'active':''}" onclick="setDetailOT('${t.k}')">${t.label}</div>`).join('')}
+    </div>
+
+    <div class="t-xs t-dim mb8">
+      ${ot==='pallet' ? `${prod.unitsPerPallet} bags per pallet · ${fmtW(packWeight(prod,'pallet'))} total` : ''}
+      ${ot==='bulka'  ? `1 tonne bulka bag · ${fmtW(prod.bulkaWeightKg)}` : ''}
+      ${ot==='bag'    ? `Single 20kg bag` : ''}
+      · Freight score: ${freightScore(prod, ot)}
+    </div>
+
+    <div class="sec-title">Suppliers</div>
+    ${pricings.length === 0 ? `<div class="empty" style="padding:24px"><p>No suppliers yet</p><small>Add pricing in Admin</small></div>` : ''}
+    ${pricings.map(pr => renderDetailSupCard(prod, pr, ot)).join('')}
+  `;
+}
+
+function setDetailOT(ot) {
+  detailOrderType = ot;
+  renderDetail();
+}
+
+function renderDetailSupCard(prod, pr, ot) {
+  const sup = getSup(pr.supplierId);
+  if (!sup) return '';
+  const pp = packPrice(pr, ot);
+  if (!pp) return `<div class="sup-card"><div class="sup-name">${sup.name}</div><div class="t-xs t-dim mt4">No ${ot} pricing</div></div>`;
+
+  const uip = unitsInPack(prod, ot);
+  const ppUnit = pp / uip;
+  const inCart = cart.find(c => c.productId === prod.id && c.supplierId === sup.id && c.orderType === ot);
+  const qty = inCart ? inCart.qty : 0;
+  const threshold = +pr.freightFreeThreshold || 0;
+
+  return `
+    <div class="sup-card">
+      <div class="row-between mb8">
+        <div>
+          <div class="sup-name">${sup.name}</div>
+          <div class="t-xs t-dim">${sup.tradingHours || ''}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="sup-price-big">${fmt(pp)}</div>
+          <div class="sup-unit">${fmt(ppUnit)} / ${ot === 'pallet' ? 'bag' : ot === 'bulka' ? 'tonne' : 'bag'}</div>
+        </div>
+      </div>
+      <div class="info-row"><span class="info-label">Freight</span><span class="info-val">${+pr.freightCost > 0 ? fmt(pr.freightCost) + ' flat' : 'Free'}</span></div>
+      ${threshold > 0 ? `<div class="info-row"><span class="info-label">Free freight over</span><span class="info-val t-green">${fmt(threshold)}</span></div>` : ''}
+      ${sup.hasCrane ? `<div class="t-xs chip chip-blue mt4">Crane truck available</div>` : ''}
+      ${pr.freightFreeThreshold > 0 ? `<div class="t-xs t-green mt4">Free freight on orders over ${fmt(pr.freightFreeThreshold)}</div>` : ''}
+      <div class="row mt8" style="gap:8px">
+        <a href="tel:${(sup.phone||'').replace(/\s/g,'')}" class="btn btn-outline btn-sm" style="text-decoration:none">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 12.3 19.79 19.79 0 0 1 1.87 3.69 2 2 0 0 1 3.84 1.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call
+        </a>
+        ${inCart ? `
+          <div class="qty-ctrl" style="flex:1;justify-content:center">
+            <button class="qty-btn" onclick="cartQty('${prod.id}','${sup.id}','${ot}',-1)">−</button>
+            <span class="qty-val">${qty}</span>
+            <button class="qty-btn" onclick="cartQty('${prod.id}','${sup.id}','${ot}',1)">+</button>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="removeItem('${prod.id}','${sup.id}','${ot}')">Remove</button>
+        ` : `<button class="btn btn-primary" style="flex:1" onclick="addToCart('${prod.id}','${sup.id}','${ot}')">+ Add to Order</button>`}
+      </div>
+    </div>`;
+}
+
+// ============================================================
+// CART OPERATIONS
+// ============================================================
+function addToCart(productId, supplierId, orderType) {
+  const existing = cart.find(c => c.productId===productId && c.supplierId===supplierId && c.orderType===orderType);
+  if (existing) existing.qty++;
+  else cart.push({ id:uid(), productId, supplierId, orderType, qty:1 });
+  saveCart();
+  showToast('Added to order ✓');
+  if (currentPage === 'detail') renderDetail();
+  if (currentPage === 'cart')   renderCart();
+}
+
+function removeItem(productId, supplierId, orderType) {
+  cart = cart.filter(c => !(c.productId===productId && c.supplierId===supplierId && c.orderType===orderType));
+  saveCart();
+  if (currentPage === 'detail') renderDetail();
+  if (currentPage === 'cart')   renderCart();
+}
+
+function cartQty(productId, supplierId, orderType, delta) {
+  const item = cart.find(c => c.productId===productId && c.supplierId===supplierId && c.orderType===orderType);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  saveCart();
+  if (currentPage === 'detail') renderDetail();
+  if (currentPage === 'cart')   renderCart();
+}
+
+// ============================================================
+// CART PAGE
+// ============================================================
+let cartFreight = null; // null = use default
+
+function renderCart() {
+  const el = document.getElementById('page-cart');
+  if (cart.length === 0) {
+    el.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p>No items yet</p><small>Browse materials and tap Add to Order</small></div>`;
+    return;
+  }
+
+  const freight = cartFreight !== null ? cartFreight : parseFloat(getSetting('defaultFreight')) || 150;
+  const calc = calcOrder(cart, freight);
+  const goodItems = calc.filter(i => !i.error);
+  const grandTotal = goodItems.reduce((s,i) => s + i.lineTotal, 0);
+  const totalWeight = goodItems.reduce((s,i) => s + i.totalWeight, 0);
+  const totalFU = goodItems[0]?.totalFU || 0;
+
+  // Capacity warning
+  let warning = '';
+  const uniqueSups = [...new Set(cart.map(i => i.supplierId))];
+  uniqueSups.forEach(sid => {
+    const sup = getSup(sid);
+    if (!sup || !sup.maxPalletSpaces) return;
+    const supItems = goodItems.filter(i => i.supplierId === sid);
+    const supFU = supItems.reduce((s,i) => s + freightScore(i.prod, i.orderType) * i.qty, 0);
+    if (supFU > sup.maxPalletSpaces) {
+      warning += `<div class="warning">⚠ ${sup.name}: ${supFU.toFixed(1)} spaces ordered, max truck is ${sup.maxPalletSpaces}. May need 2 deliveries.</div>`;
+    }
+  });
+
+  let html = `
+    ${warning}
+    <div class="freight-banner">
+      <div class="freight-banner-title">🚛 Delivery Freight</div>
+      <div class="fg" style="margin-bottom:8px">
+        <label>Total freight charge for this delivery ($)</label>
+        <div class="row">
+          <input class="inp" id="freight-inp" type="number" min="0" step="5" value="${freight}" oninput="onFreightChange()" style="flex:1">
+          <span class="t-sm t-dim" style="white-space:nowrap">÷ ${totalFU.toFixed(1)} units</span>
+        </div>
+      </div>
+      <div class="cost-row"><span>Freight units (weighted spaces)</span><span>${totalFU.toFixed(2)}</span></div>
+      <div class="cost-row"><span>Freight per unit</span><span class="t-orange bold">${fmt(freight / (totalFU || 1))}</span></div>
+      <div class="cost-row"><span>Total order weight</span><span>${fmtW(totalWeight)}</span></div>
+      <div class="t-xs t-dim mt4">Each pallet/bulka = 1.0 · loose bags = 0.1 per bag · large items score higher</div>
+    </div>
+
+    <div class="sec-title">Order Items</div>`;
+
+  goodItems.forEach(item => {
+    const unitName = item.orderType === 'pallet' ? 'bag' : item.orderType === 'bulka' ? 'tonne' : 'bag';
+    html += `
+      <div class="card-sm">
+        <div class="row-between mb4">
+          <div>
+            <div class="semi" style="font-size:14px">${item.prod.name}</div>
+            <div class="t-xs t-dim">${item.sup.name} · ${unitLabel(item.prod, item.orderType)}</div>
+          </div>
+          <button style="background:none;border:none;color:var(--text3);cursor:pointer" onclick="removeItem('${item.productId}','${item.supplierId}','${item.orderType}')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="m19 6-.867 13.142A2 2 0 0 1 16.138 21H7.862a2 2 0 0 1-1.995-1.858L5 6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </div>
+        <div class="qty-ctrl mb8">
+          <span class="t-sm t-muted">${item.orderType === 'bag' ? 'Bags:' : 'Qty:'}</span>
+          <button class="qty-btn" onclick="cartQty('${item.productId}','${item.supplierId}','${item.orderType}',-1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="cartQty('${item.productId}','${item.supplierId}','${item.orderType}',1)">+</button>
+          ${item.orderType === 'pallet' ? `<span class="t-xs t-dim">= ${item.qty * item.uip} bags · ${fmtW(item.totalWeight)}</span>` : `<span class="t-xs t-dim">${fmtW(item.totalWeight)}</span>`}
+        </div>
+        <div class="cost-box">
+          <div class="cost-row"><span>Pack price × ${item.qty}</span><span>${fmt(item.pp)} × ${item.qty} = ${fmt(item.pp * item.qty)}</span></div>
+          <div class="cost-row"><span>Freight share${item.freightFree?' (FREE - threshold met)':''}</span><span>${item.freightFree?'<span class="t-green">$0.00</span>':fmt(item.fShare)}</span></div>
+          <div class="cost-row"><span>Material cost per ${unitName}</span><span>${fmtR(item.ppUnit)}</span></div>
+          <div class="cost-row"><span>Freight per ${unitName}</span><span>${item.freightFree?'<span class="t-green">$0.00</span>':fmtR(item.fPerUnit)}</span></div>
+          <div class="cost-row total"><span>Total per ${unitName} (incl. freight)</span><span class="t-orange">${fmtR(item.totalUnit)}</span></div>
+          <div class="cost-row total" style="font-size:12px"><span>Line total</span><span>${fmt(item.lineTotal)}</span></div>
+        </div>
+      </div>`;
+  });
+
+  html += `
+    <div class="card mt8" style="border-color:var(--primary)">
+      <div class="row-between">
+        <span class="bold" style="font-size:16px">Order Total</span>
+        <span class="bold t-orange" style="font-size:20px">${fmt(grandTotal)}</span>
+      </div>
+      <div class="t-xs t-dim mt4">Includes ${fmt(freight)} freight · ${fmtW(totalWeight)} total</div>
+    </div>
+
+    ${renderSupplierComparison(freight)}
+
+    <div class="mt12">
+      <button class="btn btn-primary btn-full" onclick="nav('order')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Prepare Order / Inquiry
+      </button>
+    </div>
+    <div class="mt8">
+      <button class="btn btn-outline btn-full" style="color:var(--red);border-color:var(--red)" onclick="clearCart()">Clear Order</button>
+    </div>`;
+
+  el.innerHTML = html;
+}
+
+function onFreightChange() {
+  const v = parseFloat(document.getElementById('freight-inp')?.value);
+  cartFreight = isNaN(v) ? null : v;
+  renderCart();
+}
+
+function clearCart() {
+  if (confirm('Clear entire order?')) { cart = []; saveCart(); renderCart(); }
+}
+
+function renderSupplierComparison(freight) {
+  if (cart.length === 0) return '';
+  const supNames = [...new Set(DB.pricing.filter(pr => cart.some(c => c.productId === pr.productId)).map(pr => pr.supplierId))];
+
+  const rows = supNames.map(sid => {
+    const sup = getSup(sid);
+    if (!sup) return null;
+    // Build hypothetical cart using this supplier for all items where they have pricing
+    const hypoCart = cart.map(item => {
+      const pr = getPricing(item.productId, sid);
+      const pp = pr ? packPrice(pr, item.orderType) : null;
+      if (!pr || !pp) return null;
+      return { ...item, supplierId: sid };
+    }).filter(Boolean);
+    if (!hypoCart.length) return null;
+
+    // Use this supplier's freight rate
+    const anyPr = DB.pricing.find(p => p.supplierId === sid);
+    const supFreight = anyPr ? (+anyPr.freightCost || 0) : freight;
+    const calc = calcOrder(hypoCart, supFreight);
+    const total = calc.reduce((s,i) => s + (i.lineTotal||0), 0);
+    const missing = cart.filter(item => !hypoCart.find(h => h.productId === item.productId)).length;
+    return { sup, total, freight: supFreight, missing, itemsCovered: hypoCart.length };
+  }).filter(Boolean);
+
+  if (!rows.length) return '';
+  rows.sort((a,b) => a.total - b.total);
+
+  return `
+    <div style="margin-top:16px">
+      <div class="sec-title">💡 Supplier Comparison</div>
+      <div class="t-xs t-dim mb8">Cost if ordering all items from one supplier (using their freight rate).</div>
+      ${rows.map((r,i) => `
+        <div class="cmp-row ${i===0?'winner':''}">
+          <div>
+            <span class="cmp-name">${r.sup.name}</span>
+            ${i===0?'<span style="color:var(--yellow);margin-left:6px">★</span>':''}
+            ${r.missing?`<span class="t-xs t-red" style="margin-left:4px">(${r.missing} item${r.missing>1?'s':''} N/A)</span>`:''}
+          </div>
+          <div style="text-align:right">
+            <div class="bold ${i===0?'t-green':''}">${fmt(r.total)}</div>
+            <div class="t-xs t-dim">freight: ${fmt(r.freight)}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ============================================================
+// ORDER / SEND PAGE
+// ============================================================
+let orderType = 'order'; // 'order' or 'inquiry'
+let deliveryMethod = 'delivery'; // 'delivery' or 'pickup'
+let unloadingOpts = new Set();
+let selectedCCs = new Set(['ct-1']); // accounts by default
+
+function renderOrder() {
+  const el = document.getElementById('page-order');
+  if (cart.length === 0) {
+    el.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>No items in order</p><small>Add materials first</small></div>`;
+    return;
+  }
+
+  const freight = cartFreight !== null ? cartFreight : parseFloat(getSetting('defaultFreight')) || 150;
+  const calc = calcOrder(cart, freight);
+  const grandTotal = calc.filter(i=>!i.error).reduce((s,i)=>s+i.lineTotal,0);
+
+  const ccContacts = DB.contacts.filter(c => c.isFavourite || selectedCCs.has(c.id));
+
+  el.innerHTML = `
+    <div class="toggle-wrap">
+      <div class="toggle-opt ${orderType==='order'?'active':''}" onclick="setOrderType('order')">📋 Order</div>
+      <div class="toggle-opt ${orderType==='inquiry'?'active':''}" onclick="setOrderType('inquiry')">💬 Inquiry</div>
+    </div>
+
+    <div class="sec-title">Order Details</div>
+    ${orderType==='order' ? `
+    <div class="fg">
+      <label>Purchase Order Number</label>
+      <input class="inp" id="o-po" placeholder="e.g. PO-2025-0042" value="${localStorage.getItem('lastPO')||''}">
+    </div>` : ''}
+    <div class="fg">
+      <label>Job / Project Name</label>
+      <input class="inp" id="o-job" placeholder="e.g. Smith Apartments – Level 3 Balcony" value="${localStorage.getItem('lastJob')||''}">
+    </div>
+
+    <div class="fg">
+      <label>Delivery / Pickup</label>
+      <div class="toggle-wrap" style="margin-bottom:0">
+        <div class="toggle-opt ${deliveryMethod==='delivery'?'active':''}" onclick="setDeliveryMethod('delivery')">Delivery</div>
+        <div class="toggle-opt ${deliveryMethod==='pickup'?'active':''}" onclick="setDeliveryMethod('pickup')">Pick Up</div>
+      </div>
+    </div>
+
+    ${deliveryMethod==='delivery' ? `
+    <div class="fg">
+      <label>Delivery Address</label>
+      <input class="inp" id="o-addr" placeholder="Street, Suburb, State, Postcode" value="${localStorage.getItem('lastAddr')||''}">
+    </div>
+    <div class="row" style="gap:8px">
+      <div class="fg" style="flex:1">
+        <label>Required Date</label>
+        <input class="inp" id="o-date" type="date">
+      </div>
+      <div class="fg" style="flex:1">
+        <label>Latest Delivery Time</label>
+        <select class="inp" id="o-time">
+          <option value="before 2:00pm">Before 2:00pm</option>
+          <option value="before 12:00pm">Before 12:00pm</option>
+          <option value="AM only">AM only</option>
+          <option value="anytime">Anytime</option>
+        </select>
+      </div>
+    </div>` : `
+    <div class="fg">
+      <label>Pick-up Contact Name</label>
+      <input class="inp" id="o-pickup" placeholder="Name for pick-up">
+    </div>`}
+
+    <div class="fg">
+      <label>Site Contact Name & Phone</label>
+      <div class="row" style="gap:8px">
+        <input class="inp" id="o-site-name" placeholder="Contact name" style="flex:1">
+        <input class="inp" id="o-site-ph" placeholder="Mobile" style="flex:1">
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>Unloading Requirements</label>
+      <div class="unload-grid">
+        ${[
+          {k:'crane',    label:'Crane Truck Required'},
+          {k:'forklift', label:'Forklift Required'},
+          {k:'fol-onsite',label:'Forklift Onsite'},
+          {k:'hand',     label:'Hand Unload'}
+        ].map(o => `
+          <div class="unload-opt ${unloadingOpts.has(o.k)?'active':''}" onclick="toggleUnload('${o.k}')">${o.label}</div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>Special Instructions</label>
+      <textarea class="inp" id="o-notes" placeholder="e.g. Live residential site — 120 residents. Limited access during peak hours 7–9am and 4–6pm. ${deliveryMethod==='delivery'?'Deliveries no later than 2pm.':''}">${localStorage.getItem('lastNotes')||''}</textarea>
+    </div>
+
+    <hr class="divider">
+    <div class="sec-title">Ordered By</div>
+    <div class="row" style="gap:8px">
+      <div class="fg" style="flex:1"><label>Name</label><input class="inp" id="o-uname" value="${getSetting('userName')}"></div>
+      <div class="fg" style="flex:1"><label>Phone</label><input class="inp" id="o-uph" value="${getSetting('userPhone')}" placeholder="Mobile"></div>
+    </div>
+    <div class="fg"><label>Email</label><input class="inp" id="o-uemail" value="${getSetting('userEmail')}" type="email"></div>
+
+    <div class="fg">
+      <label>CC (tap to toggle)</label>
+      <div class="cc-pills">
+        ${DB.contacts.map(c => `
+          <div class="cc-pill ${selectedCCs.has(c.id)?'':'chip-gray'}" onclick="toggleCC('${c.id}')" style="${selectedCCs.has(c.id)?'':'background:var(--card2);color:var(--text2)'}">
+            ${selectedCCs.has(c.id)?'✓ ':''}${c.name}
+          </div>`).join('')}
+      </div>
+      <div class="fg mt8">
+        <label>Additional CC email</label>
+        <input class="inp inp-sm" id="o-extra-cc" placeholder="extra@email.com">
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="sec-title">Order Summary</div>
+    <div class="card">
+      ${calc.filter(i=>!i.error).map(item => `
+        <div class="info-row">
+          <div>
+            <div style="font-size:13px;font-weight:600">${item.prod.name}</div>
+            <div class="t-xs t-dim">${item.sup.name} · ${item.qty} ${unitLabel(item.prod, item.orderType)}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="semi" style="font-size:13px">${fmt(item.lineTotal)}</div>
+            <div class="t-xs t-dim">${fmtR(item.totalUnit)}/${item.orderType==='pallet'?'bag':'unit'}</div>
+          </div>
+        </div>`).join('')}
+      <div class="row-between mt8 pt8" style="border-top:1px solid var(--border)">
+        <span class="bold">Total incl. freight</span>
+        <span class="bold t-orange" style="font-size:18px">${fmt(grandTotal)}</span>
+      </div>
+    </div>
+
+    <div class="col mt12" style="gap:8px">
+      <button class="btn btn-primary btn-full" onclick="sendEmail('supplier')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        ${orderType === 'inquiry' ? 'Send Inquiry to Supplier(s)' : 'Email Order to Supplier(s)'}
+      </button>
+      <button class="btn btn-outline btn-full" onclick="sendEmail('quote')">
+        Send to Custom Email
+      </button>
+      ${getSetting('yardEmail') ? `<button class="btn btn-ghost btn-full" onclick="sendEmail('yard')">Send to Yard (${getSetting('yardEmail')})</button>` : ''}
+    </div>
+    <div class="mt8">
+      <button class="btn btn-outline btn-full" style="color:var(--red);border-color:var(--red)" onclick="clearCart()">Clear Order</button>
+    </div>
+  `;
+}
+
+function setOrderType(t)      { orderType = t; renderOrder(); }
+function setDeliveryMethod(m) { deliveryMethod = m; renderOrder(); }
+function toggleUnload(k)      { unloadingOpts.has(k) ? unloadingOpts.delete(k) : unloadingOpts.add(k); renderOrder(); }
+function toggleCC(id)         { selectedCCs.has(id) ? selectedCCs.delete(id) : selectedCCs.add(id); renderOrder(); }
+
+function gatherOrderData() {
+  return {
+    poNumber:     document.getElementById('o-po')?.value || '',
+    jobName:      document.getElementById('o-job')?.value || '',
+    address:      document.getElementById('o-addr')?.value || '',
+    date:         document.getElementById('o-date')?.value || '',
+    time:         document.getElementById('o-time')?.value || 'before 2:00pm',
+    siteName:     document.getElementById('o-site-name')?.value || '',
+    sitePh:       document.getElementById('o-site-ph')?.value || '',
+    pickupName:   document.getElementById('o-pickup')?.value || '',
+    notes:        document.getElementById('o-notes')?.value || '',
+    uName:        document.getElementById('o-uname')?.value || getSetting('userName'),
+    uEmail:       document.getElementById('o-uemail')?.value || getSetting('userEmail'),
+    uPhone:       document.getElementById('o-uph')?.value || getSetting('userPhone'),
+    extraCC:      document.getElementById('o-extra-cc')?.value || ''
+  };
+}
+
+function buildEmailBody(d) {
+  const freight = cartFreight !== null ? cartFreight : parseFloat(getSetting('defaultFreight')) || 150;
+  const calc = calcOrder(cart, freight).filter(i => !i.error);
+  const grandTotal = calc.reduce((s,i) => s + i.lineTotal, 0);
+
+  let body = orderType === 'inquiry'
+    ? `PRICE INQUIRY — ${getSetting('companyName')}\n`
+    : `PURCHASE ORDER — ${getSetting('companyName')}\n`;
+  body += '='.repeat(44) + '\n';
+  if (d.poNumber) body += `PO Number:       ${d.poNumber}\n`;
+  body += `Date:            ${new Date().toLocaleDateString('en-AU')}\n`;
+  if (d.jobName) body += `Job:             ${d.jobName}\n`;
+  body += deliveryMethod === 'delivery'
+    ? `Delivery To:     ${d.address || 'TBC'}\n`
+    : `ORDER TYPE:      PICK UP\n`;
+  if (deliveryMethod === 'delivery') {
+    if (d.date) body += `Required By:     ${d.date}\n`;
+    body += `Delivery Window: ${d.time}\n`;
+  }
+  if (d.siteName || d.sitePh) body += `Site Contact:    ${d.siteName} ${d.sitePh}\n`;
+  if (unloadingOpts.size) body += `Unloading:       ${[...unloadingOpts].map(u => u.replace('-',' ')).join(', ')}\n`;
+  if (d.notes) body += `\nNotes:\n${d.notes}\n`;
+
+  body += '\n' + '='.repeat(44) + '\n';
+  body += orderType === 'inquiry' ? 'ITEMS TO PRICE:\n\n' : 'ORDER ITEMS:\n\n';
+
+  calc.forEach(item => {
+    body += `${item.prod.name}\n`;
+    body += `  Supplier:  ${item.sup.name}\n`;
+    body += `  Qty:       ${item.qty} × ${unitLabel(item.prod, item.orderType)}\n`;
+    if (orderType === 'order') {
+      body += `  Pack price: ${fmt(item.pp)} × ${item.qty} = ${fmt(item.pp * item.qty)}\n`;
+      body += `  Freight:   ${item.freightFree ? 'Free (threshold met)' : fmt(item.fShare)}\n`;
+      body += `  Per unit:  ${fmtR(item.totalUnit)} / ${item.orderType==='pallet'?'bag':'unit'} (incl. freight)\n`;
+      body += `  Line total: ${fmt(item.lineTotal)}\n`;
+    }
+    body += '\n';
+  });
+
+  body += '='.repeat(44) + '\n';
+  if (orderType === 'order') {
+    body += `ORDER TOTAL (incl. freight): ${fmt(grandTotal)}\n`;
+    body += '='.repeat(44) + '\n\n';
+  }
+
+  body += `Ordered By:  ${d.uName}\n`;
+  body += `Email:       ${d.uEmail}\n`;
+  if (d.uPhone) body += `Phone:       ${d.uPhone}\n`;
+  body += `\n${getSetting('companyName')}\n`;
+  body += `${getSetting('companyAddress')}\n`;
+  body += `${getSetting('companyPhone')}\n`;
+  body += `${getSetting('companyWebsite')}\n`;
+
+  return body;
+}
+
+function sendEmail(dest) {
+  const d = gatherOrderData();
+  if (d.poNumber) localStorage.setItem('lastPO', d.poNumber);
+  if (d.jobName)  localStorage.setItem('lastJob', d.jobName);
+  if (d.address)  localStorage.setItem('lastAddr', d.address);
+  if (d.notes)    localStorage.setItem('lastNotes', d.notes);
+
+  const subject = orderType === 'inquiry'
+    ? `Price Inquiry – ${getSetting('companyName')}${d.jobName?' – '+d.jobName:''}`
+    : `Purchase Order${d.poNumber?' '+d.poNumber:''}${d.jobName?' – '+d.jobName:''}`;
+
+  const body = buildEmailBody(d);
+
+  let to = '';
+  if (dest === 'supplier') {
+    const emails = [...new Set(cart.map(c => {
+      const sup = getSup(c.supplierId);
+      return sup?.email;
+    }).filter(Boolean))];
+    to = emails.join(',');
+  } else if (dest === 'yard') {
+    to = getSetting('yardEmail');
+  } else {
+    to = d.extraCC || d.uEmail;
+  }
+
+  // Build CC
+  const ccEmails = [];
+  selectedCCs.forEach(id => { const c = DB.contacts.find(x=>x.id===id); if(c?.email) ccEmails.push(c.email); });
+  if (d.extraCC && dest !== 'quote') ccEmails.push(d.extraCC);
+  const cc = [...new Set(ccEmails)].join(',');
+
+  const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&cc=${encodeURIComponent(cc)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+}
+
+// ============================================================
+// ADMIN PAGE
+// ============================================================
+function renderAdmin() {
+  const el = document.getElementById('page-admin');
+  if (!adminUnlocked) {
+    el.innerHTML = `
+      <div class="sec-title">Admin Login</div>
+      <div class="fg"><label>Password</label><input class="inp" id="adm-pass" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkAdmin()"></div>
+      <button class="btn btn-primary btn-full" onclick="checkAdmin()">Unlock Admin</button>
+      <div class="t-xs t-dim mt8" style="text-align:center">Default: <strong>admin123</strong></div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="admin-tabs">
+      ${['suppliers','products','contacts','settings'].map(t =>
+        `<div class="a-tab ${adminTab===t?'active':''}" onclick="setAdminTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</div>`
+      ).join('')}
+    </div>
+    <div id="admin-panel"></div>`;
+
+  renderAdminPanel();
+}
+
+function checkAdmin() {
+  const pass = document.getElementById('adm-pass')?.value;
+  if (pass === (getSetting('adminPass') || 'admin123')) {
+    adminUnlocked = true; renderAdmin();
+  } else showToast('Wrong password');
+}
+
+function setAdminTab(t) { adminTab = t; renderAdminPanel(); }
+
+function renderAdminPanel() {
+  const el = document.getElementById('admin-panel');
+  if (!el) return;
+  if (adminTab === 'suppliers') renderAdminSuppliers(el);
+  else if (adminTab === 'products')  renderAdminProducts(el);
+  else if (adminTab === 'contacts')  renderAdminContacts(el);
+  else if (adminTab === 'settings')  renderAdminSettings(el);
+}
+
+function renderAdminSuppliers(el) {
+  el.innerHTML = `
+    <button class="btn btn-primary btn-full mb12" onclick="openSupModal(null)">+ Add Supplier</button>
+    ${DB.suppliers.map(s => `
+      <div class="card-sm row-between">
+        <div>
+          <div class="semi" style="font-size:14px">${s.name}</div>
+          <div class="t-xs t-dim">${s.phone} · ${s.creditTerms||'COD'}</div>
+        </div>
+        <div class="row" style="gap:6px">
+          <button class="btn btn-ghost btn-xs" onclick="openSupModal('${s.id}')">Edit</button>
+          <button class="btn btn-xs" style="background:var(--red-bg);color:var(--red)" onclick="deleteSup('${s.id}')">Del</button>
+        </div>
+      </div>`).join('')}`;
+}
+
+function renderAdminProducts(el) {
+  el.innerHTML = `
+    <button class="btn btn-primary btn-full mb12" onclick="openProdModal(null)">+ Add Product</button>
+    ${DB.products.map(p => {
+      const pricings = getProdPricings(p.id);
+      return `
+      <div class="card-sm">
+        <div class="row-between mb4">
+          <div>
+            <div class="semi" style="font-size:14px">${p.name}</div>
+            <div class="t-xs t-dim">${p.category}${p.brand?' · '+p.brand:''} · ${pricings.length} supplier${pricings.length!==1?'s':''}</div>
+          </div>
+          <div class="row" style="gap:6px">
+            <button class="btn btn-ghost btn-xs" onclick="openProdModal('${p.id}')">Edit</button>
+            <button class="btn btn-xs" style="background:var(--red-bg);color:var(--red)" onclick="deleteProd('${p.id}')">Del</button>
+          </div>
+        </div>
+        <div class="row" style="flex-wrap:wrap;gap:5px">
+          ${pricings.map(pr => { const sup = getSup(pr.supplierId); return sup ? `<span class="chip chip-gray">${sup.name}</span>` : ''; }).join('')}
+          <button class="btn btn-xs btn-outline" onclick="openPricingModal('${p.id}')">+ Pricing</button>
+        </div>
+      </div>`; }).join('')}`;
+}
+
+function renderAdminContacts(el) {
+  el.innerHTML = `
+    <button class="btn btn-primary btn-full mb12" onclick="openContactModal(null)">+ Add Contact</button>
+    ${DB.contacts.map(c => `
+      <div class="card-sm row-between">
+        <div>
+          <div class="semi" style="font-size:14px">${c.name}</div>
+          <div class="t-xs t-dim">${c.email} · ${c.role||''}</div>
+        </div>
+        <div class="row" style="gap:6px">
+          <button class="btn btn-ghost btn-xs" onclick="openContactModal('${c.id}')">Edit</button>
+          <button class="btn btn-xs" style="background:var(--red-bg);color:var(--red)" onclick="deleteContact('${c.id}')">Del</button>
+        </div>
+      </div>`).join('')}`;
+}
+
+function renderAdminSettings(el) {
+  el.innerHTML = `
+    <div class="sec-title">Company</div>
+    ${['companyName','companyAddress','companyPhone','companyEmail','accountsEmail','yardEmail','companyWebsite'].map(k => `
+      <div class="fg"><label>${k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase())}</label>
+      <input class="inp" data-setting="${k}" value="${getSetting(k)||''}" oninput="onSettingChange(this)"></div>`).join('')}
+
+    <hr class="divider">
+    <div class="sec-title">Your Profile</div>
+    ${['userName','userEmail','userPhone'].map(k => `
+      <div class="fg"><label>${k.replace('user','').replace(/^./,s=>s.toUpperCase())}</label>
+      <input class="inp" data-setting="${k}" value="${getSetting(k)||''}" oninput="onSettingChange(this)"></div>`).join('')}
+
+    <hr class="divider">
+    <div class="sec-title">Google Sheets</div>
+    <div class="fg"><label>Apps Script Web App URL</label>
+      <input class="inp" id="script-url-inp" value="${getSetting('scriptUrl')||''}" placeholder="https://script.google.com/macros/s/...">
+    </div>
+    <div class="row" style="gap:8px">
+      <button class="btn btn-primary" style="flex:1" onclick="saveScriptUrl()">Connect & Sync</button>
+      <button class="btn btn-outline" style="flex:1" onclick="syncFromSheets()">Sync Now</button>
+    </div>
+    <div class="t-xs t-dim mt8">See <strong>dapcor-bco-apps-script.js</strong> for setup instructions.</div>
+
+    <hr class="divider">
+    <div class="sec-title">App</div>
+    <div class="fg"><label>Default Freight ($)</label>
+      <input class="inp" data-setting="defaultFreight" type="number" value="${getSetting('defaultFreight')||150}" oninput="onSettingChange(this)"></div>
+    <div class="fg"><label>Admin Password</label>
+      <input class="inp" type="password" data-setting="adminPass" placeholder="Change password" oninput="onSettingChange(this)"></div>
+    <button class="btn btn-outline btn-full mt8" onclick="resetToDefaults()">Reset Database to Defaults</button>
+    <button class="btn btn-outline btn-full mt8" style="color:var(--text3)" onclick="adminUnlocked=false;renderAdmin()">Lock & Exit Admin</button>`;
+}
+
+function onSettingChange(el) { setSetting(el.dataset.setting, el.value); }
+
+function saveScriptUrl() {
+  const url = document.getElementById('script-url-inp')?.value?.trim();
+  if (!url) return;
+  setSetting('scriptUrl', url);
+  syncFromSheets();
+}
+
+function resetToDefaults() {
+  if (confirm('Reset ALL data to defaults? This deletes all custom suppliers and products.')) {
+    seedDefaults(); loadSettings(); renderAdmin(); showToast('Reset to defaults');
+  }
+}
+
+// ============================================================
+// SUPPLIER MODAL
+// ============================================================
+function openSupModal(id) {
+  const s = id ? DB.suppliers.find(x=>x.id===id) : null;
+  const ov = document.createElement('div');
+  ov.className = 'modal-overlay'; ov.id = 'sup-modal';
+  ov.innerHTML = `<div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">${s?'Edit':'Add'} Supplier</div>
+    ${['name','phone','email','website','repName','address','accountNumber','creditTerms','tradingHours'].map(f => `
+      <div class="fg"><label>${f.replace(/([A-Z])/g,' $1').replace(/^./,c=>c.toUpperCase())}</label>
+      <input class="inp" id="sf-${f}" value="${s?s[f]||'':''}"></div>`).join('')}
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <label class="check-row"><input type="checkbox" id="sf-hasAccount" ${s?.hasAccount?'checked':''}> Has Account</label>
+      <label class="check-row"><input type="checkbox" id="sf-hasCrane" ${s?.hasCrane?'checked':''}> Has Crane Truck</label>
+      <label class="check-row"><input type="checkbox" id="sf-hasForklift" ${s?.hasForklift?'checked':''}> Has Forklift</label>
+    </div>
+    <div class="row" style="gap:8px">
+      <div class="fg" style="flex:1"><label>Max Pallet Spaces</label><input class="inp" id="sf-maxPalletSpaces" type="number" value="${s?.maxPalletSpaces||10}"></div>
+      <div class="fg" style="flex:1"><label>Max Load (kg)</label><input class="inp" id="sf-maxLoadKg" type="number" value="${s?.maxLoadKg||8000}"></div>
+    </div>
+    <div class="row" style="gap:8px">
+      <div class="fg" style="flex:1"><label>Min Order ($)</label><input class="inp" id="sf-minOrderValue" type="number" value="${s?.minOrderValue||0}"></div>
+      <div class="fg" style="flex:1"><label>Free Freight Threshold ($)</label><input class="inp" id="sf-freeFreightThreshold" type="number" value="${s?.freeFreightThreshold||0}"></div>
+    </div>
+    <div class="fg"><label>Notes</label><textarea class="inp" id="sf-notes">${s?.notes||''}</textarea></div>
+    <div class="row" style="gap:8px;margin-top:12px">
+      <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('sup-modal').remove()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveSup('${id||''}')">Save</button>
+    </div></div>`;
+  document.body.appendChild(ov);
+}
+
+function saveSup(id) {
+  const fields = ['name','phone','email','website','repName','address','accountNumber','creditTerms','tradingHours','notes'];
+  const numFields = ['maxPalletSpaces','maxLoadKg','minOrderValue','freeFreightThreshold'];
+  const boolFields = ['hasAccount','hasCrane','hasForklift'];
+  const obj = {};
+  fields.forEach(f => { obj[f] = document.getElementById('sf-'+f)?.value || ''; });
+  numFields.forEach(f => { obj[f] = parseFloat(document.getElementById('sf-'+f)?.value) || 0; });
+  boolFields.forEach(f => { obj[f] = document.getElementById('sf-'+f)?.checked || false; });
+  if (!obj.name) { showToast('Name required'); return; }
+  if (id) {
+    const i = DB.suppliers.findIndex(s=>s.id===id);
+    if (i>=0) DB.suppliers[i] = {...DB.suppliers[i], ...obj};
+    pushToSheets('suppliers','update',{id, row:obj});
+  } else {
+    obj.id = uid(); DB.suppliers.push(obj);
+    pushToSheets('suppliers','insert',{row:obj});
+  }
+  saveLocal(); document.getElementById('sup-modal')?.remove();
+  renderAdminSuppliers(document.getElementById('admin-panel'));
+  showToast('Supplier saved ✓');
+}
+
+function deleteSup(id) {
+  if (!confirm('Delete supplier?')) return;
+  DB.suppliers = DB.suppliers.filter(s=>s.id!==id);
+  DB.pricing   = DB.pricing.filter(p=>p.supplierId!==id);
+  saveLocal(); pushToSheets('suppliers','delete',{id});
+  renderAdminSuppliers(document.getElementById('admin-panel'));
+}
+
+// ============================================================
+// PRODUCT MODAL
+// ============================================================
+function openProdModal(id) {
+  const p = id ? DB.products.find(x=>x.id===id) : null;
+  const ov = document.createElement('div');
+  ov.className='modal-overlay'; ov.id='prod-modal';
+  ov.innerHTML = `<div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">${p?'Edit':'Add'} Product</div>
+    ${['name','category','brand','description','barcode','productUrl'].map(f=>`
+      <div class="fg"><label>${f.replace(/([A-Z])/g,' $1').replace(/^./,c=>c.toUpperCase())}</label>
+      <input class="inp" id="pf-${f}" value="${p?p[f]||'':''}"></div>`).join('')}
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <label class="check-row"><input type="checkbox" id="pf-hasPallet" ${p?.hasPallet?'checked':''}> Sold by Pallet</label>
+      <label class="check-row"><input type="checkbox" id="pf-hasBulka"  ${p?.hasBulka ?'checked':''}> Sold by Bulka Bag</label>
+      <label class="check-row"><input type="checkbox" id="pf-hasLoose"  ${p?.hasLoose ?'checked':''}> Sold Loose (bags)</label>
+      <label class="check-row"><input type="checkbox" id="pf-requiresLift" ${p?.requiresLift?'checked':''}> Requires Lifting Equipment</label>
+    </div>
+    <div class="row" style="gap:8px">
+      <div class="fg" style="flex:1"><label>Units per Pallet</label><input class="inp" id="pf-unitsPerPallet" type="number" value="${p?.unitsPerPallet||0}"></div>
+      <div class="fg" style="flex:1"><label>Bag Weight (kg)</label><input class="inp" id="pf-bagWeightKg" type="number" value="${p?.bagWeightKg||20}"></div>
+    </div>
+    <div class="row" style="gap:8px">
+      <div class="fg" style="flex:1"><label>Pallet Base Weight (kg)</label><input class="inp" id="pf-palletWeightKg" type="number" value="${p?.palletWeightKg||20}"></div>
+      <div class="fg" style="flex:1"><label>Bulka Weight (kg)</label><input class="inp" id="pf-bulkaWeightKg" type="number" value="${p?.bulkaWeightKg||1000}"></div>
+    </div>
+    <div class="row" style="gap:8px">
+      <div class="fg" style="flex:1"><label>Pallet Freight Score</label><input class="inp" id="pf-palletFreightScore" type="number" step="0.1" value="${p?.palletFreightScore||1}"></div>
+      <div class="fg" style="flex:1"><label>Bulka Freight Score</label><input class="inp" id="pf-bulkaFreightScore" type="number" step="0.1" value="${p?.bulkaFreightScore||1}"></div>
+      <div class="fg" style="flex:1"><label>Loose Bag Score</label><input class="inp" id="pf-looseFreightScore" type="number" step="0.05" value="${p?.looseFreightScore||0.1}"></div>
+    </div>
+    <div class="fg"><label>Lift Notes</label><input class="inp" id="pf-liftNotes" value="${p?.liftNotes||''}"></div>
+    <div class="row" style="gap:8px;margin-top:12px">
+      <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('prod-modal').remove()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveProd('${id||''}')">Save</button>
+    </div></div>`;
+  document.body.appendChild(ov);
+}
+
+function saveProd(id) {
+  const sf = ['name','category','brand','description','barcode','productUrl','liftNotes'];
+  const nf = ['unitsPerPallet','bagWeightKg','palletWeightKg','bulkaWeightKg','palletL','palletW','palletH','palletFreightScore','bulkaFreightScore','looseFreightScore'];
+  const bf = ['hasPallet','hasBulka','hasLoose','requiresLift'];
+  const obj = {};
+  sf.forEach(f => { obj[f] = document.getElementById('pf-'+f)?.value || ''; });
+  nf.forEach(f => { const el = document.getElementById('pf-'+f); obj[f] = el ? (parseFloat(el.value)||0) : 0; });
+  bf.forEach(f => { obj[f] = document.getElementById('pf-'+f)?.checked||false; });
+  if (!obj.name) { showToast('Name required'); return; }
+  if (id) {
+    const i = DB.products.findIndex(p=>p.id===id);
+    if (i>=0) DB.products[i] = {...DB.products[i], ...obj};
+    pushToSheets('products','update',{id, row:obj});
+  } else {
+    obj.id = uid(); DB.products.push(obj);
+    pushToSheets('products','insert',{row:obj});
+  }
+  saveLocal(); document.getElementById('prod-modal')?.remove();
+  renderAdminProducts(document.getElementById('admin-panel'));
+  showToast('Product saved ✓');
+}
+
+function deleteProd(id) {
+  if (!confirm('Delete product and all its pricing?')) return;
+  DB.products = DB.products.filter(p=>p.id!==id);
+  DB.pricing  = DB.pricing.filter(p=>p.productId!==id);
+  cart = cart.filter(c=>c.productId!==id);
+  saveLocal(); pushToSheets('products','delete',{id});
+  renderAdminProducts(document.getElementById('admin-panel'));
+}
+
+// ============================================================
+// PRICING MODAL
+// ============================================================
+function openPricingModal(productId) {
+  const prod = getProd(productId);
+  if (!prod) return;
+  const existing = getProdPricings(productId);
+  const ov = document.createElement('div');
+  ov.className='modal-overlay'; ov.id='pricing-modal';
+  ov.innerHTML = `<div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Pricing — ${prod.name}</div>
+    <div class="t-xs t-dim mb12">Add or edit pricing per supplier.</div>
+    ${DB.suppliers.map(sup => {
+      const pr = existing.find(p=>p.supplierId===sup.id);
+      return `
+        <div class="card-sm mb8">
+          <div class="semi mb8" style="font-size:13px">${sup.name}</div>
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            ${prod.hasLoose  ? `<div class="fg" style="flex:1;min-width:80px"><label>Per Bag ($)</label><input class="inp inp-sm" id="pr-${sup.id}-bag"    type="number" step="0.01" value="${pr?.pricePerBag||''}"></div>` : ''}
+            ${prod.hasPallet ? `<div class="fg" style="flex:1;min-width:80px"><label>Per Pallet ($)</label><input class="inp inp-sm" id="pr-${sup.id}-pallet" type="number" step="0.01" value="${pr?.pricePerPallet||''}"></div>` : ''}
+            ${prod.hasBulka  ? `<div class="fg" style="flex:1;min-width:80px"><label>Per Bulka ($)</label><input class="inp inp-sm" id="pr-${sup.id}-bulka"  type="number" step="0.01" value="${pr?.pricePerBulka||''}"></div>` : ''}
+            <div class="fg" style="flex:1;min-width:80px"><label>Freight ($)</label><input class="inp inp-sm" id="pr-${sup.id}-freight" type="number" step="5" value="${pr?.freightCost||150}"></div>
+            <div class="fg" style="flex:1;min-width:80px"><label>Free freight over ($)</label><input class="inp inp-sm" id="pr-${sup.id}-threshold" type="number" step="50" value="${pr?.freightFreeThreshold||0}"></div>
+          </div>
+        </div>`;
+    }).join('')}
+    <div class="row" style="gap:8px;margin-top:12px">
+      <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('pricing-modal').remove()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="savePricing('${productId}')">Save All</button>
+    </div></div>`;
+  document.body.appendChild(ov);
+}
+
+function savePricing(productId) {
+  DB.suppliers.forEach(sup => {
+    const bag     = parseFloat(document.getElementById(`pr-${sup.id}-bag`)?.value)||0;
+    const pallet  = parseFloat(document.getElementById(`pr-${sup.id}-pallet`)?.value)||0;
+    const bulka   = parseFloat(document.getElementById(`pr-${sup.id}-bulka`)?.value)||0;
+    const freight = parseFloat(document.getElementById(`pr-${sup.id}-freight`)?.value)||0;
+    const thresh  = parseFloat(document.getElementById(`pr-${sup.id}-threshold`)?.value)||0;
+    if (!bag && !pallet && !bulka) return; // no pricing entered
+    const existing = DB.pricing.find(p=>p.productId===productId && p.supplierId===sup.id);
+    if (existing) {
+      existing.pricePerBag=bag; existing.pricePerPallet=pallet; existing.pricePerBulka=bulka;
+      existing.freightCost=freight; existing.freightFreeThreshold=thresh;
+      pushToSheets('pricing','update',{id:existing.id, row:existing});
+    } else {
+      const row = { id:uid(), productId, supplierId:sup.id, pricePerBag:bag, pricePerPallet:pallet, pricePerBulka:bulka, freightType:'flat', freightCost:freight, freightFreeThreshold:thresh };
+      DB.pricing.push(row);
+      pushToSheets('pricing','insert',{row});
+    }
+  });
+  saveLocal(); document.getElementById('pricing-modal')?.remove();
+  renderAdminProducts(document.getElementById('admin-panel'));
+  showToast('Pricing saved ✓');
+}
+
+// ============================================================
+// CONTACT MODAL
+// ============================================================
+function openContactModal(id) {
+  const c = id ? DB.contacts.find(x=>x.id===id) : null;
+  const ov = document.createElement('div');
+  ov.className='modal-overlay'; ov.id='contact-modal';
+  ov.innerHTML = `<div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">${c?'Edit':'Add'} Contact</div>
+    <div class="fg"><label>Name</label><input class="inp" id="cf-name"  value="${c?.name||''}"></div>
+    <div class="fg"><label>Email</label><input class="inp" id="cf-email" value="${c?.email||''}" type="email"></div>
+    <div class="fg"><label>Phone</label><input class="inp" id="cf-phone" value="${c?.phone||''}"></div>
+    <div class="fg"><label>Role</label><input class="inp" id="cf-role"  value="${c?.role||''}" placeholder="e.g. Project Manager, Yard Manager"></div>
+    <label class="check-row"><input type="checkbox" id="cf-fav" ${c?.isFavourite?'checked':''}> Show as favourite CC option</label>
+    <div class="row" style="gap:8px;margin-top:12px">
+      <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('contact-modal').remove()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveContact('${id||''}')">Save</button>
+    </div></div>`;
+  document.body.appendChild(ov);
+}
+
+function saveContact(id) {
+  const obj = {
+    name: document.getElementById('cf-name')?.value||'',
+    email: document.getElementById('cf-email')?.value||'',
+    phone: document.getElementById('cf-phone')?.value||'',
+    role: document.getElementById('cf-role')?.value||'',
+    isFavourite: document.getElementById('cf-fav')?.checked||false
+  };
+  if (!obj.name) { showToast('Name required'); return; }
+  if (id) {
+    const i = DB.contacts.findIndex(c=>c.id===id);
+    if (i>=0) DB.contacts[i] = {...DB.contacts[i], ...obj};
+    pushToSheets('contacts','update',{id, row:obj});
+  } else {
+    obj.id = uid(); DB.contacts.push(obj);
+    pushToSheets('contacts','insert',{row:obj});
+  }
+  saveLocal(); document.getElementById('contact-modal')?.remove();
+  renderAdminContacts(document.getElementById('admin-panel'));
+  showToast('Contact saved ✓');
+}
+
+function deleteContact(id) {
+  if (!confirm('Delete contact?')) return;
+  DB.contacts = DB.contacts.filter(c=>c.id!==id);
+  selectedCCs.delete(id);
+  saveLocal(); pushToSheets('contacts','delete',{id});
+  renderAdminContacts(document.getElementById('admin-panel'));
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadLocal();
+renderCurrentPage();
+updateBadge();
+// Attempt sync on load if script URL is set
+if (getSetting('scriptUrl')) setTimeout(syncFromSheets, 800);
+</script>
+</body>
+</html>
