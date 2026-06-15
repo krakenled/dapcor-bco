@@ -202,6 +202,17 @@ textarea.inp{resize:vertical;min-height:70px}
 
 /* WARNING */
 .warning{background:rgba(234,179,8,.1);border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--yellow);margin-bottom:10px}
+
+/* BROADCAST */
+.bc-card{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:10px;border:1px solid var(--border)}
+.bc-card.open{border-color:var(--green)}
+.bc-card.closed{opacity:.65}
+.bc-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+.bc-status.open{background:var(--green-bg);color:var(--green)}
+.bc-status.closed{background:var(--card2);color:var(--text3)}
+.bc-item{background:var(--card2);border-radius:8px;padding:8px 10px;margin-bottom:5px;font-size:12px}
+.bc-join-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:var(--primary-bg);color:var(--primary);font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--primary)}
+.bc-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse .9s infinite;display:inline-block}
 </style>
 </head>
 <body>
@@ -220,14 +231,16 @@ textarea.inp{resize:vertical;min-height:70px}
   </div>
 
   <div class="content">
-    <div id="page-browse" class="page active"></div>
-    <div id="page-detail" class="page"></div>
-    <div id="page-cart"   class="page"></div>
-    <div id="page-order"  class="page"></div>
-    <div id="page-admin"  class="page"></div>
+    <div id="page-browse"    class="page active"></div>
+    <div id="page-detail"    class="page"></div>
+    <div id="page-cart"      class="page"></div>
+    <div id="page-order"     class="page"></div>
+    <div id="page-broadcast" class="page"></div>
+    <div id="page-submit"    class="page"></div>
+    <div id="page-admin"     class="page"></div>
   </div>
 
-  <nav class="nav">
+  <nav class="nav" style="font-size:9px">
     <button class="nav-btn active" id="nav-browse" onclick="nav('browse')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Browse
     </button>
@@ -235,8 +248,16 @@ textarea.inp{resize:vertical;min-height:70px}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Order
       <span class="badge" id="cart-badge" style="display:none">0</span>
     </button>
+    <button class="nav-btn" id="nav-broadcast" onclick="nav('broadcast')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 12.3 19.79 19.79 0 0 1 1.87 3.69 2 2 0 0 1 3.84 1.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Board
+      <span class="badge" id="bc-badge" style="display:none">0</span>
+    </button>
     <button class="nav-btn" id="nav-order" onclick="nav('order')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Send
+    </button>
+    <button class="nav-btn" id="nav-submit" onclick="nav('submit')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>Suggest
+      <span class="badge" id="submit-badge" style="display:none">0</span>
     </button>
     <button class="nav-btn" id="nav-admin" onclick="nav('admin')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>Admin
@@ -278,7 +299,47 @@ const SEED_SUPPLIERS = [
     website:'', repName:'', address:'Sydney NSW',
     hasAccount:false, accountNumber:'', creditTerms:'COD', tradingHours:'Mon–Fri 7am–4pm',
     minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:10, maxLoadKg:10000,
-    hasCrane:false, hasForklift:true, notes:'' }
+    hasCrane:false, hasForklift:true, notes:'' },
+  { id:'sup-ardex', name:'Ardex', phone:'1800 224 070', email:'orders@ardex.com.au',
+    website:'https://www.ardex.com.au', repName:'', address:'Villawood NSW',
+    hasAccount:true, accountNumber:'DAP-001', creditTerms:'30 days', tradingHours:'Mon–Fri 7am–5pm',
+    minOrderValue:0, freeFreightThreshold:500, maxPalletSpaces:12, maxLoadKg:12000,
+    hasCrane:false, hasForklift:true, notes:'Account manager: contact via website' },
+  { id:'sup-hwgeneral', name:'Hardware & General', phone:'02 9555 0100', email:'sales@hardwaregeneral.com.au',
+    website:'', repName:'Steve', address:'Marrickville NSW',
+    hasAccount:true, accountNumber:'DAP-HG-22', creditTerms:'30 days', tradingHours:'Mon–Fri 6:30am–5pm, Sat 7am–1pm',
+    minOrderValue:0, freeFreightThreshold:500, maxPalletSpaces:8, maxLoadKg:8000,
+    hasCrane:false, hasForklift:true, notes:'Free freight over $500' },
+  { id:'sup-komerco', name:'Komerco', phone:'', email:'orders@komerco.com.au',
+    website:'https://www.komerco.com.au', repName:'', address:'G04/89-99 Princes Highway, Kogarah NSW 2217',
+    hasAccount:true, accountNumber:'110303', creditTerms:'30 days', tradingHours:'Mon–Fri 7am–4pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:6, maxLoadKg:6000,
+    hasCrane:false, hasForklift:false, notes:'Delivery $50 flat. SikaFlex and sealant products.' },
+  { id:'sup-ardex', name:'Ardex', phone:'1300 788 780', email:'orders@ardex.com.au',
+    website:'https://www.ardex.com.au', repName:'Wade Bennett', address:'2 Buda Way, Kemps Creek NSW 2178',
+    hasAccount:true, accountNumber:'141102', creditTerms:'30 days', tradingHours:'Mon–Fri 7am–5pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:12, maxLoadKg:12000,
+    hasCrane:false, hasForklift:true, notes:'35% discount off list price. Standard freight $50. NSW Distribution Centre.' },
+  { id:'sup-parchem', name:'Parchem (Fosroc)', phone:'1300 576 758', email:'orders@parchem.com.au',
+    website:'https://www.parchem.com.au', repName:'', address:'64 Elizabeth St, Wetherill Park NSW 2164',
+    hasAccount:true, accountNumber:'823027', creditTerms:'30 days', tradingHours:'Mon–Fri 7am–5pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:10, maxLoadKg:10000,
+    hasCrane:false, hasForklift:true, notes:'Fosroc products. Freight approx $81.82.' },
+  { id:'sup-skippens', name:'Skippens Landscape & Building Supplies', phone:'02 9661 020', email:'accounts@skippens.com.au',
+    website:'', repName:'Jordan', address:'PO Box 361, Maroubra NSW 2035',
+    hasAccount:true, accountNumber:'DAPCOR', creditTerms:'30 days', tradingHours:'Mon–Sat 6am–3pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:8, maxLoadKg:8000,
+    hasCrane:true, hasForklift:true, notes:'Delivery Area 2 $70, Area 3 $95. HIAB fee $70 one setup. 15% handling on returned goods.' },
+  { id:'sup-kims-tiling', name:"Kim's Tiling Supplies", phone:'', email:'kimsonline@tilemarket.com.au',
+    website:'https://www.kimstilingsupplies.com.au', repName:'', address:'30B Legge St, Roselands NSW 2196',
+    hasAccount:false, accountNumber:'', creditTerms:'COD', tradingHours:'Mon–Fri 10am–4pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:4, maxLoadKg:4000,
+    hasCrane:false, hasForklift:false, notes:'Click & collect available. Waterproofing accessories and angles.' },
+  { id:'sup-hwgeneral', name:'Hardware & General', phone:'02 8456 1188', email:'accounts@hg.com.au',
+    website:'https://www.hg.com.au', repName:'William / Greg', address:'702-704 Pittwater Rd, Brookvale NSW 2100',
+    hasAccount:true, accountNumber:'225571', creditTerms:'30 days', tradingHours:'Mon–Fri 6:30am–5pm, Sat 7am–1pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:10, maxLoadKg:10000,
+    hasCrane:false, hasForklift:true, notes:'H&G Peakhurst branch. Various discounts per product. Sand 10% disc, cement 3.21% disc.' }
 ];
 
 const SEED_PRODUCTS = [
@@ -301,24 +362,139 @@ const SEED_PRODUCTS = [
   { id:'prod-bluemetal', name:'Blue Metal 20mm', category:'Aggregate', brand:'', description:'Crushed blue metal aggregate 20mm, suits concrete, drainage and base course.',
     barcode:'', productUrl:'', hasLoose:false, hasPallet:false, hasBulka:true,
     unitsPerPallet:0, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:1,
-    palletWeightKg:0, bagWeightKg:20, bulkaWeightKg:1000, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'', imageUrl:'' }
+    palletWeightKg:0, bagWeightKg:20, bulkaWeightKg:1000, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-la55', name:'Renderoc LA55 20kg', category:'Waterproofing', brand:'Fosroc', description:'Fosroc Renderoc LA55 liquid admixture 20kg. Used for bonding coat and waterproofing.',
+    barcode:'', productUrl:'', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:20, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:20, bagWeightKg:20, bulkaWeightKg:0, palletL:1200, palletW:800, palletH:1000, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-wpm270', name:'WPM270 20L pail', category:'Waterproofing', brand:'Ardex', description:'Ardex WPM270 waterproofing membrane 20L pail.',
+    barcode:'9315021111583', productUrl:'https://www.ardex.com.au', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:10, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:20, bagWeightKg:20, bulkaWeightKg:0, palletL:1200, palletW:800, palletH:1000, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-wpm300', name:'WPM300 Grey 20L kit', category:'Waterproofing', brand:'Ardex', description:'Ardex WPM300 grey waterproofing membrane 20L kit.',
+    barcode:'', productUrl:'https://www.ardex.com.au', hasLoose:true, hasPallet:false, hasBulka:false,
+    unitsPerPallet:0, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:0, bagWeightKg:20, bulkaWeightKg:0, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-wpm1000', name:'WPM1000 Undertile Sheet 20mx1.4m', category:'Waterproofing', brand:'Ardex', description:'Ardex WPM1000 undertile waterproofing sheet 20mx1.4mx1mm.',
+    barcode:'9421031332808', productUrl:'https://www.ardex.com.au', hasLoose:true, hasPallet:false, hasBulka:false,
+    unitsPerPallet:0, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:0, bagWeightKg:5, bulkaWeightKg:0, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-ra050', name:'RA050 Grey 600ml sausage', category:'Waterproofing', brand:'Ardex', description:'Ardex RA050 grey sealant 600ml sausage.',
+    barcode:'9315021121551', productUrl:'https://www.ardex.com.au', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:20, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:12, bagWeightKg:0.6, bulkaWeightKg:0, palletL:600, palletW:400, palletH:400, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-ca20p', name:'CA20P Plus White 310ml tube', category:'Waterproofing', brand:'Ardex', description:'Ardex CA20P Plus white silicone 310ml tube.',
+    barcode:'9315021121728', productUrl:'https://www.ardex.com.au', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:25, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:8, bagWeightKg:0.31, bulkaWeightKg:0, palletL:600, palletW:400, palletH:400, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-sikaflex-beige', name:'SikaFlex Pro SSG Japan Beige 600ml', category:'Waterproofing', brand:'Sika', description:'SikaFlex Pro SSG Japan Beige 600ml sausage. From Komerco.',
+    barcode:'', productUrl:'', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:20, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:12, bagWeightKg:0.6, bulkaWeightKg:0, palletL:600, palletW:400, palletH:400, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-pvc-angle', name:'PVC Waterproofing Angle 40x50x2x3000mm', category:'Waterproofing', brand:'', description:'PVC waterproofing angle strip 40x50x2x3000mm. 3 sizes available.',
+    barcode:'M010-00071', productUrl:'', hasLoose:true, hasPallet:false, hasBulka:false,
+    unitsPerPallet:0, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:0, bagWeightKg:2.6, bulkaWeightKg:0, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-fosroc-st06-liquid', name:'Renderoc ST06 Liquid PTA 2L', category:'Structural Repair', brand:'Fosroc', description:'Fosroc Renderoc ST06 liquid PTA component 2L.',
+    barcode:'', productUrl:'', hasLoose:true, hasPallet:false, hasBulka:false,
+    unitsPerPallet:0, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:0, bagWeightKg:2, bulkaWeightKg:0, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-fosroc-st06-powder', name:'Renderoc ST06 Powder PTB 10kg', category:'Structural Repair', brand:'Fosroc', description:'Fosroc Renderoc ST06 powder PTB component 10kg.',
+    barcode:'', productUrl:'', hasLoose:true, hasPallet:false, hasBulka:false,
+    unitsPerPallet:0, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:0, bagWeightKg:10, bulkaWeightKg:0, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-cemtop-gp', name:'Cemtop GP Advanced 20kg', category:'Structural Repair', brand:'Fosroc', description:'Fosroc Cemtop GP Advanced cementitious repair mortar 20kg.',
+    barcode:'', productUrl:'', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:48, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:20, bagWeightKg:20, bulkaWeightKg:0, palletL:1200, palletW:800, palletH:1200, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-renderoc-hb40', name:'Renderoc HB40 20kg', category:'Structural Repair', brand:'Fosroc', description:'Fosroc Renderoc HB40 high-build repair mortar 20kg.',
+    barcode:'', productUrl:'', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:48, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:20, bagWeightKg:20, bulkaWeightKg:0, palletL:1200, palletW:800, palletH:1200, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-white-brickies', name:'White Brickies Sand 20kg bag', category:'Sand', brand:'', description:'White brickies sand 20kg bag. For bricklaying and pointing.',
+    barcode:'WBSBAG20', productUrl:'', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:60, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:20, bagWeightKg:20, bulkaWeightKg:0, palletL:1200, palletW:1200, palletH:1200, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-off-white-cement', name:'Off White Cement 20kg bag', category:'Cement', brand:'', description:'Off white cement 20kg bag for brickwork and rendering.',
+    barcode:'OWC20', productUrl:'', hasLoose:true, hasPallet:true, hasBulka:false,
+    unitsPerPallet:72, palletFreightScore:1, looseFreightScore:0.1, bulkaFreightScore:0,
+    palletWeightKg:20, bagWeightKg:20, bulkaWeightKg:0, palletL:1200, palletW:1200, palletH:1200, requiresLift:false, liftNotes:'', imageUrl:'' },
+  { id:'prod-crusher-dust', name:'Crusher Dust Bulk Bag', category:'Sand', brand:'', description:'Crusher dust bulk bag approx 1 tonne. Compactable fill.',
+    barcode:'100000000427', productUrl:'', hasLoose:false, hasPallet:false, hasBulka:true,
+    unitsPerPallet:0, palletFreightScore:1, looseFreightScore:0, bulkaFreightScore:1,
+    palletWeightKg:0, bagWeightKg:0, bulkaWeightKg:1000, palletL:0, palletW:0, palletH:0, requiresLift:false, liftNotes:'Requires HIAB', imageUrl:'' },
+  { id:'prod-garden-mix', name:'Premium Garden Mix 1m³ bag', category:'Aggregate', brand:'', description:'Premium garden mix recycled 1 cubic metre bag.',
+    barcode:'GMBAG1', productUrl:'', hasLoose:true, hasPallet:false, hasBulka:false,
+    unitsPerPallet:0, palletFreightScore:1, looseFreightScore:1, bulkaFreightScore:0,
+    palletWeightKg:0, bagWeightKg:400, bulkaWeightKg:0, palletL:0, palletW:0, palletH:0, requiresLift:true, liftNotes:'Requires HIAB delivery', imageUrl:'' }
 ];
 
 // pricing: productId, supplierId, pricePerBag, pricePerPallet, pricePerBulka, freightType, freightCost, freightFreeThreshold
 const SEED_PRICING = [
   // Sandhub
-  { id:'pr-1', productId:'prod-sand-syd', supplierId:'sup-sandhub', pricePerBag:0, pricePerPallet:0, pricePerBulka:115, freightType:'flat', freightCost:150, freightFreeThreshold:0 },
-  { id:'pr-2', productId:'prod-cem-gp',   supplierId:'sup-sandhub', pricePerBag:9.50, pricePerPallet:798, pricePerBulka:0, freightType:'flat', freightCost:150, freightFreeThreshold:0 },
-  { id:'pr-3', productId:'prod-con-hi',   supplierId:'sup-sandhub', pricePerBag:11.48, pricePerPallet:551.04, pricePerBulka:0, freightType:'flat', freightCost:150, freightFreeThreshold:0 },
+  { id:'pr-1', productId:'prod-sand-syd', supplierId:'sup-sandhub', pricePerBag:0, pricePerPallet:0, pricePerBulka:115, freightType:'flat', freightCost:150, freightFreeThreshold:0, truckCapacity:8 },
+  { id:'pr-2', productId:'prod-cem-gp',   supplierId:'sup-sandhub', pricePerBag:9.50, pricePerPallet:798, pricePerBulka:0, freightType:'flat', freightCost:150, freightFreeThreshold:0, truckCapacity:80 },
+  { id:'pr-3', productId:'prod-con-hi',   supplierId:'sup-sandhub', pricePerBag:11.48, pricePerPallet:551.04, pricePerBulka:0, freightType:'flat', freightCost:150, freightFreeThreshold:0, truckCapacity:48 },
   // Kim's
-  { id:'pr-4', productId:'prod-sand-syd', supplierId:'sup-kims', pricePerBag:0, pricePerPallet:0, pricePerBulka:99, freightType:'flat', freightCost:250, freightFreeThreshold:0 },
-  { id:'pr-5', productId:'prod-cem-gp',   supplierId:'sup-kims', pricePerBag:9.60, pricePerPallet:806.40, pricePerBulka:0, freightType:'flat', freightCost:250, freightFreeThreshold:0 },
-  { id:'pr-6', productId:'prod-con-rapid', supplierId:'sup-kims', pricePerBag:11.50, pricePerPallet:552, pricePerBulka:0, freightType:'flat', freightCost:250, freightFreeThreshold:0 }
+  { id:'pr-4', productId:'prod-sand-syd', supplierId:'sup-kims', pricePerBag:0, pricePerPallet:0, pricePerBulka:99, freightType:'flat', freightCost:250, freightFreeThreshold:0, truckCapacity:11 },
+  { id:'pr-5', productId:'prod-cem-gp',   supplierId:'sup-kims', pricePerBag:9.60, pricePerPallet:806.40, pricePerBulka:0, freightType:'flat', freightCost:250, freightFreeThreshold:0, truckCapacity:72 },
+  { id:'pr-6', productId:'prod-con-rapid', supplierId:'sup-kims', pricePerBag:11.50, pricePerPallet:552, pricePerBulka:0, freightType:'flat', freightCost:250, freightFreeThreshold:0, truckCapacity:48 },
+  // H&G real pricing from invoices
+  { id:'pr-7', productId:'prod-sand-syd', supplierId:'sup-hwgeneral', pricePerBag:7.48, pricePerPallet:448.80, pricePerBulka:0, freightType:'flat', freightCost:0, freightFreeThreshold:0, truckCapacity:175 },
+  { id:'pr-8', productId:'prod-cem-gp', supplierId:'sup-hwgeneral', pricePerBag:9.68, pricePerPallet:697.00, pricePerBulka:0, freightType:'flat', freightCost:0, freightFreeThreshold:0, truckCapacity:72 },
+  { id:'pr-9', productId:'prod-white-brickies', supplierId:'sup-skippens', pricePerBag:6.50, pricePerPallet:390, pricePerBulka:0, freightType:'flat', freightCost:95, freightFreeThreshold:0, truckCapacity:30 },
+  { id:'pr-10', productId:'prod-off-white-cement', supplierId:'sup-skippens', pricePerBag:13.50, pricePerPallet:972, pricePerBulka:0, freightType:'flat', freightCost:95, freightFreeThreshold:0, truckCapacity:20 },
+  { id:'pr-11', productId:'prod-crusher-dust', supplierId:'sup-sandhub', pricePerBag:0, pricePerPallet:0, pricePerBulka:67.03, freightType:'flat', freightCost:225, freightFreeThreshold:0, truckCapacity:6 },
+  { id:'pr-12', productId:'prod-garden-mix', supplierId:'sup-skippens', pricePerBag:133.50, pricePerPallet:0, pricePerBulka:0, freightType:'flat', freightCost:95, freightFreeThreshold:0, truckCapacity:4 },
+  // Ardex products
+  { id:'pr-13', productId:'prod-wpm270', supplierId:'sup-ardex', pricePerBag:289.13, pricePerPallet:2891.30, pricePerBulka:0, freightType:'flat', freightCost:50, freightFreeThreshold:0, truckCapacity:64 },
+  { id:'pr-14', productId:'prod-wpm300', supplierId:'sup-ardex', pricePerBag:513.44, pricePerPallet:0, pricePerBulka:0, freightType:'flat', freightCost:50, freightFreeThreshold:0, truckCapacity:10 },
+  { id:'pr-15', productId:'prod-wpm1000', supplierId:'sup-ardex', pricePerBag:1990.75, pricePerPallet:0, pricePerBulka:0, freightType:'flat', freightCost:50, freightFreeThreshold:0, truckCapacity:50 },
+  { id:'pr-16', productId:'prod-ra050', supplierId:'sup-ardex', pricePerBag:19.27, pricePerPallet:385.40, pricePerBulka:0, freightType:'flat', freightCost:50, freightFreeThreshold:0, truckCapacity:40 },
+  { id:'pr-17', productId:'prod-ca20p', supplierId:'sup-ardex', pricePerBag:23.46, pricePerPallet:586.50, pricePerBulka:0, freightType:'flat', freightCost:50, freightFreeThreshold:0, truckCapacity:60 },
+  // Komerco products
+  { id:'pr-18', productId:'prod-sikaflex-beige', supplierId:'sup-komerco', pricePerBag:17.95, pricePerPallet:359, pricePerBulka:0, freightType:'flat', freightCost:50, freightFreeThreshold:0, truckCapacity:100 },
+  // Kim's tiling products
+  { id:'pr-19', productId:'prod-pvc-angle', supplierId:'sup-kims-tiling', pricePerBag:11.90, pricePerPallet:0, pricePerBulka:0, freightType:'flat', freightCost:0, freightFreeThreshold:0, truckCapacity:10 },
+  // Parchem Fosroc products
+  { id:'pr-20', productId:'prod-la55', supplierId:'sup-parchem', pricePerBag:47.69, pricePerPallet:953.80, pricePerBulka:0, freightType:'flat', freightCost:81.82, freightFreeThreshold:0, truckCapacity:50 },
+  { id:'pr-21', productId:'prod-cemtop-gp', supplierId:'sup-parchem', pricePerBag:36.00, pricePerPallet:1728, pricePerBulka:0, freightType:'flat', freightCost:81.82, freightFreeThreshold:0, truckCapacity:48 },
+  { id:'pr-22', productId:'prod-renderoc-hb40', supplierId:'sup-parchem', pricePerBag:58.80, pricePerPallet:2822.40, pricePerBulka:0, freightType:'flat', freightCost:81.82, freightFreeThreshold:0, truckCapacity:48 },
+  { id:'pr-23', productId:'prod-fosroc-st06-liquid', supplierId:'sup-parchem', pricePerBag:56.37, pricePerPallet:0, pricePerBulka:0, freightType:'flat', freightCost:81.82, freightFreeThreshold:0, truckCapacity:20 },
+  { id:'pr-24', productId:'prod-fosroc-st06-powder', supplierId:'sup-parchem', pricePerBag:19.88, pricePerPallet:0, pricePerBulka:0, freightType:'flat', freightCost:81.82, freightFreeThreshold:0, truckCapacity:40 }
 ];
 
 const SEED_CONTACTS = [
   { id:'ct-1', name:'Accounts', email:'accounts@dapcor.com.au', phone:'02 9316 7866', role:'Accounts', isFavourite:true },
-  { id:'ct-2', name:'Yard Manager', email:'yard@dapcor.com.au', phone:'', role:'Yard', isFavourite:true }
+  { id:'ct-2', name:'Ben Lawrence', email:'ben@dapcor.com.au', phone:'0484 548 274', role:'Yard Manager', isFavourite:true },
+  { id:'ct-3', name:'Mitchell Reilly', email:'mitchellreilly@dapcor.com.au', phone:'0425 424 755', role:'Project Manager', isFavourite:true },
+  { id:'ct-4', name:'Alexander Han', email:'alexander@dapcor.com.au', phone:'0434 612 876', role:'Assistant Project Manager', isFavourite:false },
+  { id:'ct-5', name:'Damon Riordan', email:'damon@dapcor.com.au', phone:'0497 355 880', role:'Site Foreman', isFavourite:false },
+  { id:'ct-6', name:'Ayden Murrell', email:'ayden@dapcor.com.au', phone:'0409 244 148', role:'Leading Hand', isFavourite:false }
+];
+
+const SEED_JOBSITES = [
+  { id:'site-1', address:'244 Bulwarra Rd, Ultimo NSW 2007', procore:'2024-081', suffix:'A', po:'2024-081-A', pm:'Mitchell Reilly', apm:'Alexander Han', foreman:'Damon Riordan', leadingHand:'Ayden Murrell', liveSite:true, notes:'Occupied building — residents present. No deliveries before 7:30am.' },
+  { id:'site-2', address:'22 Jenkins St, Cammeray NSW 2062', procore:'2024-092', suffix:'A', po:'2024-092-A', pm:'Mitchell Reilly', apm:'Jack Dwyer', foreman:'Milan Soni', leadingHand:'Mattia Tomasin', liveSite:true, notes:'Strata building. Check with concierge on arrival.' }
+];
+
+const SEED_USERS = [
+  { id:'usr-1', name:'Mitchell Reilly', position:'Project Manager', email:'mitchellreilly@dapcor.com.au', phone:'0425 424 755', accessLevel:3 },
+  { id:'usr-2', name:'Alexander Han', position:'Assistant Project Manager', email:'alexander@dapcor.com.au', phone:'0434 612 876', accessLevel:2 },
+  { id:'usr-3', name:'Damon Riordan', position:'Site Foreman', email:'damon@dapcor.com.au', phone:'0497 355 880', accessLevel:1 },
+  { id:'usr-4', name:'Ayden Murrell', position:'Leading Hand', email:'ayden@dapcor.com.au', phone:'0409 244 148', accessLevel:1 }
+];
+
+const SEED_QUOTES = [
+  { id:'qt-1', product:'Ardex LA55 Liquid Adhesive', productId:'prod-la55', requestDate:'2026-06-13', status:'partial',
+    suppliers:[
+      { supplierId:'sup-ardex', name:'Ardex', email:'orders@ardex.com.au', replied:true, price:42.50, unit:'per unit', quotedDate:'2026-06-14', notes:'Price valid 30 days. Min order 10 units.' },
+      { supplierId:'sup-hwgeneral', name:'Hardware & General', email:'sales@hardwaregeneral.com.au', replied:true, price:38.90, unit:'per unit', quotedDate:'2026-06-14', notes:'Free freight on orders over $500.' },
+      { supplierId:'sup-komerco', name:'Komerco', email:'orders@komerco.com.au', replied:true, price:40.00, unit:'per unit', quotedDate:'2026-06-15', notes:'Can deliver same day if ordered before 10am.' },
+      { supplierId:'sup-sandhub', name:'Sandhub', email:'orders@sandhub.com.au', replied:false, price:0, unit:'', quotedDate:'', notes:'' },
+      { supplierId:'sup-kims', name:"Kim's Building Supplies", email:'orders@kimsbuilding.com.au', replied:false, price:0, unit:'', quotedDate:'', notes:'' }
+    ]
+  }
 ];
 
 // ============================================================
@@ -570,17 +746,19 @@ function goBack() {
 
 function renderCurrentPage() {
   if (currentPage === 'browse') renderBrowse();
-  else if (currentPage === 'detail') renderDetail();
-  else if (currentPage === 'cart')   renderCart();
-  else if (currentPage === 'order')  renderOrder();
-  else if (currentPage === 'admin')  renderAdmin();
+  else if (currentPage === 'detail')    renderDetail();
+  else if (currentPage === 'cart')      renderCart();
+  else if (currentPage === 'order')     renderOrder();
+  else if (currentPage === 'broadcast') renderBroadcast();
+  else if (currentPage === 'submit')    renderSubmit();
+  else if (currentPage === 'admin')     renderAdmin();
   updateHeader();
   updateBadge();
 }
 
 function updateHeader() {
-  const titles = { browse:'Dapcor BCO', cart:'Order Builder', order:'Send Order', admin:'Admin', detail:'' };
-  const subs   = { browse:'Browse · Compare · Order', cart:'Select suppliers & calculate freight', order:'Review & send', admin:'Manage data & settings', detail:'' };
+  const titles = { browse:'Dapcor BCO', cart:'Order Builder', order:'Send Order', admin:'Admin', detail:'', broadcast:'Broadcast Board', submit:'Suggest a Supplier' };
+  const subs   = { browse:'Browse · Compare · Order', cart:'Select suppliers & calculate freight', order:'Review & send', admin:'Manage data & settings', detail:'', broadcast:'Upcoming deliveries — join & split freight', submit:'Help grow our supplier network' };
   document.getElementById('hdr-title').textContent = titles[currentPage] || 'Dapcor BCO';
   document.getElementById('hdr-sub').textContent   = subs[currentPage]  || '';
 }
@@ -589,6 +767,18 @@ function updateBadge() {
   const total = cart.reduce((s,i) => s + i.qty, 0);
   const b = document.getElementById('cart-badge');
   if (b) { b.style.display = total > 0 ? 'block' : 'none'; b.textContent = total; }
+  // broadcast badge — open broadcasts
+  try {
+    const opens = getBroadcasts().filter(bc => bc.status === 'open').length;
+    const bb = document.getElementById('bc-badge');
+    if (bb) { bb.style.display = opens > 0 ? 'block' : 'none'; bb.textContent = opens; }
+  } catch(e) {}
+  // submit badge — pending supplier submissions
+  try {
+    const pending = getSubmissions().filter(s => s.status === 'pending').length;
+    const sb = document.getElementById('submit-badge');
+    if (sb) { sb.style.display = pending > 0 ? 'block' : 'none'; sb.textContent = pending; }
+  } catch(e) {}
 }
 
 // ============================================================
@@ -605,10 +795,43 @@ function showToast(msg) {
 // ============================================================
 // BROWSE PAGE
 // ============================================================
+const CAT_ICONS = {
+  'Sand': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M3 20h18M5 20V10l7-7 7 7v10"/><path d="M9 20v-5h6v5"/></svg>`,
+  'Cement': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`,
+  'Concrete': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M2 20h20M4 20V8l8-5 8 5v12"/><rect x="9" y="13" width="6" height="7"/></svg>`,
+  'Aggregate': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><circle cx="8" cy="14" r="3"/><circle cx="15" cy="10" r="4"/><circle cx="18" cy="17" r="2.5"/><circle cx="5" cy="19" r="2"/></svg>`,
+  'Timber': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><rect x="2" y="8" width="20" height="4" rx="1"/><rect x="2" y="14" width="20" height="4" rx="1"/><path d="M6 8V6M12 8V5M18 8V7M6 18v2M12 18v3M18 18v2"/></svg>`,
+  'Waterproofing': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M12 2s-8 6-8 12a8 8 0 0 0 16 0c0-6-8-12-8-12z"/></svg>`,
+  'Protection': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M12 2l7 4v6c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-4z"/></svg>`,
+  'default': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`
+};
+
+function getCatIcon(cat) { return CAT_ICONS[cat] || CAT_ICONS['default']; }
+
 function renderBrowse() {
   const el = document.getElementById('page-browse');
-  const cats = getCategories();
   const query = el.querySelector('#browse-search')?.value || '';
+
+  if (selectedCategory === 'All' && !query) {
+    const cats = getCategories().filter(c => c !== 'All');
+    el.innerHTML = `
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="inp" id="browse-search" placeholder="Search products…" value="" oninput="onBrowseSearch()" autocomplete="off">
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase">Browse by category</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        ${cats.map(c => {
+          const count = DB.products.filter(p => p.category === c).length;
+          return `<div class="card card-click" onclick="selectCat('${c}')" style="display:flex;flex-direction:column;align-items:center;padding:18px 12px;text-align:center">
+            <div style="color:var(--primary);margin-bottom:10px">${getCatIcon(c)}</div>
+            <div style="font-size:14px;font-weight:600;margin-bottom:3px">${c}</div>
+            <div style="font-size:12px;color:var(--text3)">${count} product${count !== 1 ? 's' : ''}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    return;
+  }
 
   let mats = DB.products;
   if (selectedCategory !== 'All') mats = mats.filter(p => p.category === selectedCategory);
@@ -621,12 +844,17 @@ function renderBrowse() {
   el.innerHTML = `
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input class="inp" id="browse-search" placeholder="Search materials…" value="${query}" oninput="onBrowseSearch()" autocomplete="off">
+      <input class="inp" id="browse-search" placeholder="Search products…" value="${query}" oninput="onBrowseSearch()" autocomplete="off">
     </div>
-    <div class="cat-scroll" id="cat-scroll">
-      ${cats.map(c => `<div class="cat-chip ${c===selectedCategory?'active':''}" onclick="selectCat('${c}')">${c}</div>`).join('')}
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <button class="btn btn-ghost btn-sm" onclick="selectCat('All')" style="padding:6px 10px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        All
+      </button>
+      <span style="font-size:14px;font-weight:600">${selectedCategory}</span>
+      <span style="font-size:12px;color:var(--text3)">${mats.length} product${mats.length !== 1 ? 's' : ''}</span>
     </div>
-    ${mats.length === 0 ? `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p>Nothing found</p><small>Try a different search or category</small></div>` : ''}
+    ${mats.length === 0 ? `<div class="empty"><p>Nothing found</p></div>` : ''}
     ${mats.map(prod => renderProductCard(prod)).join('')}
   `;
 }
@@ -658,37 +886,47 @@ function renderProductCard(prod) {
   if (prod.hasLoose)  orderTypes.push('bag');
   if (prod.hasPallet) orderTypes.push('pallet');
   if (prod.hasBulka)  orderTypes.push('bulka');
+  const ot = orderTypes[0] || 'pallet';
 
-  // Best prices per type
-  const bestPrices = orderTypes.map(ot => {
-    const prices = pricings.map(pr => ({ sup: getSup(pr.supplierId), price: packPrice(pr, ot) }))
-      .filter(x => x.price > 0);
-    if (!prices.length) return null;
-    prices.sort((a,b) => a.price - b.price);
-    return { ot, sup: prices[0].sup, price: prices[0].price };
-  }).filter(Boolean);
+  const supRows = pricings.map(pr => {
+    const sup = getSup(pr.supplierId);
+    const productPrice = packPrice(pr, ot);
+    if (!productPrice || !sup) return null;
+    const cap = pr.truckCapacity || 8;
+    const freightShare = pr.freightCost > 0 ? (pr.freightCost / cap) : 0;
+    const deliveredPerUnit = productPrice + freightShare;
+    return { sup, pr, productPrice, freightShare, deliveredPerUnit };
+  }).filter(Boolean).sort((a,b) => a.deliveredPerUnit - b.deliveredPerUnit);
 
   return `
-    <div class="card card-click" onclick="openDetail('${prod.id}')">
-      <div class="row-between mb4">
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;cursor:pointer" onclick="openDetail('${prod.id}')">
         <div>
           <div class="pc-name">${prod.name}</div>
           <div class="pc-meta">
-            <span class="chip chip-gray">${prod.category}</span>
             ${prod.brand ? `<span class="t-xs t-dim">${prod.brand}</span>` : ''}
-            ${inCart ? `<span class="chip chip-o">In Order</span>` : ''}
+            ${inCart ? `<span class="chip chip-o">In order</span>` : ''}
           </div>
         </div>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
       </div>
-      <div class="pc-prices">
-        ${bestPrices.map(bp => `
-          <div class="pp best">
-            <div class="pp-name">${bp.ot === 'bulka' ? 'Bulka' : bp.ot === 'pallet' ? 'Pallet' : 'Bag'} · ${bp.sup?.name || '?'}</div>
-            <div class="pp-val t-green">${fmt(bp.price)}</div>
-          </div>`).join('')}
-        ${pricings.length === 0 ? `<span class="t-xs t-dim">No pricing yet</span>` : ''}
-      </div>
+      ${supRows.length === 0 ? `<div class="t-xs t-dim">No suppliers yet</div>` : ''}
+      ${supRows.map((row, i) => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:8px;margin-bottom:6px;${i===0?'border:1px solid var(--green);':''}">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+              ${row.sup.name}
+              ${i===0 ? `<span class="chip chip-g" style="font-size:10px;padding:2px 6px">Best delivered</span>` : ''}
+            </div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">
+              Product: ${fmt(row.productPrice)} &middot; Freight: ${row.freightShare > 0 ? fmt(row.freightShare)+'/unit' : 'Free'}
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:10px">
+            <div style="font-size:15px;font-weight:700;color:${i===0?'var(--green)':'var(--text)'}">${fmt(row.deliveredPerUnit)}</div>
+            <div style="font-size:10px;color:var(--text3)">delivered</div>
+          </div>
+        </div>`).join('')}
     </div>`;
 }
 
@@ -924,6 +1162,12 @@ function renderCart() {
       </button>
     </div>
     <div class="mt8">
+      <button class="btn btn-outline btn-full" onclick="broadcastCurrentOrder()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 12.3 19.79 19.79 0 0 1 1.87 3.69 2 2 0 0 1 3.84 1.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        📡 Broadcast — Let Others Join This Truck
+      </button>
+    </div>
+    <div class="mt8">
       <button class="btn btn-outline btn-full" style="color:var(--red);border-color:var(--red)" onclick="clearCart()">Clear Order</button>
     </div>`;
 
@@ -1137,6 +1381,25 @@ function renderOrder() {
       </button>
       ${getSetting('yardEmail') ? `<button class="btn btn-ghost btn-full" onclick="sendEmail('yard')">Send to Yard (${getSetting('yardEmail')})</button>` : ''}
     </div>
+
+    <hr class="divider">
+    <div class="sec-title">📋 Request Current Price List</div>
+    <div class="t-sm t-muted mb10">Send an auto-generated email to each supplier asking for their current prices on all products. Select which suppliers to contact.</div>
+    <div id="pricelist-sup-list">
+      ${DB.suppliers.map(s => `
+        <label class="check-row">
+          <input type="checkbox" class="pl-sup-chk" value="${s.id}" checked>
+          <div>
+            <div style="font-size:13px;font-weight:600">${s.name}</div>
+            <div class="t-xs t-dim">${s.email || 'No email set'}</div>
+          </div>
+        </label>`).join('')}
+    </div>
+    <button class="btn btn-outline btn-full mt10" onclick="openPriceListModal()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+      Generate Price List Request Emails
+    </button>
+
     <div class="mt8">
       <button class="btn btn-outline btn-full" style="color:var(--red);border-color:var(--red)" onclick="clearCart()">Clear Order</button>
     </div>
@@ -1254,8 +1517,156 @@ function sendEmail(dest) {
   if (d.extraCC && dest !== 'quote') ccEmails.push(d.extraCC);
   const cc = [...new Set(ccEmails)].join(',');
 
-  const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&cc=${encodeURIComponent(cc)}&body=${encodeURIComponent(body)}`;
-  window.location.href = mailto;
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&cc=${encodeURIComponent(cc)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.open(gmailUrl, '_blank');
+}
+
+// ============================================================
+// PRICE LIST REQUEST
+// ============================================================
+function openPriceListModal() {
+  const checked = [...document.querySelectorAll('.pl-sup-chk:checked')].map(el => el.value);
+  const suppliers = DB.suppliers.filter(s => checked.includes(s.id));
+  if (!suppliers.length) { showToast('Select at least one supplier'); return; }
+
+  const noEmail = suppliers.filter(s => !s.email);
+  const withEmail = suppliers.filter(s => s.email);
+
+  document.getElementById('pl-modal')?.remove();
+  const ov = document.createElement('div');
+  ov.className = 'modal-overlay'; ov.id = 'pl-modal';
+
+  // Preview the email body for first supplier
+  const preview = buildPriceListBody(suppliers[0]);
+
+  ov.innerHTML = `<div class="modal" style="max-height:92vh;overflow-y:auto">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📋 Price List Request</div>
+
+    ${noEmail.length ? `<div class="warning mb8">⚠ ${noEmail.map(s=>s.name).join(', ')} ha${noEmail.length>1?'ve':'s'} no email address set — skip them in Admin > Suppliers.</div>` : ''}
+
+    <div class="t-sm t-muted mb10">
+      ${withEmail.length} email${withEmail.length!==1?'s':''} will be generated — one per supplier. Your mail app opens each one ready to send.
+    </div>
+
+    <div class="sec-title" style="font-size:13px">Products included (${DB.products.length})</div>
+    <div class="card-sm mb12" style="font-size:12px;color:var(--text2)">
+      ${DB.products.map(p => `• ${p.name} (${p.category})`).join('<br>')}
+    </div>
+
+    <div class="sec-title" style="font-size:13px">Email preview — ${suppliers[0]?.name}</div>
+    <div class="card-sm mb12" style="font-size:11px;white-space:pre-wrap;color:var(--text2);font-family:monospace;max-height:200px;overflow-y:auto">${preview}</div>
+
+    <div class="fg">
+      <label>From / Reply-to name</label>
+      <input class="inp" id="pl-from-name" value="${getSetting('userName')||''}">
+    </div>
+    <div class="fg">
+      <label>From / Reply-to email</label>
+      <input class="inp" id="pl-from-email" type="email" value="${getSetting('userEmail')||''}">
+    </div>
+    <div class="fg">
+      <label>Additional note to suppliers (optional)</label>
+      <textarea class="inp" id="pl-note" placeholder="e.g. We are reviewing suppliers for Q3. Please include freight rates and any volume discounts." style="min-height:60px"></textarea>
+    </div>
+
+    <div class="row" style="gap:8px;margin-top:14px">
+      <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('pl-modal').remove()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="sendPriceListEmails(${JSON.stringify(checked)})">
+        Send ${withEmail.length} Email${withEmail.length!==1?'s':''}
+      </button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+}
+
+function buildPriceListBody(sup, fromName, fromEmail, extraNote) {
+  const name    = fromName  || getSetting('userName')  || 'Procurement';
+  const email   = fromEmail || getSetting('userEmail') || '';
+  const company = getSetting('companyName') || 'Dapcor';
+  const phone   = getSetting('companyPhone') || '';
+  const date    = new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'});
+
+  let body = `Hi${sup.repName ? ' ' + sup.repName : ''},\n\n`;
+  body += `I'm reaching out on behalf of ${company} to request your current pricing on the following materials.\n`;
+  body += `We order these products regularly and would like to ensure we have up-to-date rates on file.\n`;
+  if (extraNote) body += `\n${extraNote}\n`;
+  body += `\nCould you please provide your current pricing for the items listed below, including:\n`;
+  body += `  • Price per bag / pallet / bulka bag (as applicable)\n`;
+  body += `  • Freight costs to Sydney metro\n`;
+  body += `  • Any free-freight thresholds or volume discounts\n`;
+  body += `  • Any items currently out of stock or on lead time\n`;
+  body += '\n' + '─'.repeat(44) + '\n';
+  body += 'PRODUCT LIST\n';
+  body += '─'.repeat(44) + '\n\n';
+
+  const categories = [...new Set(DB.products.map(p => p.category))].sort();
+  categories.forEach(cat => {
+    body += `${cat.toUpperCase()}\n`;
+    DB.products.filter(p => p.category === cat).forEach(prod => {
+      body += `\n  ${prod.name}`;
+      if (prod.brand) body += ` (${prod.brand})`;
+      body += '\n';
+      if (prod.description) body += `  ${prod.description}\n`;
+      const types = [];
+      if (prod.hasLoose)  types.push('loose bags');
+      if (prod.hasPallet) types.push(`pallets (${prod.unitsPerPallet || '?'} bags/pallet)`);
+      if (prod.hasBulka)  types.push('bulka bags');
+      if (types.length)   body += `  Format: ${types.join(', ')}\n`;
+
+      // Show existing price as reference if we have one
+      const existing = DB.pricing.find(pr => pr.productId === prod.id && pr.supplierId === sup.id);
+      if (existing) {
+        body += `  Current rate on file: `;
+        const parts = [];
+        if (existing.pricePerBag    > 0) parts.push(`$${Number(existing.pricePerBag).toFixed(2)}/bag`);
+        if (existing.pricePerPallet > 0) parts.push(`$${Number(existing.pricePerPallet).toFixed(2)}/pallet`);
+        if (existing.pricePerBulka  > 0) parts.push(`$${Number(existing.pricePerBulka).toFixed(2)}/bulka`);
+        body += parts.join(' · ') || 'none';
+        body += ' — please confirm or update\n';
+      } else {
+        body += `  New pricing required\n`;
+      }
+
+      body += `  Your new price: ___________________________\n`;
+      body += `  Freight:        ___________________________\n`;
+    });
+    body += '\n';
+  });
+
+  body += '─'.repeat(44) + '\n\n';
+  body += `Please reply to this email with completed pricing at your earliest convenience.\n\n`;
+  body += `Kind regards,\n${name}\n`;
+  if (phone) body += `${phone}\n`;
+  body += `${company}\n`;
+  if (email) body += `${email}\n`;
+  body += `\nDate requested: ${date}\n`;
+
+  return body;
+}
+
+function sendPriceListEmails(checkedIds) {
+  const fromName  = document.getElementById('pl-from-name')?.value  || getSetting('userName');
+  const fromEmail = document.getElementById('pl-from-email')?.value || getSetting('userEmail');
+  const note      = document.getElementById('pl-note')?.value || '';
+
+  const suppliers = DB.suppliers.filter(s => checkedIds.includes(s.id) && s.email);
+  if (!suppliers.length) { showToast('No suppliers with email addresses selected'); return; }
+
+  document.getElementById('pl-modal')?.remove();
+
+  // Open emails one at a time with a small delay so mail client can handle each
+  suppliers.forEach((sup, i) => {
+    setTimeout(() => {
+      const subject = `Price List Request — ${getSetting('companyName') || 'Dapcor'} — ${new Date().toLocaleDateString('en-AU',{month:'short',year:'numeric'})}`;
+      const body    = buildPriceListBody(sup, fromName, fromEmail, note);
+      const cc      = fromEmail ? encodeURIComponent(fromEmail) : '';
+      const mailto  = `mailto:${encodeURIComponent(sup.email)}?subject=${encodeURIComponent(subject)}&cc=${cc}&body=${encodeURIComponent(body)}`;
+      window.open(mailto, '_blank');
+    }, i * 600);
+  });
+
+  showToast(`Opening ${suppliers.length} email${suppliers.length>1?'s':''}…`);
 }
 
 // ============================================================
@@ -1274,9 +1685,14 @@ function renderAdmin() {
 
   el.innerHTML = `
     <div class="admin-tabs">
-      ${['suppliers','products','contacts','settings'].map(t =>
-        `<div class="a-tab ${adminTab===t?'active':''}" onclick="setAdminTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</div>`
-      ).join('')}
+      ${['suppliers','products','contacts','pending','settings'].map(t => {
+        let label = t.charAt(0).toUpperCase()+t.slice(1);
+        if (t === 'pending') {
+          const count = getSubmissions().filter(s=>s.status==='pending').length;
+          label = 'Pending' + (count ? ` (${count})` : '');
+        }
+        return `<div class="a-tab ${adminTab===t?'active':''}" onclick="setAdminTab('${t}')">${label}</div>`;
+      }).join('')}
     </div>
     <div id="admin-panel"></div>`;
 
@@ -1298,6 +1714,7 @@ function renderAdminPanel() {
   if (adminTab === 'suppliers') renderAdminSuppliers(el);
   else if (adminTab === 'products')  renderAdminProducts(el);
   else if (adminTab === 'contacts')  renderAdminContacts(el);
+  else if (adminTab === 'pending')   renderAdminPending(el);
   else if (adminTab === 'settings')  renderAdminSettings(el);
 }
 
@@ -1357,6 +1774,123 @@ function renderAdminContacts(el) {
       </div>`).join('')}`;
 }
 
+function renderAdminPending(el) {
+  const subs = getSubmissions();
+  const pending  = subs.filter(s => s.status === 'pending');
+  const reviewed = subs.filter(s => s.status !== 'pending');
+
+  if (!subs.length) {
+    el.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7-7 7 7"/></svg><p>No submissions yet</p><small>Foremen can suggest suppliers from the Suggest tab</small></div>`;
+    return;
+  }
+
+  let html = '';
+
+  if (pending.length) {
+    html += `<div class="sec-title">Pending Review (${pending.length})</div>`;
+    pending.forEach(s => { html += renderSubmissionCard(s, true); });
+  }
+
+  if (reviewed.length) {
+    html += `<div class="sec-title mt16" style="color:var(--text3)">Reviewed (${reviewed.length})</div>`;
+    reviewed.forEach(s => { html += renderSubmissionCard(s, false); });
+  }
+
+  el.innerHTML = html;
+}
+
+function renderSubmissionCard(s, showActions) {
+  const fields = [
+    ['Supplies', s.supply],
+    ['Phone', s.phone],
+    ['Email', s.email],
+    ['Website', s.website],
+    ['Address', s.address],
+    ['Contact', s.repName],
+    ['Pricing', s.pricing],
+    ['Source', s.source],
+  ].filter(([,v]) => v);
+
+  return `
+  <div class="card mb10 ${s.status==='pending'?'':''}">
+    <div class="row-between mb8">
+      <div>
+        <div class="bold" style="font-size:15px">${s.name}</div>
+        <div class="t-xs t-dim">${s.submittedBy} · ${timeSince(s.submittedAt)}</div>
+      </div>
+      <span class="chip ${s.status==='approved'?'chip-g':s.status==='rejected'?'chip-r':'chip-o'}">${s.status}</span>
+    </div>
+
+    ${fields.map(([k,v]) => `<div class="info-row"><span class="info-label">${k}</span><span class="info-val">${v}</span></div>`).join('')}
+    ${s.reason ? `<div class="t-sm mt8"><span class="t-muted">Reason: </span>${s.reason}</div>` : ''}
+
+    ${showActions ? `
+      <div class="fg mt10">
+        <label>Admin note (optional)</label>
+        <input class="inp inp-sm" id="anote-${s.id}" placeholder="e.g. Already have this supplier / Will follow up" value="${s.adminNote||''}">
+      </div>
+      <div class="row mt8" style="gap:6px;flex-wrap:wrap">
+        <button class="btn btn-green btn-sm" style="flex:1" onclick="reviewSubmission('${s.id}','approved')">
+          ✓ Approve & Add
+        </button>
+        <button class="btn btn-outline btn-sm" style="flex:1" onclick="reviewSubmission('${s.id}','more-info')">
+          ? Need Info
+        </button>
+        <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red);flex:1" onclick="reviewSubmission('${s.id}','rejected')">
+          ✕ Reject
+        </button>
+      </div>` : `
+      ${s.adminNote ? `<div class="t-xs t-muted mt6">Note: ${s.adminNote}</div>` : ''}
+      <div class="row mt8" style="gap:6px">
+        <button class="btn btn-ghost btn-xs" onclick="deleteSubmission('${s.id}')">Delete</button>
+      </div>`}
+  </div>`;
+}
+
+function reviewSubmission(id, status) {
+  const list = getSubmissions();
+  const sub = list.find(s => s.id === id);
+  if (!sub) return;
+  const note = document.getElementById(`anote-${id}`)?.value.trim() || '';
+  sub.status    = status;
+  sub.adminNote = note;
+  saveSubmissions(list);
+
+  // If approved, pre-fill a new supplier modal with their details
+  if (status === 'approved') {
+    // Inject into DB as a new supplier stub for admin to complete
+    const exists = DB.suppliers.find(s => s.name.toLowerCase() === sub.name.toLowerCase());
+    if (!exists) {
+      const newSup = {
+        id: uid(), name: sub.name, phone: sub.phone, email: sub.email,
+        website: sub.website, repName: sub.repName, address: sub.address,
+        hasAccount: false, accountNumber: '', creditTerms: 'COD',
+        tradingHours: '', minOrderValue: 0, freeFreightThreshold: 0,
+        maxPalletSpaces: 10, maxLoadKg: 8000, hasCrane: false, hasForklift: false,
+        notes: `Added from foreman suggestion by ${sub.submittedBy}. ${sub.reason || ''} Reported pricing: ${sub.pricing || 'unknown'}`
+      };
+      DB.suppliers.push(newSup);
+      saveLocal();
+      pushToSheets('suppliers', 'insert', { row: newSup });
+      showToast(`${sub.name} added to suppliers ✓`);
+    } else {
+      showToast('Supplier already exists in list');
+    }
+  } else {
+    showToast(status === 'more-info' ? 'Marked — needs more info' : 'Submission rejected');
+  }
+
+  updateBadge();
+  renderAdminPending(document.getElementById('admin-panel'));
+}
+
+function deleteSubmission(id) {
+  if (!confirm('Delete this submission?')) return;
+  saveSubmissions(getSubmissions().filter(s => s.id !== id));
+  updateBadge();
+  renderAdminPending(document.getElementById('admin-panel'));
+}
+
 function renderAdminSettings(el) {
   el.innerHTML = `
     <div class="sec-title">Company</div>
@@ -1388,6 +1922,7 @@ function renderAdminSettings(el) {
     <div class="fg"><label>Admin Password</label>
       <input class="inp" type="password" data-setting="adminPass" placeholder="Change password" oninput="onSettingChange(this)"></div>
     <button class="btn btn-outline btn-full mt8" onclick="resetToDefaults()">Reset Database to Defaults</button>
+    <button class="btn btn-outline btn-full mt8" onclick="openPriceListFromAdmin()">📋 Request Price List from All Suppliers</button>
     <button class="btn btn-outline btn-full mt8" style="color:var(--text3)" onclick="adminUnlocked=false;renderAdmin()">Lock & Exit Admin</button>`;
 }
 
@@ -1404,6 +1939,43 @@ function resetToDefaults() {
   if (confirm('Reset ALL data to defaults? This deletes all custom suppliers and products.')) {
     seedDefaults(); loadSettings(); renderAdmin(); showToast('Reset to defaults');
   }
+}
+
+function openPriceListFromAdmin() {
+  // Temporarily render all suppliers as checked, then open modal
+  document.getElementById('pl-modal')?.remove();
+  const ov = document.createElement('div');
+  ov.className = 'modal-overlay'; ov.id = 'pl-modal';
+  const preview = DB.suppliers.length ? buildPriceListBody(DB.suppliers[0]) : '';
+  ov.innerHTML = `<div class="modal" style="max-height:92vh;overflow-y:auto">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📋 Price List Request</div>
+    <div class="t-sm t-muted mb10">Select which suppliers to contact for current pricing.</div>
+    ${DB.suppliers.map(s => `
+      <label class="check-row">
+        <input type="checkbox" class="pla-sup-chk" value="${s.id}" ${s.email?'checked':'disabled'}>
+        <div>
+          <div style="font-size:13px;font-weight:600">${s.name}</div>
+          <div class="t-xs t-dim">${s.email || '⚠ No email — set in Suppliers'}</div>
+        </div>
+      </label>`).join('')}
+    <div class="fg mt12"><label>From / Reply-to name</label>
+      <input class="inp" id="pl-from-name" value="${getSetting('userName')||''}"></div>
+    <div class="fg"><label>From / Reply-to email</label>
+      <input class="inp" id="pl-from-email" type="email" value="${getSetting('userEmail')||''}"></div>
+    <div class="fg"><label>Additional note (optional)</label>
+      <textarea class="inp" id="pl-note" placeholder="e.g. Reviewing suppliers for Q3 — please include volume discounts." style="min-height:60px"></textarea>
+    </div>
+    ${preview ? `<div class="sec-title mt8" style="font-size:13px">Preview — ${DB.suppliers[0]?.name}</div>
+    <div class="card-sm mb12" style="font-size:11px;white-space:pre-wrap;color:var(--text2);font-family:monospace;max-height:180px;overflow-y:auto">${preview}</div>` : ''}
+    <div class="row" style="gap:8px;margin-top:14px">
+      <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('pl-modal').remove()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="
+        const ids=[...document.querySelectorAll('.pla-sup-chk:checked')].map(e=>e.value);
+        sendPriceListEmails(ids);">Send Emails</button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
 }
 
 // ============================================================
@@ -1652,13 +2224,584 @@ function deleteContact(id) {
 }
 
 // ============================================================
+// SUBMIT SUPPLIER
+// ============================================================
+
+// ----------------------------------------------------------------
+// APPROVED FOREMAN EMAILS — add @dapcor.com.au addresses here
+// Replace this list on Monday with your full staff email database
+// ----------------------------------------------------------------
+const APPROVED_EMAILS = [
+  // 'ben@dapcor.com.au',
+  // 'yourname@dapcor.com.au',
+  // ADD ALL FOREMAN EMAILS HERE
+  '__ALL_DAPCOR__' // ← temporary: allows any @dapcor.com.au until list is loaded
+];
+
+function isDapcorEmail(email) {
+  if (!email || !email.includes('@')) return false;
+  const lower = email.trim().toLowerCase();
+  if (!lower.endsWith('@dapcor.com.au')) return false;
+  // If the wildcard placeholder is present, allow any @dapcor.com.au
+  if (APPROVED_EMAILS.includes('__ALL_DAPCOR__')) return true;
+  return APPROVED_EMAILS.includes(lower);
+}
+
+function getSubmissions() {
+  try { return JSON.parse(localStorage.getItem('bco_submissions') || '[]'); } catch(e) { return []; }
+}
+function saveSubmissions(list) { localStorage.setItem('bco_submissions', JSON.stringify(list)); }
+
+// Track the verified foreman email for this session
+let submitterEmail = localStorage.getItem('bco_submitter_email') || '';
+let submitterVerified = false;
+
+function renderSubmit() {
+  const el = document.getElementById('page-submit');
+
+  // If not yet verified this session, show login gate
+  if (!submitterVerified) {
+    // Check if we have a stored email that's still valid
+    if (submitterEmail && isDapcorEmail(submitterEmail)) {
+      submitterVerified = true;
+    } else {
+      renderSubmitLogin(el);
+      return;
+    }
+  }
+  renderSubmitForm(el);
+}
+
+function renderSubmitLogin(el) {
+  el.innerHTML = `
+    <div class="card mb12" style="border-color:var(--primary)">
+      <div class="bold mb4" style="font-size:15px">🔒 Dapcor Staff Only</div>
+      <div class="t-sm t-muted">Enter your Dapcor email address to access the supplier submission form.</div>
+    </div>
+    <div class="fg">
+      <label>Your Dapcor Email</label>
+      <input class="inp" id="sub-email-inp" type="email" placeholder="yourname@dapcor.com.au"
+        value="${submitterEmail}" onkeydown="if(event.key==='Enter')verifySubmitter()">
+    </div>
+    <button class="btn btn-primary btn-full" onclick="verifySubmitter()">Continue</button>
+    <div class="t-xs t-dim mt8 t-center">Only @dapcor.com.au email addresses are accepted.</div>`;
+}
+
+function verifySubmitter() {
+  const email = document.getElementById('sub-email-inp')?.value.trim().toLowerCase();
+  if (!email) { showToast('Enter your email'); return; }
+  if (!isDapcorEmail(email)) {
+    showToast('Not a recognised Dapcor email');
+    return;
+  }
+  submitterEmail = email;
+  submitterVerified = true;
+  localStorage.setItem('bco_submitter_email', email);
+  renderSubmit();
+}
+
+function renderSubmitForm(el) {
+  const mySubmissions = getSubmissions().filter(s => s.submittedBy === submitterEmail);
+  el.innerHTML = `
+    <div class="card mb12" style="border-color:var(--primary)">
+      <div class="row-between">
+        <div>
+          <div class="bold" style="font-size:14px">Submitting as</div>
+          <div class="t-xs t-muted">${submitterEmail}</div>
+        </div>
+        <button class="btn btn-ghost btn-xs" onclick="submitterVerified=false;submitterEmail='';localStorage.removeItem('bco_submitter_email');renderSubmit()">Switch</button>
+      </div>
+    </div>
+
+    <div class="sec-title">Suggest a New Supplier</div>
+    <div class="t-sm t-muted mb12">Fill in as much as you know — admin will follow up on missing details before adding them to the list.</div>
+
+    <div class="fg"><label>Supplier Name *</label>
+      <input class="inp" id="sub-name" placeholder="e.g. Acme Sand & Soil"></div>
+    <div class="fg"><label>What do they supply? *</label>
+      <input class="inp" id="sub-supply" placeholder="e.g. Sand, aggregate, cement, mixed materials"></div>
+    <div class="fg"><label>Phone</label>
+      <input class="inp" id="sub-phone" placeholder="02 XXXX XXXX" type="tel"></div>
+    <div class="fg"><label>Email</label>
+      <input class="inp" id="sub-email" placeholder="orders@supplier.com.au" type="email"></div>
+    <div class="fg"><label>Website</label>
+      <input class="inp" id="sub-website" placeholder="https://"></div>
+    <div class="fg"><label>Address / Location</label>
+      <input class="inp" id="sub-address" placeholder="Suburb, State"></div>
+    <div class="fg"><label>Contact Person</label>
+      <input class="inp" id="sub-rep" placeholder="Name of your contact there"></div>
+    <div class="fg"><label>Approximate Pricing (optional)</label>
+      <input class="inp" id="sub-pricing" placeholder="e.g. Sand ~$110/tonne, cement ~$9/bag"></div>
+    <div class="fg"><label>Why are you recommending them?</label>
+      <textarea class="inp" id="sub-reason" placeholder="e.g. Used them on the Marrickville job — good price, reliable delivery, have a crane truck." style="min-height:80px"></textarea></div>
+    <div class="fg"><label>How did you find them?</label>
+      <select class="inp" id="sub-source">
+        <option value="">— select —</option>
+        <option>Used on a previous job</option>
+        <option>Referred by someone</option>
+        <option>Found online</option>
+        <option>Cold call / flyer</option>
+        <option>Trade show / expo</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary btn-full mt4" onclick="submitSupplierSuggestion()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+      Submit Suggestion
+    </button>
+
+    ${mySubmissions.length ? `
+      <hr class="divider">
+      <div class="sec-title">Your Previous Submissions</div>
+      ${mySubmissions.map(s => `
+        <div class="card-sm mb8">
+          <div class="row-between">
+            <div>
+              <div class="semi" style="font-size:14px">${s.name}</div>
+              <div class="t-xs t-dim">${s.supply} · ${timeSince(s.submittedAt)}</div>
+            </div>
+            <span class="chip ${s.status==='approved'?'chip-g':s.status==='rejected'?'chip-r':'chip-o'}">${s.status}</span>
+          </div>
+          ${s.adminNote ? `<div class="t-xs t-muted mt4">Admin: ${s.adminNote}</div>` : ''}
+        </div>`).join('')}
+    ` : ''}`;
+}
+
+function submitSupplierSuggestion() {
+  const name   = document.getElementById('sub-name')?.value.trim();
+  const supply = document.getElementById('sub-supply')?.value.trim();
+  if (!name)   { showToast('Supplier name required'); return; }
+  if (!supply) { showToast('Please describe what they supply'); return; }
+
+  const sub = {
+    id:          uid(),
+    name,
+    supply,
+    phone:       document.getElementById('sub-phone')?.value.trim() || '',
+    email:       document.getElementById('sub-email')?.value.trim() || '',
+    website:     document.getElementById('sub-website')?.value.trim() || '',
+    address:     document.getElementById('sub-address')?.value.trim() || '',
+    repName:     document.getElementById('sub-rep')?.value.trim() || '',
+    pricing:     document.getElementById('sub-pricing')?.value.trim() || '',
+    reason:      document.getElementById('sub-reason')?.value.trim() || '',
+    source:      document.getElementById('sub-source')?.value || '',
+    submittedBy: submitterEmail,
+    submittedAt: new Date().toISOString(),
+    status:      'pending',
+    adminNote:   ''
+  };
+
+  const list = getSubmissions();
+  list.unshift(sub);
+  saveSubmissions(list);
+  updateBadge();
+  showToast('Submission received ✓');
+
+  // Notify admin by email
+  const adminEmail = getSetting('userEmail') || getSetting('companyEmail') || '';
+  const subject = `New Supplier Suggestion — ${name}`;
+  const body =
+`New supplier suggested via Dapcor BCO app.
+
+Submitted by: ${submitterEmail}
+Date: ${new Date().toLocaleString('en-AU')}
+
+──────────────────────────────────────
+SUPPLIER DETAILS
+──────────────────────────────────────
+Name:       ${name}
+Supplies:   ${supply}
+Phone:      ${sub.phone || 'Not provided'}
+Email:      ${sub.email || 'Not provided'}
+Website:    ${sub.website || 'Not provided'}
+Address:    ${sub.address || 'Not provided'}
+Contact:    ${sub.repName || 'Not provided'}
+Pricing:    ${sub.pricing || 'Not provided'}
+Source:     ${sub.source || 'Not provided'}
+
+Reason for recommendation:
+${sub.reason || 'Not provided'}
+
+──────────────────────────────────────
+Review this submission in the app under Admin > Suppliers > Pending.
+`;
+
+  if (adminEmail) {
+    setTimeout(() => {
+      window.location.href = `mailto:${adminEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }, 500);
+  }
+
+  // Clear form and re-render
+  renderSubmit();
+}
+
+// ============================================================
+// BROADCAST BOARD
+// ============================================================
+// Broadcasts are stored in localStorage under 'bco_broadcasts'
+// Each broadcast: { id, createdBy, createdAt, jobName, supplier,
+//   deliveryAddress, deliveryDate, status ('open'|'closed'),
+//   shareKey, items:[{productId,supplierId,orderType,qty,poNumber,orderedBy}] }
+
+function getBroadcasts() {
+  try { return JSON.parse(localStorage.getItem('bco_broadcasts') || '[]'); } catch(e) { return []; }
+}
+function saveBroadcasts(list) { localStorage.setItem('bco_broadcasts', JSON.stringify(list)); }
+
+function broadcastCurrentOrder() {
+  if (cart.length === 0) { showToast('Nothing in order to broadcast'); return; }
+  const name = getSetting('userName') || 'Unknown';
+  const job  = localStorage.getItem('lastJob') || '';
+  const addr = localStorage.getItem('lastAddr') || '';
+  const date = document.getElementById('o-date')?.value || '';
+  const freight = cartFreight !== null ? cartFreight : parseFloat(getSetting('defaultFreight')) || 150;
+
+  const bc = {
+    id: uid(),
+    createdBy: name,
+    createdAt: new Date().toISOString(),
+    jobName: job,
+    deliveryAddress: addr,
+    deliveryDate: date,
+    freight: freight,
+    status: 'open',
+    shareKey: Math.random().toString(36).slice(2,8).toUpperCase(),
+    items: cart.map(c => ({
+      productId:  c.productId,
+      supplierId: c.supplierId,
+      orderType:  c.orderType,
+      qty:        c.qty,
+      poNumber:   localStorage.getItem('lastPO') || '',
+      orderedBy:  name
+    }))
+  };
+
+  const list = getBroadcasts();
+  list.unshift(bc);
+  saveBroadcasts(list);
+  updateBadge();
+  showToast('Order broadcast to board ✓');
+  renderBroadcast();
+
+  // Build shareable URL (encodes the broadcast as a hash param)
+  const encoded = btoa(JSON.stringify(bc));
+  const shareUrl = window.location.href.split('#')[0] + '#bc=' + encoded;
+  openBroadcastShareModal(bc, shareUrl);
+}
+
+function openBroadcastShareModal(bc, shareUrl) {
+  document.getElementById('bc-share-modal')?.remove();
+  const ov = document.createElement('div');
+  ov.className = 'modal-overlay'; ov.id = 'bc-share-modal';
+  ov.innerHTML = `<div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📡 Order Broadcast Live</div>
+    <div class="t-sm t-muted mb12">Share this link with other foremen so they can see your delivery and add their own items to the same truck.</div>
+    <div class="card-sm mb12" style="word-break:break-all;font-size:11px;color:var(--primary)">${shareUrl}</div>
+    <div class="col" style="gap:8px">
+      <button class="btn btn-primary btn-full" onclick="navigator.clipboard.writeText('${shareUrl.replace(/'/g,"\\'")}').then(()=>showToast('Link copied ✓'))">
+        📋 Copy Share Link
+      </button>
+      <button class="btn btn-outline btn-full" onclick="document.getElementById('bc-share-modal').remove();nav('broadcast')">
+        View on Broadcast Board
+      </button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+}
+
+function closeBroadcast(id) {
+  if (!confirm('Close this broadcast? Foremen will no longer be able to join.')) return;
+  const list = getBroadcasts().map(bc => bc.id === id ? {...bc, status:'closed'} : bc);
+  saveBroadcasts(list);
+  updateBadge();
+  renderBroadcast();
+}
+
+function deleteBroadcast(id) {
+  if (!confirm('Delete this broadcast?')) return;
+  saveBroadcasts(getBroadcasts().filter(bc => bc.id !== id));
+  updateBadge();
+  renderBroadcast();
+}
+
+function openJoinModal(bcId) {
+  const bc = getBroadcasts().find(b => b.id === bcId);
+  if (!bc || bc.status !== 'open') return;
+  document.getElementById('join-modal')?.remove();
+  const ov = document.createElement('div');
+  ov.className = 'modal-overlay'; ov.id = 'join-modal';
+
+  const freq = cartFreight !== null ? cartFreight : parseFloat(getSetting('defaultFreight')) || 150;
+
+  ov.innerHTML = `<div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Join Delivery — ${bc.jobName || bc.createdBy}</div>
+    <div class="t-xs t-dim mb12">You'll add your own items to this truck. Each person gets their own PO and email — freight is split across all items.</div>
+
+    <div class="fg"><label>Your Name</label>
+      <input class="inp" id="jn-name" value="${getSetting('userName')||''}"></div>
+    <div class="fg"><label>Your PO Number</label>
+      <input class="inp" id="jn-po" placeholder="e.g. PO-2025-0099" value="${localStorage.getItem('lastPO')||''}"></div>
+    <div class="fg"><label>Your Email</label>
+      <input class="inp" id="jn-email" type="email" value="${getSetting('userEmail')||''}"></div>
+
+    <div class="sec-title mt12">Add Items to This Truck</div>
+    <div class="t-xs t-dim mb8">Select products and qty to add under your PO.</div>
+    <div id="join-items-list">
+      ${DB.products.map(prod => {
+        const types = [];
+        if (prod.hasPallet) types.push({k:'pallet',l:'Pallet'});
+        if (prod.hasBulka)  types.push({k:'bulka', l:'Bulka'});
+        if (prod.hasLoose)  types.push({k:'bag',   l:'Bag'});
+        if (!types.length) return '';
+        const pricings = getProdPricings(prod.id);
+        if (!pricings.length) return '';
+        return `<div class="bc-item mb8">
+          <div class="semi mb4" style="font-size:13px">${prod.name} <span class="chip chip-gray">${prod.category}</span></div>
+          <div class="row" style="gap:6px;flex-wrap:wrap">
+            <select class="inp inp-sm" id="jn-sup-${prod.id}" style="flex:1;min-width:100px">
+              ${pricings.map(pr => { const s=getSup(pr.supplierId); return s?`<option value="${s.id}">${s.name}</option>`:''; }).join('')}
+            </select>
+            <select class="inp inp-sm" id="jn-ot-${prod.id}" style="flex:1;min-width:80px">
+              ${types.map(t=>`<option value="${t.k}">${t.l}</option>`).join('')}
+            </select>
+            <input class="inp inp-sm" id="jn-qty-${prod.id}" type="number" min="0" value="0" style="width:60px">
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="row" style="gap:8px;margin-top:14px">
+      <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('join-modal').remove()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="submitJoin('${bcId}')">Join & Add Items</button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+}
+
+function submitJoin(bcId) {
+  const name  = document.getElementById('jn-name')?.value.trim();
+  const po    = document.getElementById('jn-po')?.value.trim();
+  const email = document.getElementById('jn-email')?.value.trim();
+  if (!name) { showToast('Name required'); return; }
+  if (!po)   { showToast('PO number required'); return; }
+
+  const addedItems = [];
+  DB.products.forEach(prod => {
+    const qty = parseInt(document.getElementById(`jn-qty-${prod.id}`)?.value) || 0;
+    if (qty <= 0) return;
+    const supId = document.getElementById(`jn-sup-${prod.id}`)?.value;
+    const ot    = document.getElementById(`jn-ot-${prod.id}`)?.value;
+    if (!supId || !ot) return;
+    addedItems.push({ productId:prod.id, supplierId:supId, orderType:ot, qty, poNumber:po, orderedBy:name, email });
+  });
+
+  if (!addedItems.length) { showToast('Add at least one item'); return; }
+
+  const list = getBroadcasts();
+  const bc = list.find(b => b.id === bcId);
+  if (!bc) return;
+  bc.items = [...bc.items, ...addedItems];
+  saveBroadcasts(list);
+
+  document.getElementById('join-modal')?.remove();
+  showToast(`Joined! ${addedItems.length} item${addedItems.length>1?'s':''} added ✓`);
+  renderBroadcast();
+
+  // Offer to send a confirmation email
+  setTimeout(() => openJoinConfirmEmail(bc, addedItems, {name, po, email}), 400);
+}
+
+function openJoinConfirmEmail(bc, items, joiner) {
+  const ov = document.createElement('div');
+  ov.className='modal-overlay'; ov.id='join-email-modal';
+  const lines = items.map(i => {
+    const p = getProd(i.productId); const s = getSup(i.supplierId);
+    return `${p?.name||'?'} × ${i.qty} (${i.orderType}) — ${s?.name||'?'}`;
+  }).join('\n');
+  const body = `Hi,\n\nI've joined the delivery for: ${bc.jobName||'upcoming order'} (${bc.deliveryAddress||'TBC'})\nDelivery date: ${bc.deliveryDate||'TBC'}\n\nMy PO: ${joiner.po}\nOrdered by: ${joiner.name}\n\nItems I'm adding:\n${lines}\n\nPlease include my items on the same truck.\n\n${getSetting('companyName')}\n${getSetting('companyPhone')}`;
+  const subject = `Joining Delivery — ${bc.jobName||'Dapcor Order'} — PO ${joiner.po}`;
+  const creatorEmail = bc.items[0] ? '' : '';
+  ov.innerHTML = `<div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Send Join Notification?</div>
+    <div class="t-sm t-muted mb12">Notify the order creator that you're joining their truck.</div>
+    <div class="fg"><label>Send to (order creator's email)</label>
+      <input class="inp" id="jce-to" placeholder="creator@dapcor.com.au" value="${getSetting('userEmail')||''}"></div>
+    <div class="row" style="gap:8px;margin-top:12px">
+      <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('join-email-modal').remove()">Skip</button>
+      <button class="btn btn-primary" style="flex:1" onclick="
+        const to=document.getElementById('jce-to').value;
+        window.location.href='mailto:'+to+'?subject='+encodeURIComponent('${subject.replace(/'/g,"\\'")}')+'&body='+encodeURIComponent(${JSON.stringify(body)});
+        document.getElementById('join-email-modal').remove();">
+        Send Email
+      </button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+}
+
+// Import a broadcast from a share link hash
+function checkBroadcastHash() {
+  const hash = window.location.hash;
+  if (!hash.startsWith('#bc=')) return;
+  try {
+    const bc = JSON.parse(atob(hash.slice(4)));
+    const list = getBroadcasts();
+    if (!list.find(b => b.id === bc.id)) {
+      list.unshift(bc);
+      saveBroadcasts(list);
+      updateBadge();
+      showToast('Broadcast loaded from link ✓');
+    }
+    history.replaceState(null,'',window.location.pathname);
+    nav('broadcast');
+  } catch(e) { /* ignore bad hash */ }
+}
+
+function renderBroadcast() {
+  const el = document.getElementById('page-broadcast');
+  const list = getBroadcasts();
+
+  const myName = getSetting('userName') || '';
+
+  let html = `
+    <div class="card mb12" style="border-color:var(--primary)">
+      <div class="bold mb4" style="font-size:14px">📡 Broadcast your order</div>
+      <div class="t-sm t-muted mb10">Got an upcoming delivery? Broadcast it so other foremen can add their items and split the freight.</div>
+      <button class="btn btn-primary btn-full" onclick="nav('cart')">
+        Build Order → Then Broadcast
+      </button>
+    </div>`;
+
+  if (!list.length) {
+    html += `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 12.3 19.79 19.79 0 0 1 1.87 3.69 2 2 0 0 1 3.84 1.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><p>No broadcasts yet</p><small>Build an order, then tap Broadcast on the Order tab</small></div>`;
+    el.innerHTML = html;
+    return;
+  }
+
+  const open   = list.filter(b => b.status === 'open');
+  const closed = list.filter(b => b.status !== 'open');
+
+  if (open.length) {
+    html += `<div class="sec-title"><span class="bc-dot"></span> Open Deliveries (${open.length})</div>`;
+    open.forEach(bc => { html += renderBroadcastCard(bc, myName); });
+  }
+
+  if (closed.length) {
+    html += `<div class="sec-title mt16" style="color:var(--text3)">Closed / Sent (${closed.length})</div>`;
+    closed.forEach(bc => { html += renderBroadcastCard(bc, myName); });
+  }
+
+  el.innerHTML = html;
+}
+
+function renderBroadcastCard(bc, myName) {
+  const isOpen = bc.status === 'open';
+  const isOwner = bc.items[0]?.orderedBy === myName;
+  const date = bc.deliveryDate ? new Date(bc.deliveryDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : 'TBC';
+  const createdAgo = timeSince(bc.createdAt);
+
+  // Group items by PO / orderedBy
+  const poGroups = {};
+  bc.items.forEach(item => {
+    const key = item.poNumber || item.orderedBy || 'Unknown';
+    if (!poGroups[key]) poGroups[key] = { orderedBy: item.orderedBy, po: item.poNumber, items: [] };
+    poGroups[key].items.push(item);
+  });
+
+  const totalFU = bc.items.reduce((s,i) => {
+    const p = getProd(i.productId); return s + (p ? freightScore(p, i.orderType) * i.qty : i.qty);
+  }, 0);
+
+  const freight = bc.freight || 150;
+  const freightPerFU = freight / (totalFU || 1);
+
+  const shareUrl = window.location.href.split('#')[0] + '#bc=' + btoa(JSON.stringify(bc));
+
+  return `
+  <div class="bc-card ${isOpen?'open':'closed'}">
+    <div class="row-between mb8">
+      <div>
+        <div class="bold" style="font-size:15px">${bc.jobName || 'Unnamed Job'}</div>
+        <div class="t-xs t-dim">${bc.deliveryAddress || 'Address TBC'} · ${date}</div>
+        <div class="t-xs t-dim">${bc.createdBy} · ${createdAgo}</div>
+      </div>
+      <span class="bc-status ${isOpen?'open':'closed'}">${isOpen?'🟢 Open':'Closed'}</span>
+    </div>
+
+    <div class="row mb8" style="gap:6px;flex-wrap:wrap">
+      <span class="chip chip-gray">🚛 ${totalFU.toFixed(1)} freight units</span>
+      <span class="chip chip-gray">${fmt(freightPerFU)}/unit</span>
+      <span class="chip chip-gray">${Object.keys(poGroups).length} PO${Object.keys(poGroups).length!==1?'s':''}</span>
+    </div>
+
+    ${Object.values(poGroups).map(g => `
+      <div class="bc-item">
+        <div class="row-between mb4">
+          <span class="semi" style="font-size:12px">${g.orderedBy} — PO: ${g.po||'TBC'}</span>
+          <span class="chip chip-o" style="font-size:10px">${g.items.length} item${g.items.length!==1?'s':''}</span>
+        </div>
+        ${g.items.map(i => {
+          const p = getProd(i.productId); const s = getSup(i.supplierId);
+          return `<div class="t-xs t-dim">• ${p?.name||'?'} × ${i.qty} ${i.orderType} — ${s?.name||'?'}</div>`;
+        }).join('')}
+      </div>`).join('')}
+
+    <div class="row mt10" style="gap:6px;flex-wrap:wrap">
+      ${isOpen ? `<button class="btn btn-primary btn-sm" onclick="openJoinModal('${bc.id}')">+ Join This Truck</button>` : ''}
+      <button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText('${shareUrl.replace(/'/g,"\\'")}').then(()=>showToast('Link copied ✓'))">Share Link</button>
+      ${isOpen && isOwner ? `<button class="btn btn-outline btn-sm" onclick="closeBroadcast('${bc.id}')">Close</button>` : ''}
+      <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red)" onclick="deleteBroadcast('${bc.id}')">Del</button>
+    </div>
+  </div>`;
+}
+
+function timeSince(iso) {
+  const ms = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(ms/60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + 'm ago';
+  const h = Math.floor(m/60);
+  if (h < 24) return h + 'h ago';
+  return Math.floor(h/24) + 'd ago';
+}
+
+// ============================================================
 // INIT
 // ============================================================
 loadLocal();
 renderCurrentPage();
 updateBadge();
-// Attempt sync on load if script URL is set
+checkBroadcastHash();
 if (getSetting('scriptUrl')) setTimeout(syncFromSheets, 800);
+
+// Claude welcome popup
+setTimeout(function() {
+  const popup = document.createElement('div');
+  popup.id = 'claude-popup';
+  popup.style.cssText = 'position:fixed;bottom:70px;left:12px;right:12px;max-width:456px;margin:0 auto;background:#1e1e32;border:1px solid #f97316;border-radius:14px;padding:14px 16px;z-index:999;box-shadow:0 4px 24px rgba(0,0,0,0.6)';
+  popup.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:10px">
+      <div style="width:32px;height:32px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#3C3489;flex-shrink:0">AI</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;color:#f97316;margin-bottom:6px">Dapcor assistant</div>
+        <div style="font-size:13px;color:#e2e8f0;line-height:1.5">Hi Ben — you have <strong style="color:#22c55e">3 new quote replies</strong> for <strong>Ardex LA55</strong>.<br><br>
+        🟢 <strong>Hardware &amp; General</strong> — $38.90/unit (best price)<br>
+        🟢 <strong>Komerco</strong> — $40.00/unit<br>
+        🟢 <strong>Ardex</strong> — $42.50/unit<br><br>
+        Still waiting on <strong style="color:#eab308">Sandhub</strong> and <strong style="color:#eab308">Kim's</strong>. Want me to send them a follow-up?</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button onclick="document.getElementById('claude-popup').remove()" style="flex:1;padding:8px;background:#f97316;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">View quotes</button>
+          <button onclick="document.getElementById('claude-popup').remove()" style="flex:1;padding:8px;background:transparent;color:#94a3b8;border:1px solid #2d2d50;border-radius:8px;font-size:13px;cursor:pointer">Dismiss</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(popup);
+}, 1200);
 </script>
 </body>
 </html>
