@@ -40,6 +40,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:9px 4px 11px;gap:3px;cursor:pointer;border:none;background:none;color:var(--text3);font-size:10px;font-weight:500;position:relative;transition:color .15s}
 .nav-btn.active{color:var(--primary)}
 .nav-btn svg{width:22px;height:22px}
+.typing-dots span{animation:td 1.2s infinite;display:inline-block}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,60%,100%{opacity:.2}30%{opacity:1}}
 .badge{position:absolute;top:5px;right:calc(50% - 20px);background:var(--primary);color:#fff;border-radius:10px;font-size:10px;font-weight:700;padding:1px 5px;min-width:16px;text-align:center}
 
 /* CARDS */
@@ -222,9 +226,12 @@ textarea.inp{resize:vertical;min-height:70px}
       <button class="back-btn" id="back-btn" style="display:none" onclick="goBack()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
       </button>
-      <div style="flex:1">
-        <div class="hdr-title" id="hdr-title">Dapcor BCO</div>
-        <div class="hdr-sub" id="hdr-sub">Browse · Compare · Order</div>
+      <div style="flex:1;display:flex;align-items:center;gap:10px">
+        <img src="https://cdn.prod.website-files.com/689407b698444c58db5017d2/689b2ee878e92fbb778c95a4_11590-Dapcor%20master%20logo_rgb_logo.png" alt="Dapcor" style="height:28px;width:auto;object-fit:contain" id="hdr-logo">
+        <div>
+          <div class="hdr-title" id="hdr-title" style="font-size:15px">BCO</div>
+          <div class="hdr-sub" id="hdr-sub">Browse · Compare · Order</div>
+        </div>
       </div>
       <span class="sync-dot" id="sync-dot" title="Sheets sync"></span>
     </div>
@@ -238,6 +245,36 @@ textarea.inp{resize:vertical;min-height:70px}
     <div id="page-broadcast" class="page"></div>
     <div id="page-submit"    class="page"></div>
     <div id="page-admin"     class="page"></div>
+    <div id="page-claude"    class="page"></div>
+  </div>
+
+  <!-- Claude floating button -->
+  <button id="claude-fab" onclick="toggleClaudeFloat()" style="position:fixed;bottom:72px;right:14px;width:48px;height:48px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(99,102,241,0.5);z-index:200">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </button>
+
+  <!-- Claude float overlay -->
+  <div id="claude-float" style="display:none;position:fixed;bottom:128px;left:12px;right:12px;max-width:480px;margin:0 auto;background:var(--card);border:1px solid #6366f1;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:199;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:10px;padding:.75rem 1rem;border-bottom:0.5px solid var(--border)">
+      <div style="width:28px;height:28px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">AI</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text);flex:1">Dapcor assistant</div>
+      <button onclick="toggleClaudeFloat()" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;padding:0">×</button>
+    </div>
+    <div id="float-msgs" style="padding:.75rem 1rem;min-height:120px;max-height:220px;overflow-y:auto;font-size:13px;color:var(--text)">
+      <div style="background:var(--card2);border-radius:4px 12px 12px 12px;padding:.6rem .85rem;margin-bottom:.5rem;line-height:1.5">Hi Ben — what do you need? I can add products, suppliers, check quotes, book labour, or anything else.</div>
+    </div>
+    <div style="display:flex;gap:6px;padding:.5rem 1rem 0;flex-wrap:wrap">
+      <span onclick="floatQuick('Add a product')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Add product</span>
+      <span onclick="floatQuick('Add a supplier')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Add supplier</span>
+      <span onclick="floatQuick('Check my quotes')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">My quotes</span>
+      <span onclick="floatQuick('Book a labourer')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Book labour</span>
+    </div>
+    <div style="display:flex;gap:8px;padding:.75rem 1rem;align-items:center">
+      <input id="float-input" class="inp" placeholder="Type anything..." style="flex:1;border-radius:20px;font-size:13px" onkeydown="if(event.key==='Enter')floatSend()">
+      <button onclick="floatSend()" style="width:34px;height:34px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
   </div>
 
   <nav class="nav" style="font-size:9px">
@@ -261,6 +298,9 @@ textarea.inp{resize:vertical;min-height:70px}
     </button>
     <button class="nav-btn" id="nav-admin" onclick="nav('admin')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>Admin
+    </button>
+    <button class="nav-btn" id="nav-claude" onclick="nav('claude')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Claude
     </button>
   </nav>
 </div>
@@ -335,6 +375,22 @@ const SEED_SUPPLIERS = [
     hasAccount:false, accountNumber:'', creditTerms:'COD', tradingHours:'Mon–Fri 10am–4pm',
     minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:4, maxLoadKg:4000,
     hasCrane:false, hasForklift:false, notes:'Click & collect available. Waterproofing accessories and angles.' },
+  // DUMMY TEST SUPPLIERS — safe to send test emails
+  { id:'sup-test1', name:'TEST SUPPLIER A (do not use for real orders)', phone:'0400 000 001', email:'ben@dapcor.com.au',
+    website:'', repName:'Test Rep', address:'1 Test St, Sydney NSW 2000',
+    hasAccount:false, accountNumber:'TEST-001', creditTerms:'COD', tradingHours:'Mon–Fri 9am–5pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:10, maxLoadKg:10000,
+    hasCrane:false, hasForklift:false, notes:'DUMMY SUPPLIER FOR TESTING ONLY — emails will not send' },
+  { id:'sup-test2', name:'TEST SUPPLIER B (do not use for real orders)', phone:'0400 000 002', email:'ben@dapcor.com.au',
+    website:'', repName:'Test Rep B', address:'2 Test St, Sydney NSW 2000',
+    hasAccount:false, accountNumber:'TEST-002', creditTerms:'COD', tradingHours:'Mon–Fri 9am–5pm',
+    minOrderValue:0, freeFreightThreshold:500, maxPalletSpaces:8, maxLoadKg:8000,
+    hasCrane:false, hasForklift:true, notes:'DUMMY SUPPLIER FOR TESTING ONLY — emails will not send' },
+  { id:'sup-test3', name:'TEST SUPPLIER C (do not use for real orders)', phone:'0400 000 003', email:'ben@dapcor.com.au',
+    website:'', repName:'Test Rep C', address:'3 Test St, Sydney NSW 2000',
+    hasAccount:true, accountNumber:'TEST-003', creditTerms:'30 days', tradingHours:'Mon–Sat 7am–4pm',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:12, maxLoadKg:12000,
+    hasCrane:true, hasForklift:true, notes:'DUMMY SUPPLIER FOR TESTING ONLY — emails will not send' },
   { id:'sup-hwgeneral', name:'Hardware & General', phone:'02 8456 1188', email:'accounts@hg.com.au',
     website:'https://www.hg.com.au', repName:'William / Greg', address:'702-704 Pittwater Rd, Brookvale NSW 2100',
     hasAccount:true, accountNumber:'225571', creditTerms:'30 days', tradingHours:'Mon–Fri 6:30am–5pm, Sat 7am–1pm',
@@ -752,6 +808,7 @@ function renderCurrentPage() {
   else if (currentPage === 'broadcast') renderBroadcast();
   else if (currentPage === 'submit')    renderSubmit();
   else if (currentPage === 'admin')     renderAdmin();
+  else if (currentPage === 'claude')    renderClaude();
   updateHeader();
   updateBadge();
 }
@@ -2771,8 +2828,184 @@ function timeSince(iso) {
 }
 
 // ============================================================
-// INIT
+// CLAUDE PAGE
 // ============================================================
+function renderClaude() {
+  const el = document.getElementById('page-claude');
+  el.innerHTML = `
+    <div style="padding:0 0 1rem">
+      <div style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.05em;text-transform:uppercase;padding:.75rem 1rem .5rem">Dapcor Assistant</div>
+      <div id="claude-page-msgs" style="padding:0 1rem;min-height:300px;max-height:calc(100vh - 280px);overflow-y:auto"></div>
+      <div style="padding:.75rem 1rem 0">
+        <div style="border:1px solid #6366f1;border-radius:12px;overflow:hidden;background:var(--card)">
+          <div id="claude-drop-zone" ondragover="event.preventDefault();this.style.background='rgba(99,102,241,0.1)'" ondragleave="this.style.background=''" ondrop="claudeFileDrop(event)" style="padding:.75rem 1rem;border-bottom:0.5px solid var(--border);cursor:pointer;text-align:center;font-size:13px;color:var(--text3);transition:background .2s" onclick="document.getElementById('claude-file-input').click()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:4px;display:block;margin:0 auto 4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Drop files here or tap to upload — invoices, photos, PDFs
+          </div>
+          <input type="file" id="claude-file-input" multiple accept="image/*,.pdf,.xlsx,.csv" style="display:none" onchange="claudeFileSelect(this)">
+          <div id="claude-file-preview" style="display:none;padding:.5rem 1rem;border-bottom:0.5px solid var(--border);font-size:12px;color:var(--text3)"></div>
+          <div style="display:flex;gap:8px;padding:.75rem 1rem;align-items:flex-end">
+            <textarea id="claude-page-input" class="inp" placeholder="Ask me anything — add products, suppliers, check quotes, book labour..." style="flex:1;border-radius:8px;font-size:13px;min-height:44px;max-height:120px;resize:vertical" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();claudePageSend()}"></textarea>
+            <button onclick="claudePageSend()" style="width:38px;height:38px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:2px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;padding:.75rem 1rem 0;flex-wrap:wrap">
+        <span onclick="claudePageQuick('Add a new product')" style="font-size:11px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Add product</span>
+        <span onclick="claudePageQuick('Add a new supplier')" style="font-size:11px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Add supplier</span>
+        <span onclick="claudePageQuick('Check my open quotes')" style="font-size:11px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">My quotes</span>
+        <span onclick="claudePageQuick('Book a labourer for tomorrow')" style="font-size:11px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Book labour</span>
+        <span onclick="claudePageQuick('Check invoice prices against our records')" style="font-size:11px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Check invoice</span>
+        <span onclick="claudePageQuick('Update a product price')" style="font-size:11px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Update price</span>
+      </div>
+    </div>`;
+  claudePageAddMsg('Hi Ben — what do you need? I can add products, suppliers, check quotes, book labour, or read an invoice. You can also drop a file above.', false);
+}
+
+var claudePageHistory = [];
+var claudeAttachedFiles = [];
+
+function claudeFileSelect(input) {
+  claudeAttachedFiles = Array.from(input.files);
+  showFilePreview();
+}
+
+function claudeFileDrop(e) {
+  e.preventDefault();
+  document.getElementById('claude-drop-zone').style.background = '';
+  claudeAttachedFiles = Array.from(e.dataTransfer.files);
+  showFilePreview();
+}
+
+function showFilePreview() {
+  const pv = document.getElementById('claude-file-preview');
+  if (!claudeAttachedFiles.length) { pv.style.display = 'none'; return; }
+  pv.style.display = 'block';
+  pv.innerHTML = claudeAttachedFiles.map(f => `📎 ${f.name} (${(f.size/1024).toFixed(0)}kb)`).join(' &nbsp;·&nbsp; ')
+    + ` <span onclick="claudeAttachedFiles=[];showFilePreview()" style="color:var(--primary);cursor:pointer;margin-left:6px">clear</span>`;
+}
+
+async function claudePageQuick(text) {
+  document.getElementById('claude-page-input').value = text;
+  claudePageSend();
+}
+
+async function claudePageSend() {
+  const input = document.getElementById('claude-page-input');
+  const text = input.value.trim();
+  if (!text && !claudeAttachedFiles.length) return;
+  input.value = '';
+
+  const userText = text + (claudeAttachedFiles.length ? ` [${claudeAttachedFiles.length} file(s) attached]` : '');
+  claudePageAddMsg(userText, true);
+  claudeAttachedFiles = [];
+  showFilePreview && showFilePreview();
+
+  claudePageAddMsg('<span class="typing-dots">Thinking<span>.</span><span>.</span><span>.</span></span>', false, 'claude-typing');
+
+  const systemPrompt = `You are the Dapcor BCO assistant — an AI embedded in Dapcor Building Services' procurement and operations platform. You help with:
+- Adding products to the product library (identify template: bag, sheet/board, linear, tube/sausage)
+- Adding supplier profiles
+- Checking and summarising open quote requests
+- Booking labour hire (JV Labour, contact Adrian)
+- Reading invoices and flagging price discrepancies
+- Updating prices
+
+Current product categories: Sand, Cement, Concrete, Aggregate, Waterproofing, Structural Repair, Timber, Protection.
+Dapcor account: 16 Booralee St Botany NSW 2019. Yard Manager: Ben Lawrence.
+
+Keep responses concise and action-focused. When adding a product, confirm all fields extracted. When a field is missing, ask for it.`;
+
+  try {
+    const messages = [...claudePageHistory, { role: 'user', content: text || 'I have attached a file for you to review.' }];
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, system: systemPrompt, messages })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(c => c.text || '').join('') || 'Sorry, I could not get a response.';
+    claudePageHistory.push({ role: 'user', content: text });
+    claudePageHistory.push({ role: 'assistant', content: reply });
+    if (claudePageHistory.length > 20) claudePageHistory = claudePageHistory.slice(-20);
+    document.getElementById('claude-typing')?.remove();
+    claudePageAddMsg(reply, false);
+  } catch(e) {
+    document.getElementById('claude-typing')?.remove();
+    claudePageAddMsg('Connection error — please try again.', false);
+  }
+}
+
+function claudePageAddMsg(text, isUser, id) {
+  const msgs = document.getElementById('claude-page-msgs');
+  if (!msgs) return;
+  const div = document.createElement('div');
+  if (id) div.id = id;
+  div.style.cssText = `display:flex;justify-content:${isUser?'flex-end':'flex-start'};margin-bottom:.6rem`;
+  div.innerHTML = `<div style="max-width:88%;padding:.6rem .85rem;border-radius:${isUser?'12px 4px 12px 12px':'4px 12px 12px 12px'};background:${isUser?'#6366f1':'var(--card2)'};color:${isUser?'#fff':'var(--text)'};font-size:13px;line-height:1.5;white-space:pre-wrap">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ============================================================
+// CLAUDE FLOAT
+// ============================================================
+var floatOpen = false;
+var floatHistory = [];
+
+function toggleClaudeFloat() {
+  floatOpen = !floatOpen;
+  document.getElementById('claude-float').style.display = floatOpen ? 'block' : 'none';
+  if (floatOpen) document.getElementById('float-input').focus();
+}
+
+function floatQuick(text) {
+  document.getElementById('float-input').value = text;
+  floatSend();
+}
+
+async function floatSend() {
+  const input = document.getElementById('float-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  floatAddMsg(text, true);
+  floatAddMsg('<span class="typing-dots">...</span>', false, 'float-typing');
+
+  const systemPrompt = `You are the Dapcor BCO assistant. Keep replies very short — max 3 sentences. Help with adding products, suppliers, quotes, booking labour, checking invoices. Yard Manager is Ben Lawrence at Dapcor Building Services, 16 Booralee St Botany NSW 2019.`;
+
+  try {
+    const messages = [...floatHistory, { role: 'user', content: text }];
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 300, system: systemPrompt, messages })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(c => c.text || '').join('') || 'Sorry, try again.';
+    floatHistory.push({ role: 'user', content: text });
+    floatHistory.push({ role: 'assistant', content: reply });
+    if (floatHistory.length > 10) floatHistory = floatHistory.slice(-10);
+    document.getElementById('float-typing')?.remove();
+    floatAddMsg(reply, false);
+  } catch(e) {
+    document.getElementById('float-typing')?.remove();
+    floatAddMsg('Connection error.', false);
+  }
+}
+
+function floatAddMsg(text, isUser, id) {
+  const msgs = document.getElementById('float-msgs');
+  if (!msgs) return;
+  const div = document.createElement('div');
+  if (id) div.id = id;
+  div.style.cssText = `display:flex;justify-content:${isUser?'flex-end':'flex-start'};margin-bottom:.5rem`;
+  div.innerHTML = `<div style="max-width:90%;padding:.5rem .75rem;border-radius:${isUser?'10px 3px 10px 10px':'3px 10px 10px 10px'};background:${isUser?'#6366f1':'var(--card2)'};color:${isUser?'#fff':'var(--text)'};font-size:12px;line-height:1.5">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
 loadLocal();
 renderCurrentPage();
 updateBadge();
