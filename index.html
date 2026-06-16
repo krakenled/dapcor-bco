@@ -238,7 +238,8 @@ textarea.inp{resize:vertical;min-height:70px}
   </div>
 
   <div class="content">
-    <div id="page-browse"    class="page active"></div>
+    <div id="page-login"     class="page active"></div>
+    <div id="page-browse"    class="page"></div>
     <div id="page-detail"    class="page"></div>
     <div id="page-cart"      class="page"></div>
     <div id="page-order"     class="page"></div>
@@ -246,6 +247,9 @@ textarea.inp{resize:vertical;min-height:70px}
     <div id="page-submit"    class="page"></div>
     <div id="page-admin"     class="page"></div>
     <div id="page-claude"    class="page"></div>
+    <div id="page-trade"     class="page"></div>
+    <div id="page-comms"     class="page"></div>
+    <div id="page-yard"      class="page"></div>
   </div>
 
   <!-- Claude floating button -->
@@ -277,32 +281,7 @@ textarea.inp{resize:vertical;min-height:70px}
     </div>
   </div>
 
-  <nav class="nav" style="font-size:9px">
-    <button class="nav-btn active" id="nav-browse" onclick="nav('browse')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Browse
-    </button>
-    <button class="nav-btn" id="nav-cart" onclick="nav('cart')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Order
-      <span class="badge" id="cart-badge" style="display:none">0</span>
-    </button>
-    <button class="nav-btn" id="nav-broadcast" onclick="nav('broadcast')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 12.3 19.79 19.79 0 0 1 1.87 3.69 2 2 0 0 1 3.84 1.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Board
-      <span class="badge" id="bc-badge" style="display:none">0</span>
-    </button>
-    <button class="nav-btn" id="nav-order" onclick="nav('order')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Send
-    </button>
-    <button class="nav-btn" id="nav-submit" onclick="nav('submit')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>Suggest
-      <span class="badge" id="submit-badge" style="display:none">0</span>
-    </button>
-    <button class="nav-btn" id="nav-admin" onclick="nav('admin')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>Admin
-    </button>
-    <button class="nav-btn" id="nav-claude" onclick="nav('claude')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Claude
-    </button>
-  </nav>
+  <nav class="nav" style="font-size:9px" id="main-nav"></nav>
 </div>
 
 <script>
@@ -375,6 +354,93 @@ const SEED_SUPPLIERS = [
     hasAccount:false, accountNumber:'', creditTerms:'COD', tradingHours:'Mon–Fri 10am–4pm',
     minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:4, maxLoadKg:4000,
     hasCrane:false, hasForklift:false, notes:'Click & collect available. Waterproofing accessories and angles.' },
+  // SUBCONTRACTORS & LABOUR HIRE
+  { id:'sup-jv-recruitment', name:'JV Recruitment', phone:'0406 516 169', email:'darren@jvrecruitment.com.au', website:'https://www.jvrecruitment.com.au', repName:'Darren Flynn', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Labour hire. Contact: Darren Flynn.', category:'Labour Hire', trade:'General Labour' },
+  { id:'sup-a1-remedial', name:'A1 Remedial', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Labour hire / material handling.', category:'Labour Hire', trade:'Labour Hire' },
+  { id:'sup-kpr', name:'KPR', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Labour hire / traffic control.', category:'Labour Hire', trade:'Labour Hire' },
+  { id:'sup-brilliant-electrical', name:'Brilliant Electrical', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Electrical.', category:'Subcontractor', trade:'Electrical' },
+  { id:'sup-neoline', name:'Neoline Electrical', phone:'0455 055 636', email:'service@neoline.com.au', website:'https://www.neoline.com.au', repName:'Arthur', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Electrical. Contact: Arthur.', category:'Subcontractor', trade:'Electrical' },
+  { id:'sup-silverback', name:'Silver Back Scaffolding', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Scaffold.', category:'Subcontractor', trade:'Scaffold' },
+  { id:'sup-air-construction', name:'Air Construction', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Scaffold.', category:'Subcontractor', trade:'Scaffold' },
+  { id:'sup-oceania', name:'Oceania', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Scaffold.', category:'Subcontractor', trade:'Scaffold' },
+  { id:'sup-all-stripped', name:'All Stripped', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Demolition.', category:'Subcontractor', trade:'Demolition' },
+  { id:'sup-dc-demo', name:'DC Demo', phone:'0423 912 544', email:'tom@dcdemos.net', website:'', repName:'Tom Trayers', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Demolition / Hazardous Material. Contact: Tom Trayers.', category:'Subcontractor', trade:'Demolition' },
+  { id:'sup-treaty', name:'Treaty Bricklaying', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Brickwork.', category:'Subcontractor', trade:'Brickwork' },
+  { id:'sup-zabby', name:'Zabby', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Brickwork.', category:'Subcontractor', trade:'Brickwork' },
+  { id:'sup-kmt', name:'KMT', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Brickwork.', category:'Subcontractor', trade:'Brickwork' },
+  { id:'sup-staples', name:'Staples Waterproofing', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Waterproofing.', category:'Subcontractor', trade:'Waterproofing' },
+  { id:'sup-jmb-waterproofing', name:'JMB Waterproofing', phone:'0431 436 561', email:'joe@jmbwaterproofing.com.au', website:'https://www.jmbwaterproofing.com.au', repName:'Joe Brady', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Waterproofing. Contact: Joe Brady.', category:'Subcontractor', trade:'Waterproofing' },
+  { id:'sup-watertight', name:'Watertight', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Waterproofing.', category:'Subcontractor', trade:'Waterproofing' },
+  { id:'sup-3yn', name:'3YN Tiling - Jeff', phone:'', email:'', website:'', repName:'Jeff', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Tiling / Screeding / Paving. Contact: Jeff.', category:'Subcontractor', trade:'Tiling & Screeding' },
+  { id:'sup-precision-tiling', name:'Precision Tiling Pty Ltd', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Tiling.', category:'Subcontractor', trade:'Tiling & Screeding' },
+  { id:'sup-lim-tiling', name:'LIM Tiling', phone:'0413 294 540', email:'', website:'', repName:'Lim', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Tiling. Contact: Lim. Email TBC.', category:'Subcontractor', trade:'Tiling & Screeding' },
+  { id:'sup-screedpro', name:'Screedpro Sydney', phone:'02 4257 6666', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Screeding. Email and contact TBC.', category:'Subcontractor', trade:'Tiling & Screeding' },
+  { id:'sup-cemecrete', name:'Cemecrete', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Concrete work. New contractor.', category:'Subcontractor', trade:'Concrete' },
+  { id:'sup-abbas-rendering', name:'Abbas Rendering', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Rendering.', category:'Subcontractor', trade:'Rendering' },
+  { id:'sup-xray-rendering', name:'X-Ray Rendering', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Rendering.', category:'Subcontractor', trade:'Rendering' },
+  { id:'sup-railsafe', name:'Rail Safe', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Balustrading.', category:'Subcontractor', trade:'Balustrading' },
+  { id:'sup-pgs', name:'PGS Balustrading', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Balustrading.', category:'Subcontractor', trade:'Balustrading' },
+  { id:'sup-tk', name:'T&K', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Windows & Doors supply and install / remove and reinstate.', category:'Subcontractor', trade:'Windows & Doors' },
+  { id:'sup-magic-glass', name:'Magic Glass', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Windows supply and install.', category:'Subcontractor', trade:'Windows & Doors' },
+  { id:'sup-solomons', name:'Solomons Fire Doors', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Fire doors supply and install.', category:'Subcontractor', trade:'Windows & Doors' },
+  { id:'sup-sierra', name:'Sierra Windows and Doors', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Windows supply only.', category:'Subcontractor', trade:'Windows & Doors' },
+  { id:'sup-orion', name:'Orion', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Windows supply only.', category:'Subcontractor', trade:'Windows & Doors' },
+  { id:'sup-edon', name:'Edon Build', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Carpentry / remove and reinstate doors.', category:'Subcontractor', trade:'Carpentry' },
+  { id:'sup-tomkat', name:'TomKat', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Roofing.', category:'Subcontractor', trade:'Roofing' },
+  { id:'sup-metaldeck', name:'Metaldeck', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Roofing.', category:'Subcontractor', trade:'Roofing' },
+  { id:'sup-mg-industrials', name:'MG Industrials', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Rope Access.', category:'Subcontractor', trade:'Rope Access' },
+  { id:'sup-rj-rope', name:'RJ Rope Access', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Rope Access.', category:'Subcontractor', trade:'Rope Access' },
+  { id:'sup-precise-painting', name:'Precise Painting', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Painting / Hazardous Material.', category:'Subcontractor', trade:'Painting' },
+  { id:'sup-tony-isgrove', name:"Tony Isgrove's Paint and Decorate", phone:'', email:'', website:'', repName:'Tony Isgrove', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Painting.', category:'Subcontractor', trade:'Painting' },
+  { id:'sup-krasim', name:'Krasim', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Painting.', category:'Subcontractor', trade:'Painting' },
+  { id:'sup-united-plumbing', name:'United Plumbing Group', phone:'', email:'brady@unitedplumbinggroup.com', website:'https://www.unitedplumbinggroup.com', repName:'Brady', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Plumbing. Contact: Brady.', category:'Subcontractor', trade:'Plumbing' },
+  { id:'sup-fj-plumbing', name:'FJ Plumbing', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Plumbing.', category:'Subcontractor', trade:'Plumbing' },
+  { id:'sup-nick-chen', name:'Nick Chen Plastering', phone:'', email:'', website:'', repName:'Nick Chen', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Gyprock / Plaster.', category:'Subcontractor', trade:'Plastering' },
+  { id:'sup-3brothers', name:'3 Brothers Plastering', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Gyprock / Plaster.', category:'Subcontractor', trade:'Plastering' },
+  { id:'sup-voltcom', name:'Voltcom', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Air Con.', category:'Subcontractor', trade:'Air Con' },
+  { id:'sup-premi-air', name:'Premi Air', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Air Con.', category:'Subcontractor', trade:'Air Con' },
+  { id:'sup-malabar', name:'Malabar Marine Engineering', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Fabrication.', category:'Subcontractor', trade:'Fabrication' },
+  { id:'sup-adaptalift', name:'Adaptalift', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Equipment hire — EWP (Elevated Work Platform).', category:'Equipment Hire', trade:'EWP' },
+  { id:'sup-aussie-hoist', name:'Aussie Hoist', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Equipment hire — Material Hoist.', category:'Equipment Hire', trade:'Material Hoist' },
+  { id:'sup-conveying', name:'Conveying and Hoisting Solutions', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Equipment hire — Material Hoist.', category:'Equipment Hire', trade:'Material Hoist' },
+  { id:'sup-sydney-conveying', name:'Sydney Conveying Solutions', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Equipment hire — Material Hoist.', category:'Equipment Hire', trade:'Material Hoist' },
+  { id:'sup-living-tiles', name:'Living Tiles', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Tile supply only.', category:'Materials', trade:'Tile Supply' },
+  { id:'sup-amber-tiles', name:'Amber Tiles', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Tile supply only.', category:'Materials', trade:'Tile Supply' },
+  { id:'sup-igroup', name:'Igroup', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Traffic control.', category:'Subcontractor', trade:'Traffic Control' },
+  { id:'sup-northern-fire', name:'Northern Fire Protection', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Wet Fire.', category:'Subcontractor', trade:'Fire' },
+  { id:'sup-betr-fire', name:'Betr Fire', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Dry Fire.', category:'Subcontractor', trade:'Fire' },
+  { id:'sup-bowsers', name:'Bowsers', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Passive Fire.', category:'Subcontractor', trade:'Fire' },
+  // DUMMY TEST SUPPLIERS — safe to send test emails
+  { id:'sup-neoline', name:'Neoline Electrical', phone:'0455 055 636', email:'service@neoline.com.au',
+    website:'https://www.neoline.com.au', repName:'Arthur', address:'',
+    hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0,
+    hasCrane:false, hasForklift:false, notes:'Subcontractor — Electrical. Contact: Arthur.', category:'Subcontractor', trade:'Electrical' },
+  { id:'sup-jmb-waterproofing', name:'JMB Waterproofing', phone:'0431 436 561', email:'joe@jmbwaterproofing.com.au',
+    website:'https://www.jmbwaterproofing.com.au', repName:'Joe Brady', address:'',
+    hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0,
+    hasCrane:false, hasForklift:false, notes:'Subcontractor — Waterproofing. Contact: Joe Brady.', category:'Subcontractor', trade:'Waterproofing' },
+  { id:'sup-screedpro', name:'Screedpro Sydney', phone:'02 4257 6666', email:'',
+    website:'', repName:'', address:'',
+    hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0,
+    hasCrane:false, hasForklift:false, notes:'Subcontractor — Screeding. Email and contact TBC.', category:'Subcontractor', trade:'Screeding' },
+  { id:'sup-lim-tiling', name:'Lim Tiling', phone:'0413 294 540', email:'',
+    website:'', repName:'Lim', address:'',
+    hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0,
+    hasCrane:false, hasForklift:false, notes:'Subcontractor — Tiling. Contact: Lim. Email TBC.', category:'Subcontractor', trade:'Tiling' },
+  { id:'sup-dc-demo', name:'DC Demo', phone:'0423 912 544', email:'tom@dcdemos.net',
+    website:'', repName:'Tom Trayers', address:'',
+    hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0,
+    hasCrane:false, hasForklift:false, notes:'Subcontractor — Demolition. Contact: Tom Trayers.', category:'Subcontractor', trade:'Demolition' },
+  { id:'sup-jv-recruitment', name:'JV Recruitment', phone:'0406 516 169', email:'darren@jvrecruitment.com.au',
+    website:'https://www.jvrecruitment.com.au', repName:'Darren Flynn', address:'',
+    hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'',
+    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0,
+    hasCrane:false, hasForklift:false, notes:'Labour hire. Contact: Darren Flynn.', category:'Labour Hire', trade:'General Labour' },
   // DUMMY TEST SUPPLIERS — safe to send test emails
   { id:'sup-test1', name:'TEST SUPPLIER A (do not use for real orders)', phone:'0400 000 001', email:'ben@dapcor.com.au',
     website:'', repName:'Test Rep', address:'1 Test St, Sydney NSW 2000',
@@ -530,15 +596,45 @@ const SEED_CONTACTS = [
 ];
 
 const SEED_JOBSITES = [
-  { id:'site-1', address:'244 Bulwarra Rd, Ultimo NSW 2007', procore:'2024-081', suffix:'A', po:'2024-081-A', pm:'Mitchell Reilly', apm:'Alexander Han', foreman:'Damon Riordan', leadingHand:'Ayden Murrell', liveSite:true, notes:'Occupied building — residents present. No deliveries before 7:30am.' },
-  { id:'site-2', address:'22 Jenkins St, Cammeray NSW 2062', procore:'2024-092', suffix:'A', po:'2024-092-A', pm:'Mitchell Reilly', apm:'Jack Dwyer', foreman:'Milan Soni', leadingHand:'Mattia Tomasin', liveSite:true, notes:'Strata building. Check with concierge on arrival.' }
+  { id:'site-1', address:'12 Rancom St, Botany NSW 2019', procore:'25044', suffix:'A', po:'25044-A', pm:'Ariyan Yousefi', apm:'Jack Dwyer', foreman:'Peter Yeboah', leadingHand:'', liveSite:true, notes:'Team: Peter, Leo.' },
+  { id:'site-2', address:'43-45 Wilson St, Botany NSW 2019', procore:'25008', suffix:'A', po:'25008-A', pm:'Ariyan Yousefi', apm:'Jack Dwyer', foreman:'Peter Yeboah', leadingHand:'Ayden Murrell', liveSite:true, notes:'Team: Peter, Alyssa Larkins, Ayden Murrell.' },
+  { id:'site-3', address:'285-287 Condamine St, Manly Vale NSW 2093', procore:'25011', suffix:'A', po:'25011-A', pm:'Kata Raju', apm:'Steven Wilson', foreman:'Michael Bradley', leadingHand:'', liveSite:true, notes:'Foreman: Mick Bradley.' },
+  { id:'site-4', address:'57-63 Belmore Rd, Randwick NSW 2031', procore:'24103', suffix:'A', po:'24103-A', pm:'Kata Raju', apm:'Alac Kdouh', foreman:'Rocco Pasqua', leadingHand:'', liveSite:true, notes:'Site Manager: Rocco Pasqua.' },
+  { id:'site-5', address:'146-152 Pitt St, Redfern NSW 2016', procore:'24094', suffix:'A', po:'24094-A', pm:'Ariyan Yousefi', apm:'Alac Kdouh', foreman:'Regan Raveane', leadingHand:'', liveSite:true, notes:'Team: Regan Raveane, Dylan Atkins, Zaki Zaki.' },
+  { id:'site-6', address:'60 Walker St, Rhodes NSW 2138', procore:'25105', suffix:'A', po:'25105-A', pm:'Steven Wilson', apm:'Nick Bagherinezhad', foreman:'Brenner Da Silva', leadingHand:'', liveSite:true, notes:'Foreman: Brenner Da Silva.' },
+  { id:'site-7', address:'26 Gerard St, Cremorne NSW 2090', procore:'F25005', suffix:'A', po:'F25005-A', pm:'Alexander Han', apm:'Evan Kapatos', foreman:'Harry Palin', leadingHand:'', liveSite:true, notes:'Fire upgrade job. Site Manager: Harry Palin.' },
+  { id:'site-8', address:'33/344 Bulwarra Rd, Ultimo NSW 2007', procore:'25049', suffix:'A', po:'25049-A', pm:'Kata Raju', apm:'Alexander Han', foreman:'Mattia Tomasin', leadingHand:'', liveSite:true, notes:'Stage 2. Team: Mattia Tomasin, Francisco Acuna-Bustos, Tariq Suleiman.' },
+  { id:'site-9', address:'74 Mitchell Rd, Alexandria NSW 2015', procore:'24105', suffix:'A', po:'24105-A', pm:'Ariyan Yousefi', apm:'Alexander Han', foreman:'Tim Kartzke', leadingHand:'', liveSite:true, notes:'Foreman: Tim Kartzke.' },
+  { id:'site-10', address:'5 Celebration Dve, Bella Vista NSW 2153', procore:'25109', suffix:'A', po:'25109-A', pm:'Steven Wilson', apm:'Nick Bagherinezhad', foreman:'Brenner Da Silva', leadingHand:'', liveSite:false, notes:'Foreman: Brenner Da Silva.' },
+  { id:'site-11', address:'2-4 Bellevue St, Surry Hills NSW 2010', procore:'25088', suffix:'A', po:'25088-A', pm:'Mitchell Reilly', apm:'Alac Kdouh', foreman:'Ahmed Juma', leadingHand:'', liveSite:true, notes:'Site Manager: Ahmed Juma.' },
+  { id:'site-12', address:'428-430 Railway Pde, Allawah NSW 2218', procore:'25003', suffix:'A', po:'25003-A', pm:'Taj Beesley', apm:'Mitchell Reilly', foreman:'Darren Larkins', leadingHand:'', liveSite:true, notes:'Team: Darren Larkins, Damon Riordan, James Serhal.' },
+  { id:'site-13', address:'1-7 Queens Ave, Rushcutters Bay NSW 2011', procore:'25127', suffix:'A', po:'25127-A', pm:'Steven Wilson', apm:'Raphael Nacamae', foreman:'Samuel Hai', leadingHand:'', liveSite:true, notes:'Foreman: Samuel Hai.' }
 ];
 
 const SEED_USERS = [
-  { id:'usr-1', name:'Mitchell Reilly', position:'Project Manager', email:'mitchellreilly@dapcor.com.au', phone:'0425 424 755', accessLevel:3 },
-  { id:'usr-2', name:'Alexander Han', position:'Assistant Project Manager', email:'alexander@dapcor.com.au', phone:'0434 612 876', accessLevel:2 },
-  { id:'usr-3', name:'Damon Riordan', position:'Site Foreman', email:'damon@dapcor.com.au', phone:'0497 355 880', accessLevel:1 },
-  { id:'usr-4', name:'Ayden Murrell', position:'Leading Hand', email:'ayden@dapcor.com.au', phone:'0409 244 148', accessLevel:1 }
+  { id:'usr-ben', name:'Benjamin Lawrence', position:'Yard Manager', email:'ben@dapcor.com.au', phone:'0484 548 274', accessLevel:5 },
+  { id:'usr-ariyan', name:'Ariyan Yousefi', position:'Director of Operations', email:'ariyan@dapcor.com.au', phone:'0434 042 190', accessLevel:4 },
+  { id:'usr-oliver', name:'Oliver Reithmeier', position:'Managing Director', email:'oliver@dapcor.com.au', phone:'0414 992 677', accessLevel:6 },
+  { id:'usr-mitch', name:'Mitchell Reilly', position:'Project Manager', email:'mitchellreilly@dapcor.com.au', phone:'0425 424 755', accessLevel:3 },
+  { id:'usr-steven', name:'Steven Wilson', position:'Project Manager', email:'steven@dapcor.com.au', phone:'0421 230 270', accessLevel:3 },
+  { id:'usr-kata', name:'Kata Raju', position:'Project Manager', email:'kata@dapcor.com.au', phone:'0414 782 921', accessLevel:3 },
+  { id:'usr-alexander', name:'Alexander Han', position:'Assistant Project Manager', email:'alexander@dapcor.com.au', phone:'0434 612 876', accessLevel:2 },
+  { id:'usr-jack', name:'Jack Dwyer', position:'Assistant Project Manager', email:'jackd@dapcor.com.au', phone:'0431 877 847', accessLevel:2 },
+  { id:'usr-raphael', name:'Raphael Nacamae', position:'Assistant Project Manager', email:'raphael@dapcor.com.au', phone:'0450 619 896', accessLevel:2 },
+  { id:'usr-ahmed', name:'Ahmed Juma', position:'Site Manager', email:'ahmed@dapcor.com.au', phone:'0405 995 778', accessLevel:2 },
+  { id:'usr-harry', name:'Harry Palin', position:'Site Manager', email:'harryp@dapcor.com.au', phone:'0422 452 843', accessLevel:2 },
+  { id:'usr-rocco', name:'Rocco Pasqua', position:'Site Manager', email:'rocco@dapcor.com.au', phone:'0414 584 017', accessLevel:2 },
+  { id:'usr-damon', name:'Damon Riordan', position:'Site Manager', email:'damon@dapcor.com.au', phone:'0497 355 880', accessLevel:2 },
+  { id:'usr-brenner', name:'Brenner Da Silva', position:'Site Foreman', email:'brenner@dapcor.com.au', phone:'0405 672 976', accessLevel:1 },
+  { id:'usr-darren', name:'Darren Larkins', position:'Site Foreman', email:'dlarkins@dapcor.com.au', phone:'0422 382 220', accessLevel:1 },
+  { id:'usr-mick', name:'Michael Bradley', position:'Site Foreman', email:'mickb@dapcor.com.au', phone:'0408 657 012', accessLevel:1 },
+  { id:'usr-milan', name:'Milan Soni', position:'Site Foreman', email:'milan@dapcor.com.au', phone:'0432 610 366', accessLevel:1 },
+  { id:'usr-peter', name:'Peter Yeboah', position:'Site Foreman', email:'peter@dapcor.com.au', phone:'0431 747 975', accessLevel:1 },
+  { id:'usr-regan', name:'Regan Raveane', position:'Site Foreman', email:'regan@dapcor.com.au', phone:'0448 179 004', accessLevel:1 },
+  { id:'usr-samuel', name:'Samuel Hai', position:'Site Foreman', email:'samuel@dapcor.com.au', phone:'0433 533 969', accessLevel:1 },
+  { id:'usr-tim', name:'Tim Kartzke', position:'Site Foreman', email:'tim@dapcor.com.au', phone:'0422 786 185', accessLevel:1 },
+  { id:'usr-ayden', name:'Ayden Murrell', position:'Leading Hand', email:'ayden@dapcor.com.au', phone:'0409 244 148', accessLevel:1 },
+  { id:'usr-mattia', name:'Mattia Tomasin', position:'Leading Hand', email:'mattia@dapcor.com.au', phone:'0408 954 612', accessLevel:1 }
 ];
 
 const SEED_QUOTES = [
@@ -560,6 +656,11 @@ let DB = { suppliers:[], products:[], pricing:[], contacts:[], orders:[], settin
 let SETTINGS = {};
 let cart = []; // [{id, productId, supplierId, orderType, qty}]
 let currentPage = 'browse';
+let currentUser = null; // set on login
+
+function getUserAccessLevel() { return currentUser ? currentUser.accessLevel : 1; }
+function isYardOrAbove() { return getUserAccessLevel() >= 5; }
+function isPMOrAbove() { return getUserAccessLevel() >= 3; }
 let pageHistory = [];
 let detailProductId = null;
 let detailOrderType = 'pallet';
@@ -809,6 +910,11 @@ function renderCurrentPage() {
   else if (currentPage === 'submit')    renderSubmit();
   else if (currentPage === 'admin')     renderAdmin();
   else if (currentPage === 'claude')    renderClaude();
+  else if (currentPage === 'trade')     renderTrade();
+  else if (currentPage === 'comms')     renderComms();
+  else if (currentPage === 'yard')      renderYard();
+  else if (currentPage === 'login')     renderLogin();
+  renderNav();
   updateHeader();
   updateBadge();
 }
@@ -1763,7 +1869,7 @@ function checkAdmin() {
   } else showToast('Wrong password');
 }
 
-function setAdminTab(t) { adminTab = t; renderAdminPanel(); }
+function setAdminTab(t) { adminTab = t; renderAdmin(); }
 
 function renderAdminPanel() {
   const el = document.getElementById('admin-panel');
@@ -2828,8 +2934,236 @@ function timeSince(iso) {
 }
 
 // ============================================================
-// CLAUDE PAGE
+// NAV — PERMISSION BASED
 // ============================================================
+function renderNav() {
+  const nav = document.getElementById('main-nav');
+  if (!nav) return;
+  const level = getUserAccessLevel();
+  const isLogin = currentPage === 'login';
+
+  if (isLogin) { nav.style.display = 'none'; return; }
+  nav.style.display = 'flex';
+
+  const svgs = {
+    browse: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>',
+    cart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
+    yard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/></svg>',
+    trade: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    comms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    admin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>',
+    claude: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'
+  };
+
+  const foreman = [
+    { page:'browse', label:'Browse', svg:svgs.browse },
+    { page:'cart', label:'Order', svg:svgs.cart },
+    { page:'yard', label:'Yard', svg:svgs.yard },
+    { page:'trade', label:'Trade', svg:svgs.trade },
+    { page:'comms', label:'Comms', svg:svgs.comms }
+  ];
+  const yardExtra = [
+    { page:'admin', label:'Admin', svg:svgs.admin },
+    { page:'claude', label:'Claude', svg:svgs.claude }
+  ];
+
+  const tabs = level >= 5 ? [...foreman, ...yardExtra] : foreman;
+
+  nav.innerHTML = tabs.map(t => `
+    <button class="nav-btn ${currentPage===t.page?'active':''}" onclick="nav('${t.page}')">
+      ${t.svg}${t.label}
+      ${t.page==='cart' ? '<span class="badge" id="cart-badge" style="display:none">0</span>' : ''}
+    </button>`).join('');
+}
+
+// ============================================================
+// LOGIN PAGE
+// ============================================================
+function renderLogin() {
+  const el = document.getElementById('page-login');
+  const users = DB.users || SEED_USERS;
+  el.innerHTML = `
+    <div style="padding:2rem 1rem 1rem;text-align:center">
+      <img src="https://cdn.prod.website-files.com/689407b698444c58db5017d2/689b2ee878e92fbb778c95a4_11590-Dapcor%20master%20logo_rgb_logo.png" alt="Dapcor" style="height:40px;width:auto;margin-bottom:1.5rem;display:block;margin-left:auto;margin-right:auto">
+      <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px">BCO Platform</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:2rem">Browse · Compare · Order</div>
+    </div>
+    <div style="padding:0 1rem">
+      <div style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.75rem">Select your profile</div>
+      ${users.map(u => `
+        <div onclick="loginAs('${u.id}')" style="display:flex;align-items:center;gap:12px;padding:.75rem 1rem;background:var(--card);border:0.5px solid var(--border);border-radius:var(--border-radius-lg);margin-bottom:8px;cursor:pointer">
+          <div style="width:36px;height:36px;border-radius:50%;background:${u.accessLevel>=5?'#1D9E75':u.accessLevel>=3?'#6366f1':u.accessLevel>=2?'#f97316':'var(--primary)'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0">${u.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:500;color:var(--text)">${u.name}</div>
+            <div style="font-size:12px;color:var(--text3)">${u.position}</div>
+          </div>
+          <div style="font-size:11px;padding:2px 8px;border-radius:20px;background:${u.accessLevel>=5?'#E1F5EE':u.accessLevel>=3?'#EEEDFE':'var(--card2)'};color:${u.accessLevel>=5?'#085041':u.accessLevel>=3?'#3C3489':'var(--text3)'}">${u.accessLevel>=5?'Yard Manager':u.accessLevel>=4?'Operations':u.accessLevel>=3?'PM':u.accessLevel>=2?'Manager':'Foreman'}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function loginAs(userId) {
+  const users = DB.users || SEED_USERS;
+  currentUser = users.find(u => u.id === userId);
+  if (!currentUser) return;
+  nav('browse');
+}
+
+// ============================================================
+// TRADE & LABOUR PAGE
+// ============================================================
+let tradeTab = 'subcontractors';
+function renderTrade() {
+  const el = document.getElementById('page-trade');
+  const subs = (DB.suppliers || []).filter(s => s.category === 'Subcontractor');
+  const labour = (DB.suppliers || []).filter(s => s.category === 'Labour Hire');
+  const equip = (DB.suppliers || []).filter(s => s.category === 'Equipment Hire');
+
+  // Group subs by trade
+  const grouped = {};
+  subs.forEach(s => {
+    if (!grouped[s.trade]) grouped[s.trade] = [];
+    grouped[s.trade].push(s);
+  });
+
+  el.innerHTML = `
+    <div style="padding:0 1rem">
+      <div class="admin-tabs" style="margin-bottom:12px">
+        <div class="a-tab ${tradeTab==='subcontractors'?'active':''}" onclick="tradeTab='subcontractors';renderTrade()">Subcontractors</div>
+        <div class="a-tab ${tradeTab==='labour'?'active':''}" onclick="tradeTab='labour';renderTrade()">Labour Hire</div>
+        <div class="a-tab ${tradeTab==='equipment'?'active':''}" onclick="tradeTab='equipment';renderTrade()">Equipment</div>
+      </div>
+      ${tradeTab === 'subcontractors' ? renderSubsByTrade(grouped) : tradeTab === 'labour' ? renderTradeList(labour) : renderTradeList(equip)}
+      <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="alert('Request quote / tender — coming soon')">+ Request quote / tender</button>
+    </div>`;
+}
+
+function renderSubsByTrade(grouped) {
+  if (!Object.keys(grouped).length) return '<div class="empty"><p>None added yet</p></div>';
+  return Object.entries(grouped).map(([trade, suppliers]) => `
+    <div style="margin-bottom:4px">
+      <div style="font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;padding:.5rem 0 .25rem">${trade}</div>
+      ${renderTradeList(suppliers)}
+    </div>`).join('');
+}
+
+function renderTradeList(suppliers) {
+  if (!suppliers.length) return '<div class="empty"><p>None added yet</p></div>';
+  return suppliers.map(s => `
+    <div class="card" style="margin-bottom:10px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:600;color:var(--text)">${s.name}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">${s.trade || ''} ${s.repName ? '· ' + s.repName : ''}</div>
+          ${s.email ? `<div style="font-size:12px;color:var(--primary);margin-top:2px">${s.email}</div>` : ''}
+          ${s.notes ? `<div style="font-size:11px;color:var(--text3);margin-top:4px;font-style:italic">${s.notes}</div>` : ''}
+        </div>
+        ${s.phone ? `
+        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;margin-left:12px">
+          <a href="tel:${s.phone.replace(/\s/g,'')}" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#E1F5EE;text-decoration:none" title="Call ${s.repName || s.name}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#085041" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 12.3 19.79 19.79 0 0 1 1.87 3.69 2 2 0 0 1 3.84 1.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </a>
+          ${s.email ? `
+          <a href="mailto:${s.email}" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#EEEDFE;text-decoration:none" title="Email ${s.repName || s.name}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3C3489" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </a>` : ''}
+        </div>` : ''}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button onclick="alert('Request quote — coming soon')" style="flex:1;padding:7px;border-radius:8px;border:0.5px solid var(--border);background:var(--card);font-size:12px;cursor:pointer;color:var(--text)">Request quote</button>
+        <button onclick="alert('Book — coming soon')" style="flex:1;padding:7px;border-radius:8px;background:var(--primary);border:none;font-size:12px;cursor:pointer;color:#fff;font-weight:500">Book</button>
+      </div>
+    </div>`).join('');
+}
+
+// ============================================================
+// COMMS PAGE
+// ============================================================
+let commsTab = 'sent';
+function renderComms() {
+  const el = document.getElementById('page-comms');
+  el.innerHTML = `
+    <div style="padding:0 1rem">
+      <div class="admin-tabs" style="margin-bottom:12px">
+        <div class="a-tab ${commsTab==='sent'?'active':''}" onclick="commsTab='sent';renderComms()">Sent</div>
+        <div class="a-tab ${commsTab==='received'?'active':''}" onclick="commsTab='received';renderComms()">Received</div>
+        <div class="a-tab ${commsTab==='quotes'?'active':''}" onclick="commsTab='quotes';renderComms()">Quotes</div>
+        <div class="a-tab ${commsTab==='alerts'?'active':''}" onclick="commsTab='alerts';renderComms()">Alerts</div>
+      </div>
+      ${commsTab === 'quotes' ? renderCommsQuotes() : `<div class="empty"><p>${commsTab.charAt(0).toUpperCase()+commsTab.slice(1)} emails will appear here once Gmail is connected.</p></div>`}
+    </div>`;
+}
+
+function renderCommsQuotes() {
+  const quotes = SEED_QUOTES || [];
+  if (!quotes.length) return '<div class="empty"><p>No open quote requests</p></div>';
+  return quotes.map(q => {
+    const replied = q.suppliers.filter(s => s.replied);
+    const waiting = q.suppliers.filter(s => !s.replied);
+    return `
+      <div class="card" style="margin-bottom:12px">
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">${q.product}</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Sent ${q.requestDate} · ${replied.length}/${q.suppliers.length} replied</div>
+        ${replied.map(s => `
+          <div style="display:flex;justify-content:space-between;padding:6px 10px;background:#E1F5EE;border-radius:8px;margin-bottom:6px">
+            <div>
+              <div style="font-size:13px;font-weight:500;color:#085041">✓ ${s.name}</div>
+              <div style="font-size:11px;color:#27500A">${s.notes}</div>
+            </div>
+            <div style="font-size:15px;font-weight:700;color:#085041">$${s.price}</div>
+          </div>`).join('')}
+        ${waiting.map(s => `
+          <div style="display:flex;justify-content:space-between;padding:6px 10px;background:var(--card2);border-radius:8px;margin-bottom:6px;opacity:.7">
+            <div style="font-size:13px;color:var(--text3)">⏳ ${s.name} — no reply yet</div>
+            <button onclick="alert('Follow up email — coming soon')" style="font-size:11px;padding:3px 8px;border-radius:6px;border:0.5px solid var(--border);background:var(--card);cursor:pointer;color:var(--text3)">Chase</button>
+          </div>`).join('')}
+      </div>`;
+  }).join('');
+}
+
+// ============================================================
+// YARD PAGE
+// ============================================================
+let yardTab = 'order';
+function renderYard() {
+  const el = document.getElementById('page-yard');
+  el.innerHTML = `
+    <div style="padding:0 1rem">
+      <div class="admin-tabs" style="margin-bottom:12px">
+        <div class="a-tab ${yardTab==='order'?'active':''}" onclick="yardTab='order';renderYard()">Internal Order</div>
+        <div class="a-tab ${yardTab==='myorders'?'active':''}" onclick="yardTab='myorders';renderYard()">My Orders</div>
+        <div class="a-tab ${yardTab==='trucks'?'active':''}" onclick="yardTab='trucks';renderYard()">Truck Bookings</div>
+      </div>
+      ${yardTab === 'order' ? renderYardOrder() : yardTab === 'myorders' ? renderYardMyOrders() : renderYardTrucks()}
+    </div>`;
+}
+
+function renderYardOrder() {
+  return `
+    <div class="card" style="text-align:center;padding:2rem 1rem">
+      <div style="font-size:32px;margin-bottom:.75rem">📦</div>
+      <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:.5rem">Order from yard stock</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:1rem">Stock spreadsheet loading — this will show live yard inventory once connected.</div>
+      <button class="btn btn-primary" onclick="alert('Coming soon — waiting on stock spreadsheet')">Browse yard stock</button>
+    </div>`;
+}
+
+function renderYardMyOrders() {
+  return `<div class="empty"><p>Your internal orders will appear here.</p></div>`;
+}
+
+function renderYardTrucks() {
+  return `
+    <div class="card" style="margin-bottom:12px">
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px">Today's truck slots</div>
+      ${['7:30am – 9:30am', '10:00am – 12:00pm', '1:00pm – 3:00pm'].map(slot => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)">
+          <div style="font-size:13px;color:var(--text)">${slot}</div>
+          <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#E1F5EE;color:#085041">2 of 2 left</span>
+        </div>`).join('')}
+      <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="alert('Google Calendar integration coming soon')">Book a truck slot</button>
+    </div>`;
+}
 function renderClaude() {
   const el = document.getElementById('page-claude');
   el.innerHTML = `
@@ -3007,7 +3341,10 @@ function floatAddMsg(text, isUser, id) {
   msgs.scrollTop = msgs.scrollHeight;
 }
 loadLocal();
-renderCurrentPage();
+// Force reseed if supplier count is low — ensures new subcontractors always load
+if (!DB.suppliers || DB.suppliers.length < 20) { seedDefaults(); }
+DB.users = SEED_USERS;
+showPage('login', false);
 updateBadge();
 checkBroadcastHash();
 if (getSetting('scriptUrl')) setTimeout(syncFromSheets, 800);
