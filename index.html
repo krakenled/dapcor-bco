@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f0f1a">
 <title>Dapcor BCO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap" rel="stylesheet">
 <style>
 :root {
   --primary:#f97316; --primary-dk:#ea580c; --primary-bg:rgba(249,115,22,0.12);
@@ -250,6 +252,7 @@ textarea.inp{resize:vertical;min-height:70px}
     <div id="page-trade"     class="page"></div>
     <div id="page-comms"     class="page"></div>
     <div id="page-yard"      class="page"></div>
+    <div id="page-yard-detail" class="page"></div>
   </div>
 
   <!-- Claude floating button -->
@@ -595,6 +598,214 @@ const SEED_CONTACTS = [
   { id:'ct-6', name:'Ayden Murrell', email:'ayden@dapcor.com.au', phone:'0409 244 148', role:'Leading Hand', isFavourite:false }
 ];
 
+const DAPCOR_CALENDAR_ID = 'dapcor.com.au_7953mmtmadvbstq7avfspm34g8@group.calendar.google.com';
+
+const SEED_YARD_STOCK = [
+  { id:'ys-1', name:'Ardex RA050', qty:180, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-2', name:'Ardex WPM 405', qty:48, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-3', name:'CA 20P Plus', qty:204, brand:'Ardex', notes:'White', category:'Waterproofing' },
+  { id:'ys-4', name:'ST Silicone', qty:24, brand:'Ardex', notes:'Slate Grey', category:'Waterproofing' },
+  { id:'ys-5', name:'Ardex WPM 300', qty:36, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-6', name:'ST Silicone', qty:10, brand:'Ardex', notes:'Charred Ash', category:'Waterproofing' },
+  { id:'ys-7', name:'Ardex Grout Booster', qty:3, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-8', name:'Ardex Bituminous Roof Sealant', qty:2, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-9', name:'Ardex RA88+', qty:300, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-10', name:'FG8 Grout 20kg', qty:1, brand:'Ardex', notes:'Magalian Grey', category:'Waterproofing' },
+  { id:'ys-11', name:'SE Silicone', qty:2, brand:'Ardex', notes:'Misty Grey', category:'Waterproofing' },
+  { id:'ys-12', name:'Ardex E90', qty:0, brand:'Ardex', notes:'20kg Pail', category:'Waterproofing' },
+  { id:'ys-13', name:'Ardex EG 15', qty:1, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-14', name:'WPM 002', qty:0, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-15', name:'WPM 270', qty:76, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-16', name:'WPM 368', qty:1, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-17', name:'Ardex WA98', qty:61, brand:'Ardex', notes:'New WA98', category:'Waterproofing' },
+  { id:'ys-18', name:'Ardex X18 Tile Glue', qty:85, brand:'Ardex', notes:'', category:'Tiling' },
+  { id:'ys-19', name:'Ardex WPM1000', qty:46, brand:'Ardex', notes:'Roll of membrane', category:'Waterproofing' },
+  { id:'ys-20', name:'Ardex 1000', qty:1, brand:'Ardex', notes:'Roll of membrane', category:'Waterproofing' },
+  { id:'ys-21', name:'RA88 Sausages', qty:96, brand:'Ardex', notes:'RA88 in sausages', category:'Waterproofing' },
+  { id:'ys-22', name:'FG8 Travertine 5kg', qty:38, brand:'Ardex', notes:'FG8 grout in 5kg bags', category:'Tiling' },
+  { id:'ys-23', name:'GP Cement Blue', qty:3, brand:'Bastion', notes:'', category:'Cement' },
+  { id:'ys-24', name:'Fosroc Cemtop 20kg', qty:6, brand:'Fosroc', notes:'', category:'Structural Repair' },
+  { id:'ys-25', name:'Fosroc Flame XT Sealant', qty:2, brand:'Fosroc', notes:'', category:'Structural Repair' },
+  { id:'ys-26', name:'Concure WB30', qty:1, brand:'Fosroc', notes:'', category:'Structural Repair' },
+  { id:'ys-27', name:'Concure WB30 Clear', qty:1, brand:'Fosroc', notes:'20L bottle', category:'Structural Repair' },
+  { id:'ys-28', name:'Nitoproof 510', qty:1, brand:'Fosroc', notes:'20L kit', category:'Waterproofing' },
+  { id:'ys-29', name:'Nitobond HAR 5L', qty:1, brand:'Fosroc', notes:'', category:'Structural Repair' },
+  { id:'ys-30', name:'Nitoseal MB180', qty:0, brand:'Fosroc', notes:'Bituminous Sealant', category:'Structural Repair' },
+  { id:'ys-31', name:'Fosroc ST06', qty:1, brand:'Fosroc', notes:'', category:'Structural Repair' },
+  { id:'ys-32', name:'Fosroc HB40', qty:0, brand:'Parchem', notes:'', category:'Structural Repair' },
+  { id:'ys-33', name:'Fosroc LA55', qty:30, brand:'Parchem', notes:'', category:'Structural Repair' },
+  { id:'ys-34', name:'Cemtop Screed', qty:0, brand:'Fosroc', notes:'', category:'Structural Repair' },
+  { id:'ys-35', name:'Keracem Eco', qty:24, brand:'Kerakoll', notes:'', category:'Screeding' },
+  { id:'ys-36', name:'EP21 Kit', qty:3, brand:'Kerakoll', notes:'', category:'Tiling' },
+  { id:'ys-37', name:'Laticrete 3701', qty:12, brand:'Laticrete', notes:'', category:'Tiling' },
+  { id:'ys-38', name:'Laticrete 254', qty:4, brand:'Laticrete', notes:'Glue for 3701', category:'Tiling' },
+  { id:'ys-39', name:'Laticrete 335', qty:5, brand:'Laticrete', notes:'', category:'Tiling' },
+  { id:'ys-40', name:'Selleys Liquid Nails', qty:2, brand:'Selleys', notes:'', category:'Adhesives' },
+  { id:'ys-41', name:'Sikaflex Pro', qty:0, brand:'Sika', notes:'', category:'Waterproofing' },
+  { id:'ys-42', name:'Mapefibre ST30', qty:4, brand:'Mapei', notes:'Fibre for screed mix', category:'Screeding' },
+  { id:'ys-43', name:'Cemelast Liquid 9L', qty:1, brand:'Vandex', notes:'9L bottle', category:'Waterproofing' },
+  { id:'ys-44', name:'Bricky Sand', qty:11, brand:'Skippens', notes:'', category:'Sand' },
+  { id:'ys-45', name:'Sydney Sand', qty:29, brand:'Skippens', notes:'', category:'Sand' },
+  { id:'ys-46', name:'Yellow Brickies Sand', qty:0, brand:'', notes:'', category:'Sand' },
+  { id:'ys-47', name:'Concrete GP 25MPA', qty:11, brand:'Builders', notes:'25MPA', category:'Concrete' },
+  { id:'ys-48', name:'High Strength Concrete Mix', qty:1, brand:'', notes:'', category:'Concrete' },
+  { id:'ys-49', name:'Westox 50 Injection Fluid', qty:2, brand:'Westox', notes:'Low odour injection fluid', category:'Structural Repair' },
+  { id:'ys-50', name:'Bondcrete 10L', qty:1, brand:'Bondall', notes:'Concrete glue', category:'Structural Repair' },
+  { id:'ys-51', name:'Chemset 101', qty:0, brand:'Ramset', notes:'', category:'Fixings' },
+  { id:'ys-52', name:'Hilti HAS-U M12x160', qty:17, brand:'Hilti', notes:'Very expensive stainless thread rod', category:'Fixings' },
+  { id:'ys-53', name:'Dynabolt 10mm x 100mm Galvanised', qty:25, brand:'Ramset', notes:'', category:'Fixings' },
+  { id:'ys-54', name:'Dynabolt 8mm x 65mm Zinc', qty:48, brand:'Ramset', notes:'', category:'Fixings' },
+  { id:'ys-55', name:'Screw Phillips Head 10g 125mm', qty:0, brand:'Macsim', notes:'Wood screws galvanised', category:'Fixings' },
+  { id:'ys-56', name:'8mm Thread Rod 3m', qty:25, brand:'', notes:'', category:'Fixings' },
+  { id:'ys-57', name:'Teflon Washers', qty:200, brand:'', notes:'', category:'Fixings' },
+  { id:'ys-58', name:'8mm Jub Nut Half Nut', qty:200, brand:'', notes:'', category:'Fixings' },
+  { id:'ys-59', name:'Stainless Knockins', qty:650, brand:'', notes:'', category:'Fixings' },
+  { id:'ys-60', name:'Knockins 36mm', qty:900, brand:'Bremmick', notes:'Stainless steel 306 36mm', category:'Fixings' },
+  { id:'ys-61', name:'Thor Tie 180mm', qty:50, brand:'Thor', notes:'', category:'Fixings' },
+  { id:'ys-62', name:'Brick Ties', qty:1000, brand:'', notes:'Different lengths', category:'Fixings' },
+  { id:'ys-63', name:'Galvanised N12 Reo 6m', qty:13, brand:'Ausreo', notes:'', category:'Structural' },
+  { id:'ys-64', name:'N20 Galvanised Reo 6m', qty:7, brand:'', notes:'', category:'Structural' },
+  { id:'ys-65', name:'Acroprop #2', qty:30, brand:'', notes:'1.98m - 3.35m, Red', category:'Structural' },
+  { id:'ys-66', name:'Timber LVL 90x45 E10 6m', qty:16, brand:'Covert Procurement', notes:'LVL framing timber', category:'Timber' },
+  { id:'ys-67', name:'Formply 2400x1200', qty:18, brand:'Covert Procurement', notes:'', category:'Timber' },
+  { id:'ys-68', name:'Scyon Sheets', qty:19, brand:'', notes:'600x2400', category:'Structural' },
+  { id:'ys-69', name:'CFC 2400x1200 10mm External', qty:4, brand:'', notes:'CFC sheeting', category:'Structural' },
+  { id:'ys-70', name:'Hardifine Texture Cladding CFC 8.5mm', qty:1, brand:'James Hardie', notes:'3m 8.5mm', category:'Structural' },
+  { id:'ys-71', name:'MDF Sheeting 3mm 2400x1200', qty:0, brand:'', notes:'', category:'Structural' },
+  { id:'ys-72', name:'Gyprock Base Coat 60', qty:1, brand:'Gyprock', notes:'', category:'Plastering' },
+  { id:'ys-73', name:'Ultratop Topping Compound 15kg', qty:1, brand:'Gyprock', notes:'', category:'Plastering' },
+  { id:'ys-74', name:'Gumption', qty:0, brand:'', notes:'Used', category:'Cleaning' },
+  { id:'ys-75', name:'Metho Bottle', qty:1, brand:'', notes:'Used', category:'Cleaning' },
+  { id:'ys-76', name:'Rust and Stain Remover', qty:1, brand:'Diggers', notes:'Used', category:'Cleaning' },
+  { id:'ys-77', name:'Glass Cleaner', qty:1, brand:'Glitz', notes:'Used bottles', category:'Cleaning' },
+  { id:'ys-78', name:'Sugar Soap', qty:2, brand:'', notes:'Used bottles', category:'Cleaning' },
+  { id:'ys-79', name:'Aluminium T 100x80x6m', qty:11, brand:'Capral', notes:'T Bar 10mm thick', category:'Aluminium' },
+  { id:'ys-80', name:'Aluminium Angle 40x40 6m', qty:12, brand:'Capral', notes:'Waterstop angle', category:'Aluminium' },
+  { id:'ys-81', name:'Aluminium 100x50 Angle', qty:8, brand:'Capral', notes:'For window installation, bottom fix point', category:'Aluminium' },
+  { id:'ys-82', name:'Aluminium Waterstop Angle 50x50x1.3 6m', qty:32, brand:'Capral', notes:'Waterstop angle', category:'Aluminium' },
+  { id:'ys-83', name:'Aluminium Angle 200x80x10 4m', qty:3, brand:'Capral', notes:'For window installs', category:'Aluminium' },
+  { id:'ys-84', name:'Aluminium 120x120x6', qty:3, brand:'Capral', notes:'For window installs', category:'Aluminium' },
+  { id:'ys-85', name:'Aluminium 50mm Tube 3m', qty:9, brand:'', notes:'', category:'Aluminium' },
+  { id:'ys-86', name:'Aluminium Tape Fire Rated', qty:0, brand:'', notes:'Ali installation tape', category:'Aluminium' },
+  { id:'ys-87', name:'Coreflute Roll', qty:12, brand:'', notes:'', category:'Protection' },
+  { id:'ys-88', name:'Coreflute 2000x1000mm', qty:0, brand:'', notes:'', category:'Protection' },
+  { id:'ys-89', name:'Coreflute Black 2400x1200', qty:0, brand:'Protecta', notes:'', category:'Protection' },
+  { id:'ys-90', name:'Coreflute 1800x1200x2mm', qty:329, brand:'Protrade', notes:'', category:'Protection' },
+  { id:'ys-91', name:'Rhino Board Green and Grey', qty:30, brand:'Protecta', notes:'Ask for clean or dirty condition', category:'Protection' },
+  { id:'ys-92', name:'Rhino Mat Yellow Rolls', qty:0, brand:'Protecta', notes:'Yellow path protection, 10m rolls', category:'Protection' },
+  { id:'ys-93', name:'Bull Board 5mm', qty:0, brand:'Toro', notes:'5mm protection board', category:'Protection' },
+  { id:'ys-94', name:'Bull Board 3mm', qty:13, brand:'Toro', notes:'3mm protection board', category:'Protection' },
+  { id:'ys-95', name:'Bull Board PVC Tape', qty:11, brand:'Toro', notes:'Tape for bull boards', category:'Protection' },
+  { id:'ys-96', name:'Carpet Saver Film', qty:1, brand:'Protrade', notes:'Carpet protect film', category:'Protection' },
+  { id:'ys-97', name:'Hardwood Floor Film', qty:3, brand:'Protrade', notes:'Sticky hardwood floor film', category:'Protection' },
+  { id:'ys-98', name:'Polyweave Protection', qty:2, brand:'Protrade', notes:'1.8m x 100m', category:'Protection' },
+  { id:'ys-99', name:'Carpet Film', qty:0, brand:'', notes:'Small roll', category:'Protection' },
+  { id:'ys-100', name:'Fleece Back', qty:1, brand:'Protecta', notes:'Half roll', category:'Protection' },
+  { id:'ys-101', name:'Fleece Back 1.8m Wide', qty:2, brand:'', notes:'', category:'Protection' },
+  { id:'ys-102', name:'Vinyl Floor Protection', qty:0, brand:'', notes:'', category:'Protection' },
+  { id:'ys-103', name:'Proteca Weave', qty:1, brand:'', notes:'', category:'Protection' },
+  { id:'ys-104', name:'Poly Cushion Floor Protector 50m', qty:2, brand:'Protrade', notes:'', category:'Protection' },
+  { id:'ys-105', name:'Polyfilm Clear Builders Plastic 3mx100m', qty:1, brand:'Protrade', notes:'Zipwall plastic', category:'Protection' },
+  { id:'ys-106', name:'Builders Plastic 2mx50m High Impact', qty:8, brand:'', notes:'', category:'Protection' },
+  { id:'ys-107', name:'Builders Plastic 4mx50m High Impact', qty:0, brand:'Protrade', notes:'', category:'Protection' },
+  { id:'ys-108', name:'Zipwall Sheet 4mx100m Clear 100um', qty:0, brand:'', notes:'', category:'Protection' },
+  { id:'ys-109', name:'Zipwall Poles', qty:18, brand:'Protecta', notes:'', category:'Protection' },
+  { id:'ys-110', name:'Zipwall Foam Rail', qty:17, brand:'Protecta', notes:'Foam rail for zipwall poles', category:'Protection' },
+  { id:'ys-111', name:'Duct Tape', qty:60, brand:'Protrade', notes:'48mm x 30m', category:'Protection' },
+  { id:'ys-112', name:'Cloth Tape', qty:14, brand:'', notes:'', category:'Protection' },
+  { id:'ys-113', name:'Promat', qty:8, brand:'Protrade', notes:'', category:'Protection' },
+  { id:'ys-114', name:'Ableflex 100mm Non Sticky Back', qty:0, brand:'', notes:'', category:'Sealants' },
+  { id:'ys-115', name:'Ableflex 100mm Stickyback', qty:15, brand:'', notes:'', category:'Sealants' },
+  { id:'ys-116', name:'Ableflex 50mm Non Stick', qty:0, brand:'', notes:'25m', category:'Sealants' },
+  { id:'ys-117', name:'Ableflex 50mm Stickyback', qty:10, brand:'', notes:'25m', category:'Sealants' },
+  { id:'ys-118', name:'10mm Closed Cell Backing Rod', qty:5, brand:'', notes:'', category:'Sealants' },
+  { id:'ys-119', name:'Roof n Gutter Silicone', qty:1, brand:'Parfix', notes:'', category:'Sealants' },
+  { id:'ys-120', name:'Wall Protection Membrane', qty:2, brand:'Solitex Extasana', notes:'', category:'Waterproofing' },
+  { id:'ys-121', name:'Plascourse 30m 300mm 500um', qty:1, brand:'CAgroup', notes:'', category:'Waterproofing' },
+  { id:'ys-122', name:'Puddle Flange Liquid Membrane 100mm', qty:36, brand:'Allproof', notes:'LC-100, for liquid membrane only', category:'Waterproofing' },
+  { id:'ys-123', name:'50mm x 40mm Plastic Angle', qty:8, brand:'', notes:'For water testing', category:'Waterproofing' },
+  { id:'ys-124', name:'Lintel Concrete 1800x100x80', qty:5, brand:'', notes:'Concrete lintel', category:'Structural' },
+  { id:'ys-125', name:'Concrete Cap 395x195x45', qty:41, brand:'', notes:'Concrete wall cap', category:'Structural' },
+  { id:'ys-126', name:'Drainage Cell 620x400', qty:44, brand:'', notes:'', category:'Structural' },
+  { id:'ys-127', name:'Bessa Block 290x190x90', qty:40, brand:'', notes:'90mm high', category:'Structural' },
+  { id:'ys-128', name:'Bricks Extruded Red', qty:62, brand:'', notes:'', category:'Structural' },
+  { id:'ys-129', name:'Brick Solid Common', qty:290, brand:'', notes:'', category:'Structural' },
+  { id:'ys-130', name:'Tear Away 3/8 L Beads', qty:15, brand:'Trimex', notes:'Shadow line for ceiling plaster', category:'Plastering' },
+  { id:'ys-131', name:'Rendering Straight Edge 2.4m', qty:1, brand:'Ox', notes:'', category:'Tools' },
+  { id:'ys-132', name:'1.8m Screeds', qty:2, brand:'Master Finish', notes:'', category:'Tools' },
+  { id:'ys-133', name:'Shovels', qty:25, brand:'', notes:'Flat nose shovels', category:'Tools' },
+  { id:'ys-134', name:'Long Handle Shovel', qty:3, brand:'', notes:'For digging', category:'Tools' },
+  { id:'ys-135', name:'Crow Bars 1600mm', qty:3, brand:'', notes:'Heavy duty', category:'Tools' },
+  { id:'ys-136', name:'Sledge Hammer', qty:2, brand:'', notes:'', category:'Tools' },
+  { id:'ys-137', name:'Metal Rack', qty:3, brand:'', notes:'Metal garden rack', category:'Tools' },
+  { id:'ys-138', name:'Post Hole Digger', qty:2, brand:'', notes:'Post hole shovel', category:'Tools' },
+  { id:'ys-139', name:'Floor Scraper', qty:5, brand:'', notes:'', category:'Tools' },
+  { id:'ys-140', name:'Axe', qty:1, brand:'', notes:'Cuts trees down', category:'Tools' },
+  { id:'ys-141', name:'Suction Cups', qty:13, brand:'Trojan', notes:'For glass removal', category:'Tools' },
+  { id:'ys-142', name:'Saw Horse Rigid', qty:4, brand:'', notes:'Rigid legs', category:'Tools' },
+  { id:'ys-143', name:'Saw Horse Fold Up', qty:0, brand:'', notes:'Folding legs', category:'Tools' },
+  { id:'ys-144', name:'Paint Roller Extension Poles', qty:7, brand:'', notes:'', category:'Tools' },
+  { id:'ys-145', name:'3 Step Safety Step', qty:3, brand:'Gorilla', notes:'', category:'Tools' },
+  { id:'ys-146', name:'2 Step Safety Step', qty:0, brand:'Gorilla', notes:'', category:'Tools' },
+  { id:'ys-147', name:'3 Step Ladder', qty:3, brand:'', notes:'', category:'Tools' },
+  { id:'ys-148', name:'Gorilla Work Platform', qty:1, brand:'Gorilla', notes:'', category:'Tools' },
+  { id:'ys-149', name:'Gorilla Cart', qty:0, brand:'Gorilla', notes:'', category:'Tools' },
+  { id:'ys-150', name:'Gorilla Carts', qty:0, brand:'Gorilla', notes:'Carts for material handling', category:'Tools' },
+  { id:'ys-151', name:'Trolley Side Load 4 Wheels', qty:3, brand:'', notes:'Blue trolleys for glass, ply etc', category:'Tools' },
+  { id:'ys-152', name:'Wheel Barrow', qty:3, brand:'Timberfix', notes:'', category:'Tools' },
+  { id:'ys-153', name:'Large Exhaust Fan', qty:1, brand:'', notes:'', category:'Tools' },
+  { id:'ys-154', name:'Medium Exhaust Fan', qty:3, brand:'', notes:'', category:'Tools' },
+  { id:'ys-155', name:'Small Exhaust Fan', qty:1, brand:'', notes:'', category:'Tools' },
+  { id:'ys-156', name:'Spray N Mark Marker Paint', qty:3, brand:'Dymark', notes:'You get what colour is available', category:'Tools' },
+  { id:'ys-157', name:'Fire Extinguisher', qty:14, brand:'', notes:'', category:'Safety' },
+  { id:'ys-158', name:'Chemical Spill Kits', qty:4, brand:'', notes:'', category:'Safety' },
+  { id:'ys-159', name:'Large Spill Kit', qty:1, brand:'', notes:'Spill kit in 120L wheelie bin', category:'Safety' },
+  { id:'ys-160', name:'Asbestos Containment Bags', qty:21, brand:'', notes:'Bags for asbestos removal', category:'Safety' },
+  { id:'ys-161', name:'Hard Hat', qty:25, brand:'', notes:'', category:'PPE' },
+  { id:'ys-162', name:'Glasses Clear', qty:88, brand:'', notes:'', category:'PPE' },
+  { id:'ys-163', name:'Glasses Smokey', qty:100, brand:'', notes:'', category:'PPE' },
+  { id:'ys-164', name:'Safety Vest', qty:20, brand:'', notes:'', category:'PPE' },
+  { id:'ys-165', name:'Black Gloves', qty:100, brand:'', notes:'PPE black ninja gloves', category:'PPE' },
+  { id:'ys-166', name:'Dust Mask', qty:88, brand:'', notes:'', category:'PPE' },
+  { id:'ys-167', name:'Ear Plugs', qty:1000, brand:'', notes:'', category:'PPE' },
+  { id:'ys-168', name:'Safety Caps', qty:50, brand:'', notes:'', category:'PPE' },
+  { id:'ys-169', name:'Harness', qty:0, brand:'', notes:'', category:'PPE' },
+  { id:'ys-170', name:'Safety Bollard Red Plastic', qty:40, brand:'', notes:'', category:'Safety' },
+  { id:'ys-171', name:'Bollards Metal', qty:12, brand:'Gorilla', notes:'Steel bollards', category:'Safety' },
+  { id:'ys-172', name:'Traffic Control Lollipop Stop Slow', qty:5, brand:'', notes:'', category:'Safety' },
+  { id:'ys-173', name:'Look Up and Live Signs', qty:8, brand:'', notes:'', category:'Safety' },
+  { id:'ys-174', name:'Plastic Yellow Chain', qty:5, brand:'', notes:'Different lengths', category:'Safety' },
+  { id:'ys-175', name:'Crash Barrier Water Filled', qty:3, brand:'', notes:'', category:'Safety' },
+  { id:'ys-176', name:'Temporary Handrail Safety Bases', qty:10, brand:'', notes:'', category:'Safety' },
+  { id:'ys-177', name:'Temporary Fencing', qty:15, brand:'', notes:'2.4m sections', category:'Safety' },
+  { id:'ys-178', name:'Fence Base', qty:16, brand:'', notes:'Concrete filled fence base', category:'Safety' },
+  { id:'ys-179', name:'Temp Fence Prop', qty:0, brand:'', notes:'', category:'Safety' },
+  { id:'ys-180', name:'Sediment Control Mesh', qty:2, brand:'', notes:'', category:'Safety' },
+  { id:'ys-181', name:'Barrier Mesh', qty:1, brand:'Syneco', notes:'Hi vis barrier mesh plastic', category:'Safety' },
+  { id:'ys-182', name:'Lyta Power Safe Scaff Mesh', qty:2, brand:'Talawa', notes:'Scaff insulation', category:'Safety' },
+  { id:'ys-183', name:'Bulka Bags', qty:100, brand:'', notes:'1 ton bulka bags', category:'Site Consumables' },
+  { id:'ys-184', name:'White Rubbish Bags', qty:920, brand:'', notes:'', category:'Site Consumables' },
+  { id:'ys-185', name:'Black Garbage Bins', qty:3, brand:'Timberfix', notes:'Site shed bins', category:'Site Consumables' },
+  { id:'ys-186', name:'1000L Bins', qty:2, brand:'', notes:'Large 1000L bins', category:'Site Consumables' },
+  { id:'ys-187', name:'20L Buckets', qty:0, brand:'', notes:'', category:'Site Consumables' },
+  { id:'ys-188', name:'Paper Cups', qty:45, brand:'', notes:'', category:'Site Consumables' },
+  { id:'ys-189', name:'Printer Paper', qty:5, brand:'', notes:'A4', category:'Site Consumables' },
+  { id:'ys-190', name:'Water Bottles', qty:2, brand:'', notes:'', category:'Site Consumables' },
+  { id:'ys-191', name:'Toilet Paper', qty:38, brand:'Protrade', notes:'2 ply', category:'Site Consumables' },
+  { id:'ys-192', name:'Nutri Grain', qty:0, brand:'', notes:'', category:'Site Consumables' },
+  { id:'ys-193', name:'Power Lead', qty:20, brand:'', notes:'20m 240v 10amp', category:'Site Consumables' },
+  { id:'ys-194', name:'Distro Electrical Box', qty:3, brand:'', notes:'Distro box — ask for stand if needed', category:'Site Consumables' },
+  { id:'ys-195', name:'Temp Down Pipe', qty:0, brand:'Timberfix', notes:'Blue temp plastic down pipe', category:'Site Consumables' },
+  { id:'ys-196', name:'Strong Boy Heads', qty:60, brand:'', notes:'', category:'Site Consumables' },
+  { id:'ys-197', name:'Gazebo', qty:2, brand:'', notes:'', category:'Site Consumables' },
+  { id:'ys-198', name:'Door Hinge Site Shed', qty:15, brand:'', notes:'Long door hinges', category:'Site Consumables' },
+  { id:'ys-199', name:'Door Spring', qty:11, brand:'', notes:'Large door spring', category:'Site Consumables' },
+  { id:'ys-200', name:'Lead Stand', qty:2, brand:'', notes:'', category:'Site Consumables' },
+  { id:'ys-201', name:'Office Chair', qty:2, brand:'', notes:'For filling out ITPs', category:'Site Office' },
+  { id:'ys-202', name:'Plastic Chairs', qty:0, brand:'', notes:'For lunchroom', category:'Site Office' },
+  { id:'ys-203', name:'Plastic Tables', qty:0, brand:'Bunnings', notes:'Lunch room tables', category:'Site Office' },
+];
+
 const SEED_JOBSITES = [
   { id:'site-1', address:'12 Rancom St, Botany NSW 2019', procore:'25044', suffix:'A', po:'25044-A', pm:'Ariyan Yousefi', apm:'Jack Dwyer', foreman:'Peter Yeboah', leadingHand:'', liveSite:true, notes:'Team: Peter, Leo.' },
   { id:'site-2', address:'43-45 Wilson St, Botany NSW 2019', procore:'25008', suffix:'A', po:'25008-A', pm:'Ariyan Yousefi', apm:'Jack Dwyer', foreman:'Peter Yeboah', leadingHand:'Ayden Murrell', liveSite:true, notes:'Team: Peter, Alyssa Larkins, Ayden Murrell.' },
@@ -675,9 +886,15 @@ let syncState = 'idle'; // idle|syncing|ok|err
 // ============================================================
 function loadLocal() {
   try {
+    // Always reseed suppliers, products, users and yard stock to get latest data
+    // Only preserve user-generated data: orders, settings, cart
+    seedDefaults();
     const d = localStorage.getItem('bco_db');
-    if (d) DB = JSON.parse(d);
-    else seedDefaults();
+    if (d) {
+      const saved = JSON.parse(d);
+      if (saved.orders) DB.orders = saved.orders;
+      if (saved.settings) DB.settings = saved.settings;
+    }
     const c = localStorage.getItem('bco_cart');
     if (c) cart = JSON.parse(c);
     loadSettings();
@@ -689,6 +906,7 @@ function seedDefaults() {
   DB.products  = JSON.parse(JSON.stringify(SEED_PRODUCTS));
   DB.pricing   = JSON.parse(JSON.stringify(SEED_PRICING));
   DB.contacts  = JSON.parse(JSON.stringify(SEED_CONTACTS));
+  DB.users     = JSON.parse(JSON.stringify(SEED_USERS));
   DB.orders    = [];
   DB.settings  = Object.entries(DEFAULT_SETTINGS).map(([k,v]) => ({key:k, value:v}));
   saveLocal();
@@ -889,7 +1107,7 @@ function showPage(page, pushHist = true) {
   const nb = document.getElementById('nav-' + page);
   if (nb) nb.classList.add('active');
   // Back button — show for sub-pages
-  const backPages = ['detail'];
+  const backPages = ['detail', 'yard-detail'];
   document.getElementById('back-btn').style.display = backPages.includes(page) ? 'flex' : 'none';
   // Render
   renderCurrentPage();
@@ -913,6 +1131,7 @@ function renderCurrentPage() {
   else if (currentPage === 'trade')     renderTrade();
   else if (currentPage === 'comms')     renderComms();
   else if (currentPage === 'yard')      renderYard();
+  else if (currentPage === 'yard-detail') renderYardDetail();
   else if (currentPage === 'login')     renderLogin();
   renderNav();
   updateHeader();
@@ -1848,7 +2067,7 @@ function renderAdmin() {
 
   el.innerHTML = `
     <div class="admin-tabs">
-      ${['suppliers','products','contacts','pending','settings'].map(t => {
+      ${['suppliers','products','contacts','users','jobs','pending','settings'].map(t => {
         let label = t.charAt(0).toUpperCase()+t.slice(1);
         if (t === 'pending') {
           const count = getSubmissions().filter(s=>s.status==='pending').length;
@@ -1877,6 +2096,8 @@ function renderAdminPanel() {
   if (adminTab === 'suppliers') renderAdminSuppliers(el);
   else if (adminTab === 'products')  renderAdminProducts(el);
   else if (adminTab === 'contacts')  renderAdminContacts(el);
+  else if (adminTab === 'users')     renderAdminUsers(el);
+  else if (adminTab === 'jobs')      renderAdminJobs(el);
   else if (adminTab === 'pending')   renderAdminPending(el);
   else if (adminTab === 'settings')  renderAdminSettings(el);
 }
@@ -2052,6 +2273,43 @@ function deleteSubmission(id) {
   saveSubmissions(getSubmissions().filter(s => s.id !== id));
   updateBadge();
   renderAdminPending(document.getElementById('admin-panel'));
+}
+
+function renderAdminUsers(el) {
+  const users = SEED_USERS;
+  const levelName = l => l>=6?'Admin/MD':l>=5?'Yard Manager':l>=4?'Operations':l>=3?'Project Manager':l>=2?'Site Manager':'Foreman';
+  const levelColor = l => l>=5?'#085041':l>=3?'#3C3489':l>=2?'#633806':'var(--text3)';
+  const levelBg = l => l>=5?'#E1F5EE':l>=3?'#EEEDFE':l>=2?'#FAEEDA':'var(--card2)';
+  el.innerHTML = `
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px">${users.length} staff members</div>
+    ${users.map(u => `
+      <div class="card" style="margin-bottom:8px;display:flex;align-items:center;gap:12px">
+        <div style="width:38px;height:38px;border-radius:50%;background:${levelBg(u.accessLevel)};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:${levelColor(u.accessLevel)};flex-shrink:0">${u.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:500;color:var(--text)">${u.name}</div>
+          <div style="font-size:11px;color:var(--text3)">${u.position} · ${u.email}</div>
+          ${u.phone ? `<div style="font-size:11px;color:var(--text3)">${u.phone}</div>` : ''}
+        </div>
+        <div style="font-size:11px;padding:2px 8px;border-radius:20px;background:${levelBg(u.accessLevel)};color:${levelColor(u.accessLevel)};flex-shrink:0;white-space:nowrap">${levelName(u.accessLevel)}</div>
+      </div>`).join('')}`;
+}
+
+function renderAdminJobs(el) {
+  const jobs = SEED_JOBSITES;
+  el.innerHTML = `
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px">${jobs.length} active job sites</div>
+    ${jobs.map(j => `
+      <div class="card" style="margin-bottom:8px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:500;color:var(--text)">${j.address}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">PO: ${j.po} · PM: ${j.pm}</div>
+            <div style="font-size:11px;color:var(--text3)">Foreman: ${j.foreman}</div>
+            ${j.notes ? `<div style="font-size:11px;color:var(--text3);font-style:italic;margin-top:2px">${j.notes}</div>` : ''}
+          </div>
+          ${j.liveSite ? `<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:#FEE2E2;color:#ef4444;flex-shrink:0;white-space:nowrap">🏠 Live site</span>` : ''}
+        </div>
+      </div>`).join('')}`;
 }
 
 function renderAdminSettings(el) {
@@ -2630,6 +2888,7 @@ function broadcastCurrentOrder() {
     deliveryDate: date,
     freight: freight,
     status: 'open',
+    respondBy: (() => { const d = new Date(); d.setHours(d.getHours() + 4); return d.toISOString(); })(),
     shareKey: Math.random().toString(36).slice(2,8).toUpperCase(),
     items: cart.map(c => ({
       productId:  c.productId,
@@ -2868,6 +3127,22 @@ function renderBroadcastCard(bc, myName) {
   const date = bc.deliveryDate ? new Date(bc.deliveryDate).toLocaleDateString('en-AU',{day:'numeric',month:'short'}) : 'TBC';
   const createdAgo = timeSince(bc.createdAt);
 
+  // Countdown to respond-by
+  let countdownHtml = '';
+  if (isOpen && bc.respondBy) {
+    const msLeft = new Date(bc.respondBy).getTime() - Date.now();
+    if (msLeft > 0) {
+      const h = Math.floor(msLeft / 3600000);
+      const m = Math.floor((msLeft % 3600000) / 60000);
+      const urgent = msLeft < 3600000;
+      countdownHtml = `<div style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:${urgent?'#FEE2E2':'#E1F5EE'};color:${urgent?'#ef4444':'#085041'};font-size:12px;font-weight:500;margin-top:4px">
+        ⏱ Respond by ${new Date(bc.respondBy).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})} — ${h>0?h+'h ':''} ${m}m left
+      </div>`;
+    } else {
+      countdownHtml = `<div style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:#FEE2E2;color:#ef4444;font-size:12px;font-weight:500;margin-top:4px">⏱ Response window closed</div>`;
+    }
+  }
+
   // Group items by PO / orderedBy
   const poGroups = {};
   bc.items.forEach(item => {
@@ -2892,6 +3167,7 @@ function renderBroadcastCard(bc, myName) {
         <div class="bold" style="font-size:15px">${bc.jobName || 'Unnamed Job'}</div>
         <div class="t-xs t-dim">${bc.deliveryAddress || 'Address TBC'} · ${date}</div>
         <div class="t-xs t-dim">${bc.createdBy} · ${createdAgo}</div>
+        ${countdownHtml}
       </div>
       <span class="bc-status ${isOpen?'open':'closed'}">${isOpen?'🟢 Open':'Closed'}</span>
     </div>
@@ -3013,13 +3289,17 @@ function loginAs(userId) {
 // TRADE & LABOUR PAGE
 // ============================================================
 let tradeTab = 'subcontractors';
+let tradeSubTab = 'All';
+
 function renderTrade() {
   const el = document.getElementById('page-trade');
-  const subs = (DB.suppliers || []).filter(s => s.category === 'Subcontractor');
+  const allSubs = (DB.suppliers || []).filter(s => s.category === 'Subcontractor');
   const labour = (DB.suppliers || []).filter(s => s.category === 'Labour Hire');
   const equip = (DB.suppliers || []).filter(s => s.category === 'Equipment Hire');
 
-  // Group subs by trade
+  const trades = ['All', ...[...new Set(allSubs.map(s => s.trade))].sort()];
+  const subs = tradeSubTab === 'All' ? allSubs : allSubs.filter(s => s.trade === tradeSubTab);
+
   const grouped = {};
   subs.forEach(s => {
     if (!grouped[s.trade]) grouped[s.trade] = [];
@@ -3028,12 +3308,17 @@ function renderTrade() {
 
   el.innerHTML = `
     <div style="padding:0 1rem">
-      <div class="admin-tabs" style="margin-bottom:12px">
+      <div class="admin-tabs" style="margin-bottom:8px">
         <div class="a-tab ${tradeTab==='subcontractors'?'active':''}" onclick="tradeTab='subcontractors';renderTrade()">Subcontractors</div>
         <div class="a-tab ${tradeTab==='labour'?'active':''}" onclick="tradeTab='labour';renderTrade()">Labour Hire</div>
         <div class="a-tab ${tradeTab==='equipment'?'active':''}" onclick="tradeTab='equipment';renderTrade()">Equipment</div>
       </div>
-      ${tradeTab === 'subcontractors' ? renderSubsByTrade(grouped) : tradeTab === 'labour' ? renderTradeList(labour) : renderTradeList(equip)}
+      ${tradeTab === 'subcontractors' ? `
+        <div class="admin-tabs" style="margin-bottom:12px">
+          ${trades.map(t => `<div class="a-tab ${tradeSubTab===t?'active':''}" onclick="tradeSubTab='${t}';renderTrade()">${t}</div>`).join('')}
+        </div>
+        ${renderSubsByTrade(grouped)}
+      ` : tradeTab === 'labour' ? renderTradeList(labour) : renderTradeList(equip)}
       <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="alert('Request quote / tender — coming soon')">+ Request quote / tender</button>
     </div>`;
 }
@@ -3125,27 +3410,230 @@ function renderCommsQuotes() {
 // YARD PAGE
 // ============================================================
 let yardTab = 'order';
+let yardSearch = '';
+let yardCategory = 'All';
+let yardScrollPos = 0;
+
+// Generic category photos
+const YARD_CATEGORY_PHOTOS = {
+  'Waterproofing': 'https://www.ardex.com.au/wp-content/uploads/2020/03/WPM270_20L_HighRes-300x300.jpg',
+  'Tiling': 'https://www.ardex.com.au/wp-content/uploads/2020/03/X18_20kg_HighRes-300x300.jpg',
+  'Sand': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Sandhaufen.jpg/320px-Sandhaufen.jpg',
+  'Cement': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Ciment_en_poudre.jpg/320px-Ciment_en_poudre.jpg',
+  'Concrete': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Ciment_en_poudre.jpg/320px-Ciment_en_poudre.jpg',
+  'Structural Repair': 'https://www.parchem.com.au/wp-content/uploads/2019/07/Renderoc-HB40-300x300.jpg',
+  'Protection': 'https://www.protecta.com.au/wp-content/uploads/rhino-board-300x300.jpg',
+  'PPE': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Personal_Protective_Equipment.jpg/320px-Personal_Protective_Equipment.jpg',
+  'Safety': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Personal_Protective_Equipment.jpg/320px-Personal_Protective_Equipment.jpg',
+  'Timber': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Single_row_of_three_wooden_planks.jpg/320px-Single_row_of_three_wooden_planks.jpg',
+  'Aluminium': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Aluminium-4.jpg/320px-Aluminium-4.jpg',
+  'Fixings': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Screw_Head_-_Pozidriv.jpg/320px-Screw_Head_-_Pozidriv.jpg',
+  'Tools': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/GoldenGateBridge-001.jpg/320px-GoldenGateBridge-001.jpg',
+  'Site Consumables': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Camponotus_flavomarginatus_ant.jpg/320px-Camponotus_flavomarginatus_ant.jpg',
+  'default': 'https://via.placeholder.com/300x300?text=No+Photo'
+};
+
+// TDS/SDS links for key products
+const YARD_DOCS = {
+  'ys-1':  { tds:'https://www.ardex.com.au/products/ardex-ra050/', sds:'https://www.ardex.com.au/sds/' },
+  'ys-2':  { tds:'https://www.ardex.com.au/products/ardex-wpm-405/', sds:'https://www.ardex.com.au/sds/' },
+  'ys-15': { tds:'https://www.ardex.com.au/products/ardex-wpm-270/', sds:'https://www.ardex.com.au/sds/' },
+  'ys-19': { tds:'https://www.ardex.com.au/products/ardex-wpm1000/', sds:'https://www.ardex.com.au/sds/' },
+  'ys-33': { tds:'https://www.parchem.com.au/product/renderoc-la55/', sds:'https://www.parchem.com.au/sds/' },
+  'ys-32': { tds:'https://www.parchem.com.au/product/renderoc-hb40/', sds:'https://www.parchem.com.au/sds/' },
+};
+
 function renderYard() {
+  yardScrollPos = window.scrollY;
   const el = document.getElementById('page-yard');
-  el.innerHTML = `
-    <div style="padding:0 1rem">
-      <div class="admin-tabs" style="margin-bottom:12px">
-        <div class="a-tab ${yardTab==='order'?'active':''}" onclick="yardTab='order';renderYard()">Internal Order</div>
-        <div class="a-tab ${yardTab==='myorders'?'active':''}" onclick="yardTab='myorders';renderYard()">My Orders</div>
-        <div class="a-tab ${yardTab==='trucks'?'active':''}" onclick="yardTab='trucks';renderYard()">Truck Bookings</div>
-      </div>
-      ${yardTab === 'order' ? renderYardOrder() : yardTab === 'myorders' ? renderYardMyOrders() : renderYardTrucks()}
-    </div>`;
+  try {
+    const inner = yardTab === 'order' ? renderYardOrder() : yardTab === 'myorders' ? renderYardMyOrders() : renderYardTrucks();
+    el.innerHTML = `
+      <div style="padding:0 1rem">
+        <div class="admin-tabs" style="margin-bottom:12px">
+          <div class="a-tab ${yardTab==='order'?'active':''}" onclick="yardScrollPos=0;yardTab='order';renderYard()">Internal Order</div>
+          <div class="a-tab ${yardTab==='myorders'?'active':''}" onclick="yardScrollPos=0;yardTab='myorders';renderYard()">My Orders</div>
+          <div class="a-tab ${yardTab==='trucks'?'active':''}" onclick="yardScrollPos=0;yardTab='trucks';renderYard()">Truck Bookings</div>
+        </div>
+        ${inner}
+      </div>`;
+    if (yardTab === 'order') setTimeout(() => window.scrollTo(0, yardScrollPos), 0);
+  } catch(e) {
+    el.innerHTML = `<div style="padding:1rem;color:#ef4444;font-size:13px">Error: ${e.message}</div>`;
+    console.error('renderYard error:', e);
+  }
 }
 
 function renderYardOrder() {
+  const cats = ['All', 'Waterproofing', 'Protection', 'PPE', 'Safety', 'Structural Repair',
+    'Tiling', 'Screeding', 'Sand', 'Cement', 'Concrete', 'Timber', 'Aluminium',
+    'Fixings', 'Structural', 'Sealants', 'Adhesives', 'Plastering', 'Cleaning',
+    'Tools', 'Site Consumables', 'Site Office'];
+  let items = SEED_YARD_STOCK;
+  if (yardCategory !== 'All') items = items.filter(i => i.category === yardCategory);
+  if (yardSearch) items = items.filter(i => i.name.toLowerCase().includes(yardSearch.toLowerCase()) || (i.brand||'').toLowerCase().includes(yardSearch.toLowerCase()));
+
   return `
-    <div class="card" style="text-align:center;padding:2rem 1rem">
-      <div style="font-size:32px;margin-bottom:.75rem">📦</div>
-      <div style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:.5rem">Order from yard stock</div>
-      <div style="font-size:13px;color:var(--text3);margin-bottom:1rem">Stock spreadsheet loading — this will show live yard inventory once connected.</div>
-      <button class="btn btn-primary" onclick="alert('Coming soon — waiting on stock spreadsheet')">Browse yard stock</button>
+    <input class="inp" placeholder="Search stock..." value="${yardSearch}" oninput="yardScrollPos=window.scrollY;yardSearch=this.value;renderYard()" style="width:100%;margin-bottom:10px">
+    <div class="admin-tabs" style="margin-bottom:10px">
+      ${cats.filter(c => c === 'All' || SEED_YARD_STOCK.some(i => i.category === c)).map(c =>
+        `<div class="a-tab ${yardCategory===c?'active':''}" onclick="yardScrollPos=0;yardCategory='${c}';renderYard()">${c}</div>`
+      ).join('')}
+    </div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:8px">${items.length} item${items.length!==1?'s':''}</div>
+    ${items.map(item => `
+      <div onclick="openYardDetail('${item.id}')" style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--card);border:0.5px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer">
+        <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+          <div style="width:40px;height:40px;border-radius:6px;background:var(--card2);flex-shrink:0;overflow:hidden">
+            <img src="${YARD_CATEGORY_PHOTOS[item.category]||YARD_CATEGORY_PHOTOS['default']}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
+          </div>
+          <div style="min-width:0">
+            <div style="font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</div>
+            <div style="font-size:11px;color:var(--text3)">${item.brand||''}${item.notes?' · '+item.notes:''}</div>
+          </div>
+        </div>
+        <div style="font-size:16px;font-weight:700;color:${item.qty===0?'#ef4444':item.qty<5?'#f97316':'var(--primary)'};flex-shrink:0;margin-left:8px">${item.qty}</div>
+      </div>`).join('')}`;
+}
+
+function yardAddToCart(id) {
+  const item = SEED_YARD_STOCK.find(i => i.id === id);
+  if (!item) return;
+  alert('Added ' + item.name + ' to internal order — full cart coming soon');
+}
+
+function openYardDetail(id) {
+  currentYardItemId = id;
+  showPage('yard-detail', true);
+}
+
+let currentYardItemId = null;
+let yardQtyAdj = 0;
+
+function renderYardDetail() {
+  const el = document.getElementById('page-yard-detail');
+  const item = SEED_YARD_STOCK.find(i => i.id === currentYardItemId);
+  if (!item) { showPage('yard'); return; }
+  const docs = YARD_DOCS[item.id] || {};
+  const photo = YARD_CATEGORY_PHOTOS[item.category] || YARD_CATEGORY_PHOTOS['default'];
+
+  // Generate simple barcode display (CODE128 style visual)
+  const barcodeVal = item.id.replace('ys-','DAP') + String(item.name.length).padStart(4,'0');
+
+  el.innerHTML = `
+    <div style="padding:0 0 2rem">
+      <div style="display:flex;align-items:center;gap:10px;padding:.75rem 1rem;border-bottom:0.5px solid var(--border)">
+        <button onclick="showPage('yard')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:20px;padding:0;display:flex">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <div style="font-size:15px;font-weight:600;color:var(--text);flex:1">${item.name}</div>
+      </div>
+
+      <!-- Photo -->
+      <div style="width:100%;height:200px;background:var(--card2);overflow:hidden;display:flex;align-items:center;justify-content:center">
+        <img src="${photo}" style="width:100%;height:100%;object-fit:cover" onerror="this.src='https://via.placeholder.com/400x200?text=${encodeURIComponent(item.name)}'">
+      </div>
+
+      <div style="padding:1rem">
+        <!-- Details -->
+        <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px">${item.name}</div>
+        ${item.brand ? `<div style="font-size:13px;color:var(--text3);margin-bottom:4px">${item.brand}</div>` : ''}
+        ${item.notes ? `<div style="font-size:13px;color:var(--text3);margin-bottom:12px">${item.notes}</div>` : ''}
+
+        <!-- Stock qty -->
+        <div style="background:var(--card2);border-radius:10px;padding:.75rem 1rem;margin-bottom:12px">
+          <div style="font-size:12px;color:var(--text3);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:.05em">Current stock</div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="font-size:32px;font-weight:700;color:${item.qty===0?'#ef4444':item.qty<5?'#f97316':'var(--primary)'};">${item.qty}</div>
+            <div style="font-size:13px;color:var(--text3)">${item.qty===0?'Out of stock':item.qty<5?'Low stock':'In stock'}</div>
+          </div>
+        </div>
+
+        <!-- Qty adjust -->
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.75rem 1rem;margin-bottom:12px">
+          <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:.05em">Adjust stock</div>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <button onclick="document.getElementById('adj-mode').textContent='TAKE OUT';document.getElementById('adj-mode').style.background='#FEE2E2';document.getElementById('adj-mode').style.color='#ef4444'" style="flex:1;padding:8px;border-radius:8px;border:0.5px solid var(--border);background:var(--card2);font-size:13px;cursor:pointer;color:var(--text)">Take from yard</button>
+            <button onclick="document.getElementById('adj-mode').textContent='ADD IN';document.getElementById('adj-mode').style.background='#E1F5EE';document.getElementById('adj-mode').style.color='#085041'" style="flex:1;padding:8px;border-radius:8px;border:0.5px solid var(--border);background:var(--card2);font-size:13px;cursor:pointer;color:var(--text)">Add to yard</button>
+          </div>
+          <div id="adj-mode" style="text-align:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--card2);color:var(--text3);margin-bottom:8px;display:inline-block">SELECT ACTION</div>
+          <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+            <button onclick="var n=document.getElementById('adj-qty');n.value=Math.max(1,parseInt(n.value||1)-1)" style="width:36px;height:36px;border-radius:8px;border:0.5px solid var(--border);background:var(--card2);cursor:pointer;font-size:20px;color:var(--text)">−</button>
+            <input type="number" id="adj-qty" value="1" min="1" style="flex:1;text-align:center;font-size:18px;font-weight:600;border:0.5px solid var(--border);border-radius:8px;padding:6px;background:var(--card);color:var(--text)">
+            <button onclick="var n=document.getElementById('adj-qty');n.value=parseInt(n.value||1)+1" style="width:36px;height:36px;border-radius:8px;border:0.5px solid var(--border);background:var(--card2);cursor:pointer;font-size:20px;color:var(--text)">+</button>
+          </div>
+          <input placeholder="Job/PO number (required for take out)" class="inp" style="width:100%;margin-top:8px;font-size:13px" id="adj-po">
+          <button onclick="confirmYardAdj('${item.id}')" style="width:100%;margin-top:8px;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer">Confirm</button>
+        </div>
+
+        <!-- Barcode -->
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.75rem 1rem;margin-bottom:12px;text-align:center">
+          <div style="font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:.05em">Barcode</div>
+          <div style="font-family:monospace;font-size:11px;letter-spacing:3px;background:#fff;padding:12px;border-radius:6px;display:inline-block;min-width:200px">
+            <div style="font-size:32px;letter-spacing:1px;line-height:1;color:#000;font-family:'Libre Barcode 128',monospace">${barcodeVal}</div>
+            <div style="font-size:11px;color:#333;margin-top:4px">${barcodeVal}</div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-top:6px">Scan to identify item</div>
+        </div>
+
+        <!-- Documents -->
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.75rem 1rem;margin-bottom:12px">
+          <div style="font-size:12px;color:var(--text3);margin-bottom:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em">Documents</div>
+          ${docs.tds ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)">
+            <div>
+              <div style="font-size:13px;font-weight:500;color:var(--text)">Technical Data Sheet (TDS)</div>
+              <div style="font-size:11px;color:var(--text3)">Product specifications and application guide</div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <a href="${docs.tds}" target="_blank" style="padding:5px 10px;border-radius:6px;background:var(--primary);color:#fff;text-decoration:none;font-size:12px;font-weight:500">Open</a>
+              <a href="${docs.tds}" download style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);color:var(--text);text-decoration:none;font-size:12px">↓</a>
+              <button onclick="window.print()" style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);color:var(--text);font-size:12px;cursor:pointer">⎙</button>
+            </div>
+          </div>` : `
+          <div style="padding:8px 0;border-bottom:0.5px solid var(--border)">
+            <div style="font-size:13px;color:var(--text3)">TDS — link not added yet</div>
+            <button onclick="alert('Add TDS link in Admin')" style="font-size:11px;color:var(--primary);background:none;border:none;cursor:pointer;padding:0;margin-top:2px">+ Add TDS link</button>
+          </div>`}
+          ${docs.sds ? `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+            <div>
+              <div style="font-size:13px;font-weight:500;color:var(--text)">Safety Data Sheet (SDS)</div>
+              <div style="font-size:11px;color:var(--text3)">Hazard and safety information</div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <a href="${docs.sds}" target="_blank" style="padding:5px 10px;border-radius:6px;background:#EEEDFE;color:#3C3489;text-decoration:none;font-size:12px;font-weight:500">Open</a>
+              <a href="${docs.sds}" download style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);color:var(--text);text-decoration:none;font-size:12px">↓</a>
+            </div>
+          </div>` : `
+          <div style="padding:8px 0">
+            <div style="font-size:13px;color:var(--text3)">SDS — link not added yet</div>
+            <button onclick="alert('Add SDS link in Admin')" style="font-size:11px;color:var(--primary);background:none;border:none;cursor:pointer;padding:0;margin-top:2px">+ Add SDS link</button>
+          </div>`}
+        </div>
+
+        <!-- Order more -->
+        <button class="btn btn-primary btn-full" onclick="nav('browse')">Order more from supplier</button>
+      </div>
     </div>`;
+}
+
+function confirmYardAdj(id) {
+  const mode = document.getElementById('adj-mode')?.textContent;
+  const qty = parseInt(document.getElementById('adj-qty')?.value || 0);
+  const po = document.getElementById('adj-po')?.value;
+  if (mode === 'SELECT ACTION') { alert('Please select Take from yard or Add to yard'); return; }
+  if (mode === 'TAKE OUT' && !po) { alert('PO/Job number is required when taking stock out'); return; }
+  const item = SEED_YARD_STOCK.find(i => i.id === id);
+  if (!item) return;
+  if (mode === 'TAKE OUT') {
+    item.qty = Math.max(0, item.qty - qty);
+    alert('✓ ' + qty + ' × ' + item.name + ' taken out\nJob: ' + po + '\nNew qty: ' + item.qty);
+  } else {
+    item.qty = item.qty + qty;
+    alert('✓ ' + qty + ' × ' + item.name + ' added to yard\nNew qty: ' + item.qty);
+  }
+  showPage('yard');
 }
 
 function renderYardMyOrders() {
@@ -3161,9 +3649,36 @@ function renderYardTrucks() {
           <div style="font-size:13px;color:var(--text)">${slot}</div>
           <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#E1F5EE;color:#085041">2 of 2 left</span>
         </div>`).join('')}
-      <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="alert('Google Calendar integration coming soon')">Book a truck slot</button>
+      <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="openCalendarBooking()">Book a truck slot</button>
+      <button class="btn btn-outline btn-full" style="margin-top:8px" onclick="viewCalendar()">View Dapcor calendar</button>
     </div>`;
 }
+// ============================================================
+// GOOGLE CALENDAR
+// ============================================================
+function openCalendarBooking() {
+  const site = currentUser ? (SEED_JOBSITES[0]?.address || 'Site TBC') : 'Site TBC';
+  const user = currentUser ? currentUser.name : 'Ben Lawrence';
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const date = tomorrow.toISOString().split('T')[0].replace(/-/g,'');
+  const start = date + 'T073000';
+  const end   = date + 'T093000';
+  const title = encodeURIComponent('Truck Delivery — ' + site);
+  const details = encodeURIComponent('Booked by: ' + user + '\nSite: ' + site + '\nBooked via Dapcor BCO');
+  const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + title
+    + '&dates=' + start + '/' + end
+    + '&details=' + details
+    + '&src=' + encodeURIComponent(DAPCOR_CALENDAR_ID);
+  window.open(url, '_blank');
+}
+
+function viewCalendar() {
+  const url = 'https://calendar.google.com/calendar/embed?src=' + encodeURIComponent(DAPCOR_CALENDAR_ID);
+  window.open(url, '_blank');
+}
+
+// ============================================================
 function renderClaude() {
   const el = document.getElementById('page-claude');
   el.innerHTML = `
@@ -3341,8 +3856,6 @@ function floatAddMsg(text, isUser, id) {
   msgs.scrollTop = msgs.scrollHeight;
 }
 loadLocal();
-// Force reseed if supplier count is low — ensures new subcontractors always load
-if (!DB.suppliers || DB.suppliers.length < 20) { seedDefaults(); }
 DB.users = SEED_USERS;
 showPage('login', false);
 updateBadge();
