@@ -229,7 +229,8 @@ textarea.inp{resize:vertical;min-height:70px}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
       </button>
       <div style="flex:1;display:flex;align-items:center;gap:10px">
-        <img src="https://cdn.prod.website-files.com/689407b698444c58db5017d2/689b2ee878e92fbb778c95a4_11590-Dapcor%20master%20logo_rgb_logo.png" alt="Dapcor" style="height:28px;width:auto;object-fit:contain" id="hdr-logo">
+        <img src="https://cdn.prod.website-files.com/689407b698444c58db5017d2/689b2ee878e92fbb778c95a4_11590-Dapcor%20master%20logo_rgb_logo.png" alt="Dapcor" style="height:28px;width:auto;object-fit:contain" id="hdr-logo" onerror="this.style.display='none';document.getElementById('hdr-logo-text').style.display='block'">
+        <span id="hdr-logo-text" style="display:none;font-size:18px;font-weight:700;color:var(--primary);letter-spacing:.02em">DAPCOR</span>
         <div>
           <div class="hdr-title" id="hdr-title" style="font-size:15px">BCO</div>
           <div class="hdr-sub" id="hdr-sub">Browse · Compare · Order</div>
@@ -241,6 +242,8 @@ textarea.inp{resize:vertical;min-height:70px}
 
   <div class="content">
     <div id="page-login"     class="page active"></div>
+    <div id="page-myjobs"    class="page"></div>
+    <div id="page-myyard"    class="page"></div>
     <div id="page-browse"    class="page"></div>
     <div id="page-detail"    class="page"></div>
     <div id="page-cart"      class="page"></div>
@@ -251,38 +254,13 @@ textarea.inp{resize:vertical;min-height:70px}
     <div id="page-claude"    class="page"></div>
     <div id="page-trade"     class="page"></div>
     <div id="page-comms"     class="page"></div>
+    <div id="page-assets"    class="page"></div>
+    <div id="page-asset-detail" class="page"></div>
     <div id="page-yard"      class="page"></div>
     <div id="page-yard-detail" class="page"></div>
   </div>
 
-  <!-- Claude floating button -->
-  <button id="claude-fab" onclick="toggleClaudeFloat()" style="position:fixed;bottom:72px;right:14px;width:48px;height:48px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(99,102,241,0.5);z-index:200">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-  </button>
 
-  <!-- Claude float overlay -->
-  <div id="claude-float" style="display:none;position:fixed;bottom:128px;left:12px;right:12px;max-width:480px;margin:0 auto;background:var(--card);border:1px solid #6366f1;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:199;overflow:hidden">
-    <div style="display:flex;align-items:center;gap:10px;padding:.75rem 1rem;border-bottom:0.5px solid var(--border)">
-      <div style="width:28px;height:28px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">AI</div>
-      <div style="font-size:14px;font-weight:600;color:var(--text);flex:1">Dapcor assistant</div>
-      <button onclick="toggleClaudeFloat()" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;padding:0">×</button>
-    </div>
-    <div id="float-msgs" style="padding:.75rem 1rem;min-height:120px;max-height:220px;overflow-y:auto;font-size:13px;color:var(--text)">
-      <div style="background:var(--card2);border-radius:4px 12px 12px 12px;padding:.6rem .85rem;margin-bottom:.5rem;line-height:1.5">Hi Ben — what do you need? I can add products, suppliers, check quotes, book labour, or anything else.</div>
-    </div>
-    <div style="display:flex;gap:6px;padding:.5rem 1rem 0;flex-wrap:wrap">
-      <span onclick="floatQuick('Add a product')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Add product</span>
-      <span onclick="floatQuick('Add a supplier')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Add supplier</span>
-      <span onclick="floatQuick('Check my quotes')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">My quotes</span>
-      <span onclick="floatQuick('Book a labourer')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Book labour</span>
-    </div>
-    <div style="display:flex;gap:8px;padding:.75rem 1rem;align-items:center">
-      <input id="float-input" class="inp" placeholder="Type anything..." style="flex:1;border-radius:20px;font-size:13px" onkeydown="if(event.key==='Enter')floatSend()">
-      <button onclick="floatSend()" style="width:34px;height:34px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
-      </button>
-    </div>
-  </div>
 
   <nav class="nav" style="font-size:9px" id="main-nav"></nav>
 </div>
@@ -337,11 +315,7 @@ const SEED_SUPPLIERS = [
     hasAccount:true, accountNumber:'110303', creditTerms:'30 days', tradingHours:'Mon–Fri 7am–4pm',
     minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:6, maxLoadKg:6000,
     hasCrane:false, hasForklift:false, notes:'Delivery $50 flat. SikaFlex and sealant products.' },
-  { id:'sup-ardex', name:'Ardex', phone:'1300 788 780', email:'orders@ardex.com.au',
-    website:'https://www.ardex.com.au', repName:'Wade Bennett', address:'2 Buda Way, Kemps Creek NSW 2178',
-    hasAccount:true, accountNumber:'141102', creditTerms:'30 days', tradingHours:'Mon–Fri 7am–5pm',
-    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:12, maxLoadKg:12000,
-    hasCrane:false, hasForklift:true, notes:'35% discount off list price. Standard freight $50. NSW Distribution Centre.' },
+
   { id:'sup-parchem', name:'Parchem (Fosroc)', phone:'1300 576 758', email:'orders@parchem.com.au',
     website:'https://www.parchem.com.au', repName:'', address:'64 Elizabeth St, Wetherill Park NSW 2164',
     hasAccount:true, accountNumber:'823027', creditTerms:'30 days', tradingHours:'Mon–Fri 7am–5pm',
@@ -358,11 +332,11 @@ const SEED_SUPPLIERS = [
     minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:4, maxLoadKg:4000,
     hasCrane:false, hasForklift:false, notes:'Click & collect available. Waterproofing accessories and angles.' },
   // SUBCONTRACTORS & LABOUR HIRE
-  { id:'sup-jv-recruitment', name:'JV Recruitment', phone:'0406 516 169', email:'darren@jvrecruitment.com.au', website:'https://www.jvrecruitment.com.au', repName:'Darren Flynn', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Labour hire. Contact: Darren Flynn.', category:'Labour Hire', trade:'General Labour' },
+
   { id:'sup-a1-remedial', name:'A1 Remedial', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Labour hire / material handling.', category:'Labour Hire', trade:'Labour Hire' },
   { id:'sup-kpr', name:'KPR', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Labour hire / traffic control.', category:'Labour Hire', trade:'Labour Hire' },
   { id:'sup-brilliant-electrical', name:'Brilliant Electrical', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Electrical.', category:'Subcontractor', trade:'Electrical' },
-  { id:'sup-neoline', name:'Neoline Electrical', phone:'0455 055 636', email:'service@neoline.com.au', website:'https://www.neoline.com.au', repName:'Arthur', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Electrical. Contact: Arthur.', category:'Subcontractor', trade:'Electrical' },
+
   { id:'sup-silverback', name:'Silver Back Scaffolding', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Scaffold.', category:'Subcontractor', trade:'Scaffold' },
   { id:'sup-air-construction', name:'Air Construction', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Scaffold.', category:'Subcontractor', trade:'Scaffold' },
   { id:'sup-oceania', name:'Oceania', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Scaffold.', category:'Subcontractor', trade:'Scaffold' },
@@ -372,12 +346,12 @@ const SEED_SUPPLIERS = [
   { id:'sup-zabby', name:'Zabby', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Brickwork.', category:'Subcontractor', trade:'Brickwork' },
   { id:'sup-kmt', name:'KMT', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Brickwork.', category:'Subcontractor', trade:'Brickwork' },
   { id:'sup-staples', name:'Staples Waterproofing', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Waterproofing.', category:'Subcontractor', trade:'Waterproofing' },
-  { id:'sup-jmb-waterproofing', name:'JMB Waterproofing', phone:'0431 436 561', email:'joe@jmbwaterproofing.com.au', website:'https://www.jmbwaterproofing.com.au', repName:'Joe Brady', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Waterproofing. Contact: Joe Brady.', category:'Subcontractor', trade:'Waterproofing' },
+
   { id:'sup-watertight', name:'Watertight', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Waterproofing.', category:'Subcontractor', trade:'Waterproofing' },
   { id:'sup-3yn', name:'3YN Tiling - Jeff', phone:'', email:'', website:'', repName:'Jeff', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Tiling / Screeding / Paving. Contact: Jeff.', category:'Subcontractor', trade:'Tiling & Screeding' },
   { id:'sup-precision-tiling', name:'Precision Tiling Pty Ltd', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Tiling.', category:'Subcontractor', trade:'Tiling & Screeding' },
-  { id:'sup-lim-tiling', name:'LIM Tiling', phone:'0413 294 540', email:'', website:'', repName:'Lim', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Tiling. Contact: Lim. Email TBC.', category:'Subcontractor', trade:'Tiling & Screeding' },
-  { id:'sup-screedpro', name:'Screedpro Sydney', phone:'02 4257 6666', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Screeding. Email and contact TBC.', category:'Subcontractor', trade:'Tiling & Screeding' },
+
+
   { id:'sup-cemecrete', name:'Cemecrete', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Concrete work. New contractor.', category:'Subcontractor', trade:'Concrete' },
   { id:'sup-abbas-rendering', name:'Abbas Rendering', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Rendering.', category:'Subcontractor', trade:'Rendering' },
   { id:'sup-xray-rendering', name:'X-Ray Rendering', phone:'', email:'', website:'', repName:'', address:'', hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'', minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0, hasCrane:false, hasForklift:false, notes:'Subcontractor — Rendering.', category:'Subcontractor', trade:'Rendering' },
@@ -434,11 +408,7 @@ const SEED_SUPPLIERS = [
     hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'',
     minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0,
     hasCrane:false, hasForklift:false, notes:'Subcontractor — Tiling. Contact: Lim. Email TBC.', category:'Subcontractor', trade:'Tiling' },
-  { id:'sup-dc-demo', name:'DC Demo', phone:'0423 912 544', email:'tom@dcdemos.net',
-    website:'', repName:'Tom Trayers', address:'',
-    hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'',
-    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:0, maxLoadKg:0,
-    hasCrane:false, hasForklift:false, notes:'Subcontractor — Demolition. Contact: Tom Trayers.', category:'Subcontractor', trade:'Demolition' },
+
   { id:'sup-jv-recruitment', name:'JV Recruitment', phone:'0406 516 169', email:'darren@jvrecruitment.com.au',
     website:'https://www.jvrecruitment.com.au', repName:'Darren Flynn', address:'',
     hasAccount:false, accountNumber:'', creditTerms:'Quote basis', tradingHours:'',
@@ -460,11 +430,7 @@ const SEED_SUPPLIERS = [
     hasAccount:true, accountNumber:'TEST-003', creditTerms:'30 days', tradingHours:'Mon–Sat 7am–4pm',
     minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:12, maxLoadKg:12000,
     hasCrane:true, hasForklift:true, notes:'DUMMY SUPPLIER FOR TESTING ONLY — emails will not send' },
-  { id:'sup-hwgeneral', name:'Hardware & General', phone:'02 8456 1188', email:'accounts@hg.com.au',
-    website:'https://www.hg.com.au', repName:'William / Greg', address:'702-704 Pittwater Rd, Brookvale NSW 2100',
-    hasAccount:true, accountNumber:'225571', creditTerms:'30 days', tradingHours:'Mon–Fri 6:30am–5pm, Sat 7am–1pm',
-    minOrderValue:0, freeFreightThreshold:0, maxPalletSpaces:10, maxLoadKg:10000,
-    hasCrane:false, hasForklift:true, notes:'H&G Peakhurst branch. Various discounts per product. Sand 10% disc, cement 3.21% disc.' }
+
 ];
 
 const SEED_PRODUCTS = [
@@ -601,60 +567,60 @@ const SEED_CONTACTS = [
 const DAPCOR_CALENDAR_ID = 'dapcor.com.au_7953mmtmadvbstq7avfspm34g8@group.calendar.google.com';
 
 const SEED_YARD_STOCK = [
-  { id:'ys-1', name:'Ardex RA050', qty:180, brand:'Ardex', notes:'', category:'Waterproofing' },
-  { id:'ys-2', name:'Ardex WPM 405', qty:48, brand:'Ardex', notes:'', category:'Waterproofing' },
-  { id:'ys-3', name:'CA 20P Plus', qty:204, brand:'Ardex', notes:'White', barcode:'9315021121728', category:'Waterproofing' },
-  { id:'ys-4', name:'ST Silicone', qty:24, brand:'Ardex', notes:'Slate Grey', category:'Waterproofing' },
-  { id:'ys-5', name:'Ardex WPM 300', qty:36, brand:'Ardex', notes:'', category:'Waterproofing' },
-  { id:'ys-6', name:'ST Silicone', qty:10, brand:'Ardex', notes:'Charred Ash', category:'Waterproofing' },
+  { id:'ys-1', name:'Ardex RA050', qty:180, brand:'Ardex', notes:'', price:19.27, minStock:20, fullStock:100, reorderQty:50, reorderContact:'ben@dapcor.com.au', category:'Waterproofing' },
+  { id:'ys-2', name:'Ardex WPM 405', qty:48, brand:'Ardex', notes:'', price:0, minStock:10, fullStock:40, reorderQty:20, reorderContact:'ben@dapcor.com.au', category:'Waterproofing' },
+  { id:'ys-3', name:'CA 20P Plus', qty:204, brand:'Ardex', notes:'White', price:23.46, minStock:30, fullStock:150, reorderQty:60, reorderContact:'ben@dapcor.com.au', barcode:'9315021121728', category:'Waterproofing' },
+  { id:'ys-4', name:'ST Silicone', qty:24, brand:'Ardex', notes:'Slate Grey', price:14.77, category:'Waterproofing' },
+  { id:'ys-5', name:'Ardex WPM 300', qty:36, brand:'Ardex', notes:'', price:513.44, minStock:10, fullStock:60, reorderQty:30, reorderContact:'ben@dapcor.com.au', category:'Waterproofing' },
+  { id:'ys-6', name:'ST Silicone', qty:10, brand:'Ardex', notes:'Charred Ash', price:14.77, category:'Waterproofing' },
   { id:'ys-7', name:'Ardex Grout Booster', qty:3, brand:'Ardex', notes:'', category:'Waterproofing' },
   { id:'ys-8', name:'Ardex Bituminous Roof Sealant', qty:2, brand:'Ardex', notes:'', category:'Waterproofing' },
-  { id:'ys-9', name:'Ardex RA88+', qty:300, brand:'Ardex', notes:'', barcode:'9315021121583', category:'Waterproofing' },
-  { id:'ys-10', name:'FG8 Grout 20kg', qty:1, brand:'Ardex', notes:'Magalian Grey', category:'Waterproofing' },
-  { id:'ys-11', name:'SE Silicone', qty:2, brand:'Ardex', notes:'Misty Grey', category:'Waterproofing' },
-  { id:'ys-12', name:'Ardex E90', qty:0, brand:'Ardex', notes:'20kg Pail', category:'Waterproofing' },
-  { id:'ys-13', name:'Ardex EG 15', qty:1, brand:'Ardex', notes:'', category:'Waterproofing' },
+  { id:'ys-9', name:'Ardex RA88+', qty:300, brand:'Ardex', notes:'', price:0, barcode:'9315021121583', category:'Waterproofing' },
+  { id:'ys-10', name:'FG8 Grout 20kg', qty:1, brand:'Ardex', notes:'Magalian Grey', price:65.52, category:'Waterproofing' },
+  { id:'ys-11', name:'SE Silicone', qty:2, brand:'Ardex', notes:'Misty Grey', price:14.77, category:'Waterproofing' },
+  { id:'ys-12', name:'Ardex E90', qty:0, brand:'Ardex', notes:'20kg Pail', price:310.39, category:'Waterproofing' },
+  { id:'ys-13', name:'Ardex EG 15', qty:1, brand:'Ardex', notes:'', price:0, category:'Waterproofing' },
   { id:'ys-14', name:'WPM 002', qty:0, brand:'Ardex', notes:'', category:'Waterproofing' },
-  { id:'ys-15', name:'WPM 270', qty:76, brand:'Ardex', notes:'', barcode:'9315021111583', category:'Waterproofing' },
-  { id:'ys-16', name:'WPM 368', qty:1, brand:'Ardex', notes:'', category:'Waterproofing' },
-  { id:'ys-17', name:'Ardex WA98', qty:61, brand:'Ardex', notes:'New WA98', barcode:'9315021119398', category:'Waterproofing' },
-  { id:'ys-18', name:'Ardex X18 Tile Glue', qty:85, brand:'Ardex', notes:'', barcode:'9315021111408', category:'Tiling' },
-  { id:'ys-19', name:'Ardex WPM1000', qty:46, brand:'Ardex', notes:'Roll of membrane', barcode:'9421031332808', category:'Waterproofing' },
+  { id:'ys-15', name:'WPM 270', qty:76, brand:'Ardex', notes:'', price:289.13, minStock:10, fullStock:40, reorderQty:20, reorderContact:'ben@dapcor.com.au', barcode:'9315021111583', category:'Waterproofing' },
+  { id:'ys-16', name:'WPM 368', qty:1, brand:'Ardex', notes:'', price:0, category:'Waterproofing' },
+  { id:'ys-17', name:'Ardex WA98', qty:61, brand:'Ardex', notes:'New WA98', price:311.58, minStock:10, fullStock:40, reorderQty:20, reorderContact:'ben@dapcor.com.au', barcode:'9315021119398', category:'Waterproofing' },
+  { id:'ys-18', name:'Ardex X18 Tile Glue', qty:85, brand:'Ardex', notes:'', price:0, barcode:'9315021111408', category:'Tiling' },
+  { id:'ys-19', name:'Ardex WPM1000', qty:46, brand:'Ardex', notes:'Roll of membrane', price:1990.75, minStock:10, fullStock:30, reorderQty:10, reorderContact:'ben@dapcor.com.au', barcode:'9421031332808', category:'Waterproofing' },
   { id:'ys-20', name:'Ardex 1000', qty:1, brand:'Ardex', notes:'Roll of membrane', category:'Waterproofing' },
-  { id:'ys-21', name:'RA88 Sausages', qty:96, brand:'Ardex', notes:'RA88 in sausages', barcode:'9315021121551', category:'Waterproofing' },
-  { id:'ys-22', name:'FG8 Travertine 5kg', qty:38, brand:'Ardex', notes:'FG8 grout in 5kg bags', category:'Tiling' },
+  { id:'ys-21', name:'RA88 Sausages', qty:96, brand:'Ardex', notes:'RA88 in sausages', price:19.27, barcode:'9315021121551', category:'Waterproofing' },
+  { id:'ys-22', name:'FG8 Travertine 5kg', qty:38, brand:'Ardex', notes:'FG8 grout in 5kg bags', price:0, category:'Tiling' },
   { id:'ys-23', name:'GP Cement Blue', qty:3, brand:'Bastion', notes:'', category:'Cement' },
-  { id:'ys-24', name:'Fosroc Cemtop 20kg', qty:6, brand:'Fosroc', notes:'', category:'Structural Repair' },
+  { id:'ys-24', name:'Fosroc Cemtop 20kg', qty:6, brand:'Fosroc', notes:'', price:36.0, category:'Structural Repair' },
   { id:'ys-25', name:'Fosroc Flame XT Sealant', qty:2, brand:'Fosroc', notes:'', category:'Structural Repair' },
-  { id:'ys-26', name:'Concure WB30', qty:1, brand:'Fosroc', notes:'', category:'Structural Repair' },
+  { id:'ys-26', name:'Concure WB30', qty:1, brand:'Fosroc', notes:'', price:0, category:'Structural Repair' },
   { id:'ys-27', name:'Concure WB30 Clear', qty:1, brand:'Fosroc', notes:'20L bottle', category:'Structural Repair' },
   { id:'ys-28', name:'Nitoproof 510', qty:1, brand:'Fosroc', notes:'20L kit', category:'Waterproofing' },
-  { id:'ys-29', name:'Nitobond HAR 5L', qty:1, brand:'Fosroc', notes:'', category:'Structural Repair' },
+  { id:'ys-29', name:'Nitobond HAR 5L', qty:1, brand:'Fosroc', notes:'', price:0, category:'Structural Repair' },
   { id:'ys-30', name:'Nitoseal MB180', qty:0, brand:'Fosroc', notes:'Bituminous Sealant', category:'Structural Repair' },
-  { id:'ys-31', name:'Fosroc ST06', qty:1, brand:'Fosroc', notes:'', category:'Structural Repair' },
-  { id:'ys-32', name:'Fosroc HB40', qty:0, brand:'Parchem', notes:'', category:'Structural Repair' },
-  { id:'ys-33', name:'Fosroc LA55', qty:30, brand:'Parchem', notes:'', category:'Structural Repair' },
-  { id:'ys-34', name:'Cemtop Screed', qty:0, brand:'Fosroc', notes:'', category:'Structural Repair' },
-  { id:'ys-35', name:'Keracem Eco', qty:24, brand:'Kerakoll', notes:'', category:'Screeding' },
+  { id:'ys-31', name:'Fosroc ST06', qty:1, brand:'Fosroc', notes:'', price:19.88, category:'Structural Repair' },
+  { id:'ys-32', name:'Fosroc HB40', qty:0, brand:'Parchem', notes:'', price:58.8, minStock:5, fullStock:20, reorderQty:10, reorderContact:'ben@dapcor.com.au', category:'Structural Repair' },
+  { id:'ys-33', name:'Fosroc LA55', qty:30, brand:'Parchem', notes:'', price:47.69, minStock:10, fullStock:40, reorderQty:20, reorderContact:'ben@dapcor.com.au', category:'Structural Repair' },
+  { id:'ys-34', name:'Cemtop Screed', qty:0, brand:'Fosroc', notes:'', price:0, category:'Structural Repair' },
+  { id:'ys-35', name:'Keracem Eco', qty:24, brand:'Kerakoll', notes:'', price:0, category:'Screeding' },
   { id:'ys-36', name:'EP21 Kit', qty:3, brand:'Kerakoll', notes:'', category:'Tiling' },
-  { id:'ys-37', name:'Laticrete 3701', qty:12, brand:'Laticrete', notes:'', category:'Tiling' },
+  { id:'ys-37', name:'Laticrete 3701', qty:12, brand:'Laticrete', notes:'', price:0, category:'Tiling' },
   { id:'ys-38', name:'Laticrete 254', qty:4, brand:'Laticrete', notes:'Glue for 3701', category:'Tiling' },
   { id:'ys-39', name:'Laticrete 335', qty:5, brand:'Laticrete', notes:'', category:'Tiling' },
-  { id:'ys-40', name:'Selleys Liquid Nails', qty:2, brand:'Selleys', notes:'', category:'Adhesives' },
+  { id:'ys-40', name:'Selleys Liquid Nails', qty:2, brand:'Selleys', notes:'', price:15.5, category:'Adhesives' },
   { id:'ys-41', name:'Sikaflex Pro', qty:0, brand:'Sika', notes:'', category:'Waterproofing' },
   { id:'ys-42', name:'Mapefibre ST30', qty:4, brand:'Mapei', notes:'Fibre for screed mix', category:'Screeding' },
   { id:'ys-43', name:'Cemelast Liquid 9L', qty:1, brand:'Vandex', notes:'9L bottle', category:'Waterproofing' },
-  { id:'ys-44', name:'Bricky Sand', qty:11, brand:'Skippens', notes:'', barcode:'100000000212', category:'Sand' },
-  { id:'ys-45', name:'Sydney Sand', qty:29, brand:'Skippens', notes:'', category:'Sand' },
+  { id:'ys-44', name:'Bricky Sand', qty:11, brand:'Skippens', notes:'', price:6.5, minStock:5, fullStock:20, reorderQty:10, reorderContact:'ben@dapcor.com.au', barcode:'100000000212', category:'Sand' },
+  { id:'ys-45', name:'Sydney Sand', qty:29, brand:'Skippens', notes:'', price:7.48, minStock:10, fullStock:40, reorderQty:20, reorderContact:'ben@dapcor.com.au', category:'Sand' },
   { id:'ys-46', name:'Yellow Brickies Sand', qty:0, brand:'', notes:'', category:'Sand' },
-  { id:'ys-47', name:'Concrete GP 25MPA', qty:11, brand:'Builders', notes:'25MPA', barcode:'100000000618', category:'Concrete' },
+  { id:'ys-47', name:'Concrete GP 25MPA', qty:11, brand:'Builders', notes:'25MPA', price:8.96, barcode:'100000000618', category:'Concrete' },
   { id:'ys-48', name:'High Strength Concrete Mix', qty:1, brand:'', notes:'', category:'Concrete' },
   { id:'ys-49', name:'Westox 50 Injection Fluid', qty:2, brand:'Westox', notes:'Low odour injection fluid', category:'Structural Repair' },
   { id:'ys-50', name:'Bondcrete 10L', qty:1, brand:'Bondall', notes:'Concrete glue', category:'Structural Repair' },
   { id:'ys-51', name:'Chemset 101', qty:0, brand:'Ramset', notes:'', category:'Fixings' },
-  { id:'ys-52', name:'Hilti HAS-U M12x160', qty:17, brand:'Hilti', notes:'Very expensive stainless thread rod', category:'Fixings' },
-  { id:'ys-53', name:'Dynabolt 10mm x 100mm Galvanised', qty:25, brand:'Ramset', notes:'', category:'Fixings' },
-  { id:'ys-54', name:'Dynabolt 8mm x 65mm Zinc', qty:48, brand:'Ramset', notes:'', category:'Fixings' },
+  { id:'ys-52', name:'Hilti HAS-U M12x160', qty:17, brand:'Hilti', notes:'Very expensive stainless thread rod', price:28.5, category:'Fixings' },
+  { id:'ys-53', name:'Dynabolt 10mm x 100mm Galvanised', qty:25, brand:'Ramset', notes:'', price:4.5, category:'Fixings' },
+  { id:'ys-54', name:'Dynabolt 8mm x 65mm Zinc', qty:48, brand:'Ramset', notes:'', price:2.8, category:'Fixings' },
   { id:'ys-55', name:'Screw Phillips Head 10g 125mm', qty:0, brand:'Macsim', notes:'Wood screws galvanised', category:'Fixings' },
   { id:'ys-56', name:'8mm Thread Rod 3m', qty:25, brand:'', notes:'', category:'Fixings' },
   { id:'ys-57', name:'Teflon Washers', qty:200, brand:'', notes:'', category:'Fixings' },
@@ -666,8 +632,8 @@ const SEED_YARD_STOCK = [
   { id:'ys-63', name:'Galvanised N12 Reo 6m', qty:13, brand:'Ausreo', notes:'', barcode:'100000000274', category:'Structural' },
   { id:'ys-64', name:'N20 Galvanised Reo 6m', qty:7, brand:'', notes:'', category:'Structural' },
   { id:'ys-65', name:'Acroprop #2', qty:30, brand:'', notes:'1.98m - 3.35m, Red', category:'Structural' },
-  { id:'ys-66', name:'Timber LVL 90x45 E10 6m', qty:16, brand:'Covert Procurement', notes:'LVL framing timber', category:'Timber' },
-  { id:'ys-67', name:'Formply 2400x1200', qty:18, brand:'Covert Procurement', notes:'', category:'Timber' },
+  { id:'ys-66', name:'Timber LVL 90x45 E10 6m', qty:16, brand:'Covert Procurement', notes:'LVL framing timber', price:0, category:'Timber' },
+  { id:'ys-67', name:'Formply 2400x1200', qty:18, brand:'Covert Procurement', notes:'', price:0, category:'Timber' },
   { id:'ys-68', name:'Scyon Sheets', qty:19, brand:'', notes:'600x2400', category:'Structural' },
   { id:'ys-69', name:'CFC 2400x1200 10mm External', qty:4, brand:'', notes:'CFC sheeting', category:'Structural' },
   { id:'ys-70', name:'Hardifine Texture Cladding CFC 8.5mm', qty:1, brand:'James Hardie', notes:'3m 8.5mm', category:'Structural' },
@@ -682,7 +648,7 @@ const SEED_YARD_STOCK = [
   { id:'ys-79', name:'Aluminium T 100x80x6m', qty:11, brand:'Capral', notes:'T Bar 10mm thick', category:'Aluminium' },
   { id:'ys-80', name:'Aluminium Angle 40x40 6m', qty:12, brand:'Capral', notes:'Waterstop angle', category:'Aluminium' },
   { id:'ys-81', name:'Aluminium 100x50 Angle', qty:8, brand:'Capral', notes:'For window installation, bottom fix point', category:'Aluminium' },
-  { id:'ys-82', name:'Aluminium Waterstop Angle 50x50x1.3 6m', qty:32, brand:'Capral', notes:'Waterstop angle', category:'Aluminium' },
+  { id:'ys-82', name:'Aluminium Waterstop Angle 50x50x1.3 6m', qty:32, brand:'Capral', notes:'Waterstop angle', price:0, category:'Aluminium' },
   { id:'ys-83', name:'Aluminium Angle 200x80x10 4m', qty:3, brand:'Capral', notes:'For window installs', category:'Aluminium' },
   { id:'ys-84', name:'Aluminium 120x120x6', qty:3, brand:'Capral', notes:'For window installs', category:'Aluminium' },
   { id:'ys-85', name:'Aluminium 50mm Tube 3m', qty:9, brand:'', notes:'', category:'Aluminium' },
@@ -690,12 +656,12 @@ const SEED_YARD_STOCK = [
   { id:'ys-87', name:'Coreflute Roll', qty:12, brand:'', notes:'', category:'Protection' },
   { id:'ys-88', name:'Coreflute 2000x1000mm', qty:0, brand:'', notes:'', category:'Protection' },
   { id:'ys-89', name:'Coreflute Black 2400x1200', qty:0, brand:'Protecta', notes:'', category:'Protection' },
-  { id:'ys-90', name:'Coreflute 1800x1200x2mm', qty:329, brand:'Protrade', notes:'', category:'Protection' },
+  { id:'ys-90', name:'Coreflute 1800x1200x2mm', qty:329, brand:'Protrade', notes:'', price:6.5, minStock:50, fullStock:200, reorderQty:100, reorderContact:'ben@dapcor.com.au', category:'Protection' },
   { id:'ys-91', name:'Rhino Board Green and Grey', qty:30, brand:'Protecta', notes:'Ask for clean or dirty condition', category:'Protection' },
   { id:'ys-92', name:'Rhino Mat Yellow Rolls', qty:0, brand:'Protecta', notes:'Yellow path protection, 10m rolls', category:'Protection' },
   { id:'ys-93', name:'Bull Board 5mm', qty:0, brand:'Toro', notes:'5mm protection board', category:'Protection' },
-  { id:'ys-94', name:'Bull Board 3mm', qty:13, brand:'Toro', notes:'3mm protection board', category:'Protection' },
-  { id:'ys-95', name:'Bull Board PVC Tape', qty:11, brand:'Toro', notes:'Tape for bull boards', category:'Protection' },
+  { id:'ys-94', name:'Bull Board 3mm', qty:13, brand:'Toro', notes:'3mm protection board', price:0, category:'Protection' },
+  { id:'ys-95', name:'Bull Board PVC Tape', qty:11, brand:'Toro', notes:'Tape for bull boards', price:0, category:'Protection' },
   { id:'ys-96', name:'Carpet Saver Film', qty:1, brand:'Protrade', notes:'Carpet protect film', category:'Protection' },
   { id:'ys-97', name:'Hardwood Floor Film', qty:3, brand:'Protrade', notes:'Sticky hardwood floor film', category:'Protection' },
   { id:'ys-98', name:'Polyweave Protection', qty:2, brand:'Protrade', notes:'1.8m x 100m', category:'Protection' },
@@ -731,43 +697,43 @@ const SEED_YARD_STOCK = [
   { id:'ys-128', name:'Bricks Extruded Red', qty:62, brand:'', notes:'', category:'Structural' },
   { id:'ys-129', name:'Brick Solid Common', qty:290, brand:'', notes:'', category:'Structural' },
   { id:'ys-130', name:'Tear Away 3/8 L Beads', qty:15, brand:'Trimex', notes:'Shadow line for ceiling plaster', category:'Plastering' },
-  { id:'ys-131', name:'Rendering Straight Edge 2.4m', qty:1, brand:'Ox', notes:'', category:'Tools' },
-  { id:'ys-132', name:'1.8m Screeds', qty:2, brand:'Master Finish', notes:'', category:'Tools' },
-  { id:'ys-133', name:'Shovels', qty:25, brand:'', notes:'Flat nose shovels', category:'Tools' },
-  { id:'ys-134', name:'Long Handle Shovel', qty:3, brand:'', notes:'For digging', category:'Tools' },
-  { id:'ys-135', name:'Crow Bars 1600mm', qty:3, brand:'', notes:'Heavy duty', category:'Tools' },
-  { id:'ys-136', name:'Sledge Hammer', qty:2, brand:'', notes:'', category:'Tools' },
-  { id:'ys-137', name:'Metal Rack', qty:3, brand:'', notes:'Metal garden rack', category:'Tools' },
-  { id:'ys-138', name:'Post Hole Digger', qty:2, brand:'', notes:'Post hole shovel', category:'Tools' },
-  { id:'ys-139', name:'Floor Scraper', qty:5, brand:'', notes:'', category:'Tools' },
-  { id:'ys-140', name:'Axe', qty:1, brand:'', notes:'Cuts trees down', category:'Tools' },
-  { id:'ys-141', name:'Suction Cups', qty:13, brand:'Trojan', notes:'For glass removal', category:'Tools' },
-  { id:'ys-142', name:'Saw Horse Rigid', qty:4, brand:'', notes:'Rigid legs', category:'Tools' },
-  { id:'ys-143', name:'Saw Horse Fold Up', qty:0, brand:'', notes:'Folding legs', category:'Tools' },
-  { id:'ys-144', name:'Paint Roller Extension Poles', qty:7, brand:'', notes:'', category:'Tools' },
-  { id:'ys-145', name:'3 Step Safety Step', qty:3, brand:'Gorilla', notes:'', category:'Tools' },
-  { id:'ys-146', name:'2 Step Safety Step', qty:0, brand:'Gorilla', notes:'', category:'Tools' },
-  { id:'ys-147', name:'3 Step Ladder', qty:3, brand:'', notes:'', category:'Tools' },
-  { id:'ys-148', name:'Gorilla Work Platform', qty:1, brand:'Gorilla', notes:'', category:'Tools' },
-  { id:'ys-149', name:'Gorilla Cart', qty:0, brand:'Gorilla', notes:'', category:'Tools' },
-  { id:'ys-150', name:'Gorilla Carts', qty:0, brand:'Gorilla', notes:'Carts for material handling', category:'Tools' },
-  { id:'ys-151', name:'Trolley Side Load 4 Wheels', qty:3, brand:'', notes:'Blue trolleys for glass, ply etc', category:'Tools' },
-  { id:'ys-152', name:'Wheel Barrow', qty:3, brand:'Timberfix', notes:'', category:'Tools' },
-  { id:'ys-153', name:'Large Exhaust Fan', qty:1, brand:'', notes:'', category:'Tools' },
-  { id:'ys-154', name:'Medium Exhaust Fan', qty:3, brand:'', notes:'', category:'Tools' },
-  { id:'ys-155', name:'Small Exhaust Fan', qty:1, brand:'', notes:'', category:'Tools' },
-  { id:'ys-156', name:'Spray N Mark Marker Paint', qty:3, brand:'Dymark', notes:'You get what colour is available', category:'Tools' },
+  { id:'ys-131', name:'Rendering Straight Edge 2.4m', qty:1, brand:'Ox', notes:'', category:'Assets' },
+  { id:'ys-132', name:'1.8m Screeds', qty:2, brand:'Master Finish', notes:'', category:'Assets' },
+  { id:'ys-133', name:'Shovels', qty:25, brand:'', notes:'Flat nose shovels', category:'Assets' },
+  { id:'ys-134', name:'Long Handle Shovel', qty:3, brand:'', notes:'For digging', category:'Assets' },
+  { id:'ys-135', name:'Crow Bars 1600mm', qty:3, brand:'', notes:'Heavy duty', category:'Assets' },
+  { id:'ys-136', name:'Sledge Hammer', qty:2, brand:'', notes:'', category:'Assets' },
+  { id:'ys-137', name:'Metal Rack', qty:3, brand:'', notes:'Metal garden rack', category:'Assets' },
+  { id:'ys-138', name:'Post Hole Digger', qty:2, brand:'', notes:'Post hole shovel', category:'Assets' },
+  { id:'ys-139', name:'Floor Scraper', qty:5, brand:'', notes:'', category:'Assets' },
+  { id:'ys-140', name:'Axe', qty:1, brand:'', notes:'Cuts trees down', category:'Assets' },
+  { id:'ys-141', name:'Suction Cups', qty:13, brand:'Trojan', notes:'For glass removal', category:'Assets' },
+  { id:'ys-142', name:'Saw Horse Rigid', qty:4, brand:'', notes:'Rigid legs', category:'Assets' },
+  { id:'ys-143', name:'Saw Horse Fold Up', qty:0, brand:'', notes:'Folding legs', category:'Assets' },
+  { id:'ys-144', name:'Paint Roller Extension Poles', qty:7, brand:'', notes:'', category:'Assets' },
+  { id:'ys-145', name:'3 Step Safety Step', qty:3, brand:'Gorilla', notes:'', category:'Assets' },
+  { id:'ys-146', name:'2 Step Safety Step', qty:0, brand:'Gorilla', notes:'', category:'Assets' },
+  { id:'ys-147', name:'3 Step Ladder', qty:3, brand:'', notes:'', category:'Assets' },
+  { id:'ys-148', name:'Gorilla Work Platform', qty:1, brand:'Gorilla', notes:'', category:'Assets' },
+  { id:'ys-149', name:'Gorilla Cart', qty:0, brand:'Gorilla', notes:'', category:'Assets' },
+  { id:'ys-150', name:'Gorilla Carts', qty:0, brand:'Gorilla', notes:'Carts for material handling', category:'Assets' },
+  { id:'ys-151', name:'Trolley Side Load 4 Wheels', qty:3, brand:'', notes:'Blue trolleys for glass, ply etc', category:'Assets' },
+  { id:'ys-152', name:'Wheel Barrow', qty:3, brand:'Timberfix', notes:'', category:'Assets' },
+  { id:'ys-153', name:'Large Exhaust Fan', qty:1, brand:'', notes:'', category:'Assets' },
+  { id:'ys-154', name:'Medium Exhaust Fan', qty:3, brand:'', notes:'', category:'Assets' },
+  { id:'ys-155', name:'Small Exhaust Fan', qty:1, brand:'', notes:'', category:'Assets' },
+  { id:'ys-156', name:'Spray N Mark Marker Paint', qty:3, brand:'Dymark', notes:'You get what colour is available', category:'Assets' },
   { id:'ys-157', name:'Fire Extinguisher', qty:14, brand:'', notes:'', category:'Safety' },
   { id:'ys-158', name:'Chemical Spill Kits', qty:4, brand:'', notes:'', category:'Safety' },
   { id:'ys-159', name:'Large Spill Kit', qty:1, brand:'', notes:'Spill kit in 120L wheelie bin', category:'Safety' },
   { id:'ys-160', name:'Asbestos Containment Bags', qty:21, brand:'', notes:'Bags for asbestos removal', category:'Safety' },
-  { id:'ys-161', name:'Hard Hat', qty:25, brand:'', notes:'', category:'PPE' },
-  { id:'ys-162', name:'Glasses Clear', qty:88, brand:'', notes:'', category:'PPE' },
-  { id:'ys-163', name:'Glasses Smokey', qty:100, brand:'', notes:'', category:'PPE' },
-  { id:'ys-164', name:'Safety Vest', qty:20, brand:'', notes:'', category:'PPE' },
-  { id:'ys-165', name:'Black Gloves', qty:100, brand:'', notes:'PPE black ninja gloves', category:'PPE' },
-  { id:'ys-166', name:'Dust Mask', qty:88, brand:'', notes:'', category:'PPE' },
-  { id:'ys-167', name:'Ear Plugs', qty:1000, brand:'', notes:'', category:'PPE' },
+  { id:'ys-161', name:'Hard Hat', qty:25, brand:'', notes:'', price:12.5, minStock:10, fullStock:30, reorderQty:15, reorderContact:'ben@dapcor.com.au', category:'PPE' },
+  { id:'ys-162', name:'Glasses Clear', qty:88, brand:'', notes:'', price:4.5, minStock:20, fullStock:60, reorderQty:30, reorderContact:'ben@dapcor.com.au', category:'PPE' },
+  { id:'ys-163', name:'Glasses Smokey', qty:100, brand:'', notes:'', price:4.5, category:'PPE' },
+  { id:'ys-164', name:'Safety Vest', qty:20, brand:'', notes:'', price:8.0, category:'PPE' },
+  { id:'ys-165', name:'Black Gloves', qty:100, brand:'', notes:'PPE black ninja gloves', price:1.5, minStock:30, fullStock:100, reorderQty:50, reorderContact:'ben@dapcor.com.au', category:'PPE' },
+  { id:'ys-166', name:'Dust Mask', qty:88, brand:'', notes:'', price:2.5, minStock:20, fullStock:60, reorderQty:30, reorderContact:'ben@dapcor.com.au', category:'PPE' },
+  { id:'ys-167', name:'Ear Plugs', qty:1000, brand:'', notes:'', price:0.3, minStock:100, fullStock:500, reorderQty:200, reorderContact:'ben@dapcor.com.au', category:'PPE' },
   { id:'ys-168', name:'Safety Caps', qty:50, brand:'', notes:'', category:'PPE' },
   { id:'ys-169', name:'Harness', qty:0, brand:'', notes:'', category:'PPE' },
   { id:'ys-170', name:'Safety Bollard Red Plastic', qty:40, brand:'', notes:'', category:'Safety' },
@@ -783,7 +749,7 @@ const SEED_YARD_STOCK = [
   { id:'ys-180', name:'Sediment Control Mesh', qty:2, brand:'', notes:'', category:'Safety' },
   { id:'ys-181', name:'Barrier Mesh', qty:1, brand:'Syneco', notes:'Hi vis barrier mesh plastic', category:'Safety' },
   { id:'ys-182', name:'Lyta Power Safe Scaff Mesh', qty:2, brand:'Talawa', notes:'Scaff insulation', category:'Safety' },
-  { id:'ys-183', name:'Bulka Bags', qty:100, brand:'', notes:'1 ton bulka bags', category:'Site Consumables' },
+  { id:'ys-183', name:'Bulka Bags', qty:100, brand:'', notes:'1 ton bulka bags', price:8.5, minStock:20, fullStock:60, reorderQty:30, reorderContact:'ben@dapcor.com.au', category:'Site Consumables' },
   { id:'ys-184', name:'White Rubbish Bags', qty:920, brand:'', notes:'', category:'Site Consumables' },
   { id:'ys-185', name:'Black Garbage Bins', qty:3, brand:'Timberfix', notes:'Site shed bins', category:'Site Consumables' },
   { id:'ys-186', name:'1000L Bins', qty:2, brand:'', notes:'Large 1000L bins', category:'Site Consumables' },
@@ -793,7 +759,7 @@ const SEED_YARD_STOCK = [
   { id:'ys-190', name:'Water Bottles', qty:2, brand:'', notes:'', category:'Site Consumables' },
   { id:'ys-191', name:'Toilet Paper', qty:38, brand:'Protrade', notes:'2 ply', category:'Site Consumables' },
   { id:'ys-192', name:'Nutri Grain', qty:0, brand:'', notes:'', category:'Site Consumables' },
-  { id:'ys-193', name:'Power Lead', qty:20, brand:'', notes:'20m 240v 10amp', category:'Site Consumables' },
+  { id:'ys-193', name:'Power Lead', qty:20, brand:'', notes:'20m 240v 10amp', price:12.0, category:'Site Consumables' },
   { id:'ys-194', name:'Distro Electrical Box', qty:3, brand:'', notes:'Distro box — ask for stand if needed', category:'Site Consumables' },
   { id:'ys-195', name:'Temp Down Pipe', qty:0, brand:'Timberfix', notes:'Blue temp plastic down pipe', category:'Site Consumables' },
   { id:'ys-196', name:'Strong Boy Heads', qty:60, brand:'', notes:'', category:'Site Consumables' },
@@ -804,6 +770,95 @@ const SEED_YARD_STOCK = [
   { id:'ys-201', name:'Office Chair', qty:2, brand:'', notes:'For filling out ITPs', category:'Site Office' },
   { id:'ys-202', name:'Plastic Chairs', qty:0, brand:'', notes:'For lunchroom', category:'Site Office' },
   { id:'ys-203', name:'Plastic Tables', qty:0, brand:'Bunnings', notes:'Lunch room tables', category:'Site Office' },
+];
+
+const SEED_ASSETS = {
+  harnesses: [
+    { id:'h-1', number:'H001', brand:'Petzl', model:'Vertex Best', serial:'PZ2024001', 
+      purchaseDate:'2024-03-15', purchasePrice:485, replacementValue:520,
+      assignedTo:'Brenner Da Silva', location:'Rhodes — 25105', status:'current',
+      lastFullInspection:'2025-12-10', nextFullInspection:'2026-06-10',
+      lastStrapInspection:'2026-03-10', nextStrapInspection:'2026-06-10',
+      inspectionHistory:[] },
+    { id:'h-2', number:'H002', brand:'Petzl', model:'Vertex Best', serial:'PZ2024002',
+      purchaseDate:'2024-03-15', purchasePrice:485, replacementValue:520,
+      assignedTo:'Regan Raveane', location:'Redfern — 24094', status:'due',
+      lastFullInspection:'2025-11-15', nextFullInspection:'2026-05-15',
+      lastStrapInspection:'2026-02-15', nextStrapInspection:'2026-05-15',
+      inspectionHistory:[] },
+    { id:'h-3', number:'H003', brand:'Petzl', model:'Vertex Best', serial:'PZ2024003',
+      purchaseDate:'2024-03-15', purchasePrice:485, replacementValue:520,
+      assignedTo:'In Yard', location:'Botany Yard', status:'current',
+      lastFullInspection:'2026-01-20', nextFullInspection:'2026-07-20',
+      lastStrapInspection:'2026-04-20', nextStrapInspection:'2026-07-20',
+      inspectionHistory:[] },
+  ],
+  calibration: [
+    { id:'c-1', name:'ELD Tester', brand:'Metrel', model:'MI3102H', serial:'MT2023001',
+      assignedTo:'Brenner Da Silva', location:'Rhodes — 25105',
+      lastCalibration:'2025-06-15', nextCalibration:'2026-06-15', status:'due',
+      certPhoto:'' },
+    { id:'c-2', name:'Moisture Meter', brand:'Protimeter', model:'MMS3', serial:'PR2022001',
+      assignedTo:'In Yard', location:'Botany Yard',
+      lastCalibration:'2026-01-10', nextCalibration:'2027-01-10', status:'current',
+      certPhoto:'' },
+    { id:'c-3', name:'Rotating Laser', brand:'Spectra', model:'LL300N', serial:'SP2021001',
+      assignedTo:'Peter Yeboah', location:'Botany — 25044',
+      lastCalibration:'2025-09-01', nextCalibration:'2026-09-01', status:'current',
+      certPhoto:'' },
+  ],
+  tagtest: [
+    { id:'t-1', name:'Distro Box 1', serial:'DB001', location:'Redfern — 24094',
+      lastTest:'2026-03-01', nextTest:'2026-09-01', status:'current', testClass:'3 monthly' },
+    { id:'t-2', name:'Distro Box 2', serial:'DB002', location:'Rhodes — 25105',
+      lastTest:'2025-12-01', nextTest:'2026-06-01', status:'overdue', testClass:'3 monthly' },
+    { id:'t-3', name:'Power Lead 20m #1', serial:'PL001', location:'Botany Yard',
+      lastTest:'2026-02-01', nextTest:'2026-08-01', status:'current', testClass:'6 monthly' },
+  ],
+  tools: [
+    { id:'tl-1', name:'SDS Rotary Hammer', brand:'Hilti', model:'TE 60', serial:'HL2022001',
+      assignedTo:'Regan Raveane', location:'Redfern — 24094', status:'on_site',
+      purchaseDate:'2022-06-01', purchasePrice:1850, replacementValue:2100,
+      warrantyExpiry:'2025-06-01', tagTestDue:'2026-09-01',
+      repairHistory:[] },
+    { id:'tl-2', name:'Angle Grinder 125mm', brand:'Makita', model:'GA5040', serial:'MK2023001',
+      assignedTo:'Brenner Da Silva', location:'Rhodes — 25105', status:'on_site',
+      purchaseDate:'2023-01-15', purchasePrice:320, replacementValue:350,
+      warrantyExpiry:'2026-01-15', tagTestDue:'2026-08-01',
+      repairHistory:[] },
+    { id:'tl-3', name:'Cordless Drill', brand:'Milwaukee', model:'M18 FPD2', serial:'MW2023002',
+      assignedTo:'In Yard', location:'Botany Yard', status:'in_yard',
+      purchaseDate:'2023-03-10', purchasePrice:680, replacementValue:720,
+      warrantyExpiry:'2026-03-10', tagTestDue:'2026-09-01',
+      repairHistory:[] },
+  ]
+};
+
+const HARNESS_INSPECTION_QUESTIONS = [
+  // Section 1 — General Info
+  { id:'q1_1', section:'1. Full Body Harness 6 Month Inspection', question:'1.1 Dapcor Asset Number', type:'text' },
+  { id:'q1_2', section:'1. Full Body Harness 6 Month Inspection', question:'1.2 Harness Serial Number', type:'text' },
+  { id:'q1_3', section:'1. Full Body Harness 6 Month Inspection', question:'1.3 Harness Manufacturer', type:'text' },
+  { id:'q1_4', section:'1. Full Body Harness 6 Month Inspection', question:'1.4 In Service Date confirmed', type:'pass_fail_na' },
+  // Section 2 — Harness
+  { id:'q2_1', section:'2. Harness', question:'2.1 Rings and Connection Points — Check D-rings/connection points for rust or corrosion, distortion, cracks, breaks, and rough or sharp edges. D-rings/connection points are to pivot freely.', type:'pass_fail_na' },
+  { id:'q2_2', section:'2. Harness', question:'2.2 Buckles — Check for unusual wear, damage or distortion. Tongue buckles: roller and tongue move freely and tongue overlaps buckle frame. Friction/mating buckles: check outer and center bars for distortion. Quick release: check for broken plastic and will not release when one release is opened. Mating buckles should nest together.', type:'pass_fail_na' },
+  { id:'q2_3', section:'2. Harness', question:'2.3 Webbing — Inspect entire length of all webbing for frayed edges, broken fibers, pulled stitches, cuts, burns and chemical damage. Also check for mildew, discolouration, hard shiny spots, any webbing marked with felt pen, excessive hardness or brittleness.', type:'pass_fail_na' },
+  { id:'q2_4', section:'2. Harness', question:'2.4 Stitching — Check all stitching for ripped or pulled stitches and make sure webbing joints are not loose. Also look for missing stitching, hard or shiny spots, or discolouration of stitching.', type:'pass_fail_na' },
+  // Section 3 — Rope & Shock Absorber
+  { id:'q3_1', section:'3. Rope & Shock Absorber', question:'3.1 Rope & Shock Absorber — Inspect entire length of all rope for frayed edges, broken fibers, pulled stitches, cuts, burns and chemical damage. Also check for mildew, discolouration, hard shiny spots, any portion of the rope that has been marked.', type:'pass_fail_na' },
+  // Section 4 — Carabiners
+  { id:'q4_1', section:'4. Carabiners', question:'4.1 Carabiners General — Check carabiners for rust or corrosion, distortion, cracks, breaks, and rough or sharp edges. Karabiners should operate smoothly and freely.', type:'pass_fail_na' },
+  { id:'q4_2', section:'4. Carabiners', question:'4.2 Carabiner Gate Operation — Gate opens and closes automatically and where applicable automatically latches (2 lock system) and/or if a 2 lock manual system correct screws open and closed.', type:'pass_fail_na' },
+  // Section 5 — Labels
+  { id:'q5_1', section:'5. Labels', question:'5.1 Labels — Inspect to be certain that all harnesses have a label that is legible and securely held in place.', type:'pass_fail_na' },
+  // Section 6 — Suitable for Use
+  { id:'q6_1', section:'6. Suitable for Use', question:'6.1 Harness is approved for use at time of inspection and free of visual defects.', type:'pass_fail_na' },
+  // Photos
+  { id:'qp1', section:'Photos', question:'Photo of full harness (front)', type:'photo' },
+  { id:'qp2', section:'Photos', question:'Photo of full harness (back)', type:'photo' },
+  { id:'qp3', section:'Photos', question:'Photo of manufacturer/serial label', type:'photo' },
+  { id:'qp4', section:'Photos', question:'Photo of inspection tag attached to harness', type:'photo' },
 ];
 
 const SEED_JOBSITES = [
@@ -824,10 +879,15 @@ const SEED_JOBSITES = [
 
 const SEED_USERS = [
   { id:'usr-ben', name:'Benjamin Lawrence', position:'Yard Manager', email:'ben@dapcor.com.au', phone:'0484 548 274', accessLevel:5 },
-  { id:'usr-ariyan', name:'Ariyan Yousefi', position:'Director of Operations', email:'ariyan@dapcor.com.au', phone:'0434 042 190', accessLevel:4 },
-  { id:'usr-oliver', name:'Oliver Reithmeier', position:'Managing Director', email:'oliver@dapcor.com.au', phone:'0414 992 677', accessLevel:6 },
-  { id:'usr-mitch', name:'Mitchell Reilly', position:'Project Manager', email:'mitchellreilly@dapcor.com.au', phone:'0425 424 755', accessLevel:3 },
-  { id:'usr-steven', name:'Steven Wilson', position:'Project Manager', email:'steven@dapcor.com.au', phone:'0421 230 270', accessLevel:3 },
+  { id:'usr-ariyan', name:'Ariyan Yousefi', position:'Director of Operations', email:'ariyan@dapcor.com.au', phone:'0434 042 190', accessLevel:6 },
+  { id:'usr-gina', name:'Gina Kapatos', position:'Financial Controller', email:'gina@dapcor.com.au', phone:'', accessLevel:6 },
+  { id:'usr-lena', name:'Lena Kostoglou', position:'Office Manager', email:'lena@dapcor.com.au', phone:'', accessLevel:5 },
+  { id:'usr-kiara', name:'Kiara Naidoo', position:'HR Manager', email:'kiara@dapcor.com.au', phone:'', accessLevel:3 },
+  { id:'usr-evan', name:'Evan Kapatos', position:'Estimator', email:'evan@dapcor.com.au', phone:'', accessLevel:2 },
+  { id:'usr-alex-r', name:'Alex Reithmeier', position:'Director', email:'alex@dapcor.com.au', phone:'', accessLevel:6 },
+  { id:'usr-alac', name:'Alac Kdouh', position:'Assistant Project Manager', email:'alac@dapcor.com.au', phone:'', accessLevel:3 },
+  { id:'usr-mitch', name:'Mitchell Reilly', position:'Project Manager', email:'mitchellreilly@dapcor.com.au', phone:'0425 424 755', accessLevel:4 },
+  { id:'usr-steven', name:'Steven Wilson', position:'Project Manager', email:'steven@dapcor.com.au', phone:'0421 230 270', accessLevel:4 },
   { id:'usr-kata', name:'Kata Raju', position:'Project Manager', email:'kata@dapcor.com.au', phone:'0414 782 921', accessLevel:3 },
   { id:'usr-alexander', name:'Alexander Han', position:'Assistant Project Manager', email:'alexander@dapcor.com.au', phone:'0434 612 876', accessLevel:2 },
   { id:'usr-jack', name:'Jack Dwyer', position:'Assistant Project Manager', email:'jackd@dapcor.com.au', phone:'0431 877 847', accessLevel:2 },
@@ -1126,6 +1186,10 @@ function renderCurrentPage() {
   else if (currentPage === 'order')     renderOrder();
   else if (currentPage === 'broadcast') renderBroadcast();
   else if (currentPage === 'submit')    renderSubmit();
+  else if (currentPage === 'assets')    renderAssets();
+  else if (currentPage === 'asset-detail') renderAssetDetail();
+  else if (currentPage === 'myjobs')    renderMyJobs();
+  else if (currentPage === 'myyard')    renderMyYard();
   else if (currentPage === 'admin')     renderAdmin();
   else if (currentPage === 'claude')    renderClaude();
   else if (currentPage === 'trade')     renderTrade();
@@ -1190,28 +1254,68 @@ const CAT_ICONS = {
 
 function getCatIcon(cat) { return CAT_ICONS[cat] || CAT_ICONS['default']; }
 
+let browseView = 'category'; // 'category' or 'supplier'
+
 function renderBrowse() {
   const el = document.getElementById('page-browse');
   const query = el.querySelector('#browse-search')?.value || '';
 
   if (selectedCategory === 'All' && !query) {
     const cats = getCategories().filter(c => c !== 'All');
+
+    // Get material suppliers only
+    const matSuppliers = (DB.suppliers || []).filter(s => !s.category || s.category === 'Materials');
+
     el.innerHTML = `
       <div class="search-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input class="inp" id="browse-search" placeholder="Search products…" value="" oninput="onBrowseSearch()" autocomplete="off">
       </div>
-      <div style="font-size:12px;color:var(--text3);margin-bottom:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase">Browse by category</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        ${cats.map(c => {
-          const count = DB.products.filter(p => p.category === c).length;
-          return `<div class="card card-click" onclick="selectCat('${c}')" style="display:flex;flex-direction:column;align-items:center;padding:18px 12px;text-align:center">
-            <div style="color:var(--primary);margin-bottom:10px">${getCatIcon(c)}</div>
-            <div style="font-size:14px;font-weight:600;margin-bottom:3px">${c}</div>
-            <div style="font-size:12px;color:var(--text3)">${count} product${count !== 1 ? 's' : ''}</div>
+      <div class="admin-tabs" style="margin-bottom:12px">
+        <div class="a-tab ${browseView==='category'?'active':''}" onclick="browseView='category';renderBrowse()">By Category</div>
+        <div class="a-tab ${browseView==='supplier'?'active':''}" onclick="browseView='supplier';renderBrowse()">By Supplier</div>
+      </div>
+      ${browseView === 'category' ? `
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase">Browse by category</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          ${cats.map(c => {
+            const count = DB.products.filter(p => p.category === c).length;
+            return `<div class="card card-click" onclick="selectCat('${c}')" style="display:flex;flex-direction:column;align-items:center;padding:18px 12px;text-align:center">
+              <div style="color:var(--primary);margin-bottom:10px">${getCatIcon(c)}</div>
+              <div style="font-size:14px;font-weight:600;margin-bottom:3px">${c}</div>
+              <div style="font-size:12px;color:var(--text3)">${count} product${count !== 1 ? 's' : ''}</div>
+            </div>`;
+          }).join('')}
+        </div>` : `
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase">Browse by supplier</div>
+        ${matSuppliers.map(s => {
+          const pricing = (DB.pricing || []).filter(p => p.supplierId === s.id);
+          const products = pricing.map(p => DB.products.find(pr => pr.id === p.productId)).filter(Boolean);
+          const unique = [...new Map(products.map(p => [p.id, p])).values()];
+          if (!unique.length) return '';
+          return `<div class="card" style="margin-bottom:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div>
+                <div style="font-size:15px;font-weight:600;color:var(--text)">${s.name}</div>
+                <div style="font-size:11px;color:var(--text3)">${unique.length} product${unique.length!==1?'s':''} · ${s.creditTerms||'COD'}</div>
+              </div>
+              ${s.phone ? `<a href="tel:${s.phone.replace(/\s/g,'')}" style="width:34px;height:34px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#085041" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 12.3 19.79 19.79 0 0 1 1.87 3.69 2 2 0 0 1 3.84 1.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </a>` : ''}
+            </div>
+            <div style="border-top:0.5px solid var(--border);padding-top:8px">
+              ${unique.map(p => `
+                <div onclick="selectProduct('${p.id}')" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border);cursor:pointer">
+                  <div>
+                    <div style="font-size:13px;font-weight:500;color:var(--text)">${p.name}</div>
+                    <div style="font-size:11px;color:var(--text3)">${p.category}</div>
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                </div>`).join('')}
+            </div>
           </div>`;
         }).join('')}
-      </div>`;
+      `}`;
     return;
   }
 
@@ -2102,20 +2206,113 @@ function renderAdminPanel() {
   else if (adminTab === 'settings')  renderAdminSettings(el);
 }
 
+let selectedSupplier = null;
+
 function renderAdminSuppliers(el) {
+  if (selectedSupplier) {
+    renderSupplierProfile(el, selectedSupplier);
+    return;
+  }
+
+  const matSuppliers = DB.suppliers.filter(s => !s.category || s.category === 'Materials');
+  const otherSuppliers = DB.suppliers.filter(s => s.category && s.category !== 'Materials');
+
   el.innerHTML = `
     <button class="btn btn-primary btn-full mb12" onclick="openSupModal(null)">+ Add Supplier</button>
-    ${DB.suppliers.map(s => `
-      <div class="card-sm row-between">
-        <div>
-          <div class="semi" style="font-size:14px">${s.name}</div>
-          <div class="t-xs t-dim">${s.phone} · ${s.creditTerms||'COD'}</div>
+    <div style="font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Materials suppliers</div>
+    ${matSuppliers.map(s => renderSupplierRow(s)).join('')}
+    <div style="font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin:12px 0 8px">Subcontractors & Labour</div>
+    ${otherSuppliers.slice(0,5).map(s => renderSupplierRow(s)).join('')}
+    ${otherSuppliers.length>5?`<div style="font-size:12px;color:var(--text3);text-align:center;padding:8px">+${otherSuppliers.length-5} more</div>`:''}`;
+}
+
+function renderSupplierRow(s) {
+  const pricing = (DB.pricing||[]).filter(p => p.supplierId === s.id);
+  const productCount = pricing.length;
+  // Check for low stock items linked to this supplier
+  const lowStock = SEED_YARD_STOCK.filter(item => {
+    const linked = pricing.find(p => {
+      const prod = DB.products.find(pr => pr.id === p.productId);
+      return prod && item.name.toLowerCase().includes(prod.name.toLowerCase().split(' ')[0]);
+    });
+    return linked && item.minStock && item.qty <= item.minStock;
+  });
+
+  return `<div onclick="selectedSupplier='${s.id}';renderAdminSuppliers(document.getElementById('admin-panel'))" class="card-sm row-between" style="cursor:pointer;border:0.5px solid ${lowStock.length?'#ef4444':'var(--border)'}">
+    <div>
+      <div class="semi" style="font-size:14px">${s.name}</div>
+      <div class="t-xs t-dim">${s.phone||''} · ${s.creditTerms||'COD'} ${productCount?'· '+productCount+' products':''}</div>
+      ${lowStock.length?`<div style="font-size:11px;color:#ef4444;margin-top:2px">🔴 ${lowStock.length} item${lowStock.length>1?'s':''} at reorder level</div>`:''}
+    </div>
+    <div class="row" style="gap:6px">
+      <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openSupModal('${s.id}')">Edit</button>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+    </div>
+  </div>`;
+}
+
+function renderSupplierProfile(el, suppId) {
+  const s = DB.suppliers.find(s => s.id === suppId);
+  if (!s) { selectedSupplier = null; renderAdminSuppliers(el); return; }
+
+  const pricing = (DB.pricing||[]).filter(p => p.supplierId === suppId);
+  const products = pricing.map(p => {
+    const prod = DB.products.find(pr => pr.id === p.productId);
+    if (!prod) return null;
+    // Find matching yard stock item
+    const stock = SEED_YARD_STOCK.find(i => i.name.toLowerCase().includes(prod.name.toLowerCase().split(' ')[0]));
+    return { prod, pricing: p, stock };
+  }).filter(Boolean);
+
+  el.innerHTML = `
+    <button onclick="selectedSupplier=null;renderAdminSuppliers(document.getElementById('admin-panel'))" style="background:none;border:none;cursor:pointer;color:var(--primary);font-size:13px;padding:0;margin-bottom:12px;display:flex;align-items:center;gap:4px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg> All suppliers
+    </button>
+    <div class="card" style="margin-bottom:12px">
+      <div style="font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px">${s.name}</div>
+      ${s.repName?`<div style="font-size:13px;color:var(--text3)">Rep: ${s.repName}</div>`:''}
+      ${s.phone?`<div style="font-size:13px;color:var(--text3)">${s.phone}</div>`:''}
+      ${s.email?`<div style="font-size:13px;color:var(--primary)">${s.email}</div>`:''}
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">Account: ${s.accountNumber||'N/A'} · ${s.creditTerms||'COD'}</div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        ${s.phone?`<a href="tel:${s.phone.replace(/\s/g,'')}" style="flex:1;padding:8px;background:#E1F5EE;color:#085041;border-radius:8px;text-align:center;text-decoration:none;font-size:12px;font-weight:500">📞 Call</a>`:''}
+        ${s.email?`<a href="mailto:${s.email}" style="flex:1;padding:8px;background:#EEEDFE;color:#3C3489;border-radius:8px;text-align:center;text-decoration:none;font-size:12px;font-weight:500">✉️ Email</a>`:''}
+      </div>
+    </div>
+
+    ${products.length ? `
+    <div style="font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Products & stock levels</div>
+    ${products.map(({prod, pricing: p, stock}) => {
+      const status = stock ? getStockStatus(stock) : null;
+      return `<div class="card" style="margin-bottom:8px;border:0.5px solid ${status?.urgent?'#ef4444':'var(--border)'}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:500;color:var(--text)">${prod.name}</div>
+            <div style="font-size:12px;color:var(--primary);margin-top:2px">$${p.pricePerBag.toFixed(2)}/unit · Freight $${p.freightCost}</div>
+          </div>
+          ${stock ? `<div style="text-align:right;flex-shrink:0">
+            <div style="font-size:16px;font-weight:700;color:${status.color}">${stock.qty}</div>
+            <div style="font-size:10px;color:var(--text3)">in stock</div>
+          </div>` : ''}
         </div>
-        <div class="row" style="gap:6px">
-          <button class="btn btn-ghost btn-xs" onclick="openSupModal('${s.id}')">Edit</button>
-          <button class="btn btn-xs" style="background:var(--red-bg);color:var(--red)" onclick="deleteSup('${s.id}')">Del</button>
-        </div>
-      </div>`).join('')}`;
+        ${stock?.fullStock ? `
+        <div style="margin-top:8px">
+          <div style="background:var(--border);border-radius:3px;height:5px;overflow:hidden;margin-bottom:4px">
+            <div style="height:5px;border-radius:3px;background:${status.color};width:${Math.min(100,Math.round((stock.qty/stock.fullStock)*100))}%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;color:var(--text3)">Min: ${stock.minStock} · Full: ${stock.fullStock}</span>
+            <span style="font-size:10px;font-weight:500;color:${status.color}">${status.label}</span>
+          </div>
+        </div>` : ''}
+        ${status?.urgent||status?.pct<0.5 ? `
+        <button onclick="addToReorder('${stock?.id}')" style="width:100%;margin-top:8px;padding:7px;background:#f97316;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer">
+          🛒 Add to reorder — ${stock?.reorderQty||''} units
+        </button>` : ''}
+      </div>`;
+    }).join('')}
+    <button onclick="alert('Send order to ${s.name} — coming soon')" class="btn btn-primary btn-full" style="margin-top:4px">Send order to ${s.name}</button>
+    ` : `<div class="empty"><p>No products linked to this supplier yet</p></div>`}`;
 }
 
 function renderAdminProducts(el) {
@@ -3232,6 +3429,7 @@ function renderNav() {
   };
 
   const foreman = [
+    { page:'myjobs', label:'Jobs', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>' },
     { page:'browse', label:'Browse', svg:svgs.browse },
     { page:'cart', label:'Order', svg:svgs.cart },
     { page:'yard', label:'Yard', svg:svgs.yard },
@@ -3243,7 +3441,34 @@ function renderNav() {
     { page:'claude', label:'Claude', svg:svgs.claude }
   ];
 
-  const tabs = level >= 5 ? [...foreman, ...yardExtra] : foreman;
+  const assetSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+
+  const yardMgrFirst = [
+    { page:'myyard', label:'My Yard', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2M8 7V5a2 2 0 0 0-4 0v2"/></svg>' },
+    { page:'browse', label:'Browse', svg:svgs.browse },
+    { page:'yard', label:'Stock', svg:svgs.yard },
+    { page:'assets', label:'Assets', svg:assetSvg },
+    { page:'trade', label:'Trade', svg:svgs.trade },
+    { page:'comms', label:'Comms', svg:svgs.comms },
+    { page:'admin', label:'Admin', svg:svgs.admin },
+    { page:'claude', label:'Claude', svg:svgs.claude }
+  ];
+
+  const seniorIds = ['usr-oliver','usr-alex-r','usr-ariyan','usr-mitch','usr-steven'];
+  const isSenior = currentUser && seniorIds.includes(currentUser.id);
+
+  const seniorNav = [
+    { page:'myjobs', label:'Jobs', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>' },
+    { page:'myyard', label:'Yard', svg:svgs.yard },
+    { page:'assets', label:'Assets', svg:assetSvg },
+    { page:'browse', label:'Browse', svg:svgs.browse },
+    { page:'trade', label:'Trade', svg:svgs.trade },
+    { page:'comms', label:'Comms', svg:svgs.comms },
+    { page:'admin', label:'Admin', svg:svgs.admin },
+    { page:'claude', label:'Claude', svg:svgs.claude }
+  ];
+
+  const tabs = isSenior ? seniorNav : level >= 6 ? [...foreman, ...yardExtra] : level === 5 ? yardMgrFirst : foreman;
 
   nav.innerHTML = tabs.map(t => `
     <button class="nav-btn ${currentPage===t.page?'active':''}" onclick="nav('${t.page}')">
@@ -3273,7 +3498,7 @@ function renderLogin() {
             <div style="font-size:14px;font-weight:500;color:var(--text)">${u.name}</div>
             <div style="font-size:12px;color:var(--text3)">${u.position}</div>
           </div>
-          <div style="font-size:11px;padding:2px 8px;border-radius:20px;background:${u.accessLevel>=5?'#E1F5EE':u.accessLevel>=3?'#EEEDFE':'var(--card2)'};color:${u.accessLevel>=5?'#085041':u.accessLevel>=3?'#3C3489':'var(--text3)'}">${u.accessLevel>=5?'Yard Manager':u.accessLevel>=4?'Operations':u.accessLevel>=3?'PM':u.accessLevel>=2?'Manager':'Foreman'}</div>
+          <div style="font-size:11px;padding:2px 8px;border-radius:20px;background:${u.accessLevel>=5?'#E1F5EE':u.accessLevel>=3?'#EEEDFE':'var(--card2)'};color:${u.accessLevel>=5?'#085041':u.accessLevel>=3?'#3C3489':'var(--text3)'}">${u.position}</div>
         </div>`).join('')}
     </div>`;
 }
@@ -3282,7 +3507,14 @@ function loginAs(userId) {
   const users = DB.users || SEED_USERS;
   currentUser = users.find(u => u.id === userId);
   if (!currentUser) return;
-  nav('browse');
+  currentJobSite = null;
+  setTimeout(() => checkReorderAlerts(), 1500);
+  // Yard manager (Ben, Lena) → My Yard
+  // Senior management (Oliver, Alex, Ariyan, Mitch) → My Jobs (they can switch to My Yard)
+  const seniorIds = ['usr-oliver','usr-alex-r','usr-ariyan','usr-mitch','usr-steven'];
+  if (seniorIds.includes(currentUser.id)) nav('myjobs');
+  else if (currentUser.accessLevel === 5) nav('myyard');
+  else nav('myjobs');
 }
 
 // ============================================================
@@ -3458,14 +3690,44 @@ const YARD_CATEGORY_PHOTOS = {
   'default': 'https://ardexaustralia.com/wp-content/uploads/2018/01/ARDEX-WPM-300_293x384.jpg'
 };
 
-// TDS/SDS links for key products
+// TDS/SDS links — confirmed real PDF URLs from supplier websites
 const YARD_DOCS = {
-  'ys-1':  { tds:'https://www.ardex.com.au/products/ardex-ra050/', sds:'https://www.ardex.com.au/sds/' },
-  'ys-2':  { tds:'https://www.ardex.com.au/products/ardex-wpm-405/', sds:'https://www.ardex.com.au/sds/' },
-  'ys-15': { tds:'https://www.ardex.com.au/products/ardex-wpm-270/', sds:'https://www.ardex.com.au/sds/' },
-  'ys-19': { tds:'https://www.ardex.com.au/products/ardex-wpm1000/', sds:'https://www.ardex.com.au/sds/' },
-  'ys-33': { tds:'https://www.parchem.com.au/product/renderoc-la55/', sds:'https://www.parchem.com.au/sds/' },
-  'ys-32': { tds:'https://www.parchem.com.au/product/renderoc-hb40/', sds:'https://www.parchem.com.au/sds/' },
+  // ARDEX — TDS confirmed working direct PDFs
+  'ys-1':  { tds:'https://ardexaustralia.com/pdf/products/datasheets/general%20construction/ARDEX%20RA%20050%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/general%20construction/ARDEX%20RA%20050%20SDS.pdf' },
+  'ys-2':  { tds:'https://ardexaustralia.com/pdf/products/datasheets/waterproofing/ARDEX%20WPM%20405%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/waterproofing/ARDEX%20WPM%20405%20SDS.pdf' },
+  'ys-3':  { tds:'https://ardexaustralia.com/pdf/products/datasheets/tiling/ARDEX%20CA%2020P%20Plus%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/tiling/ARDEX%20CA%2020%20P%20SDS.pdf' },
+  'ys-4':  { tds:'https://ardexaustralia.com/pdf/products/datasheets/tiling/ARDEX%20ST%20Silicone%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/tiling/ARDEX%20SE%20Silicone%20SDS.pdf' },
+  'ys-5':  { tds:'https://ardexaustralia.com/pdf/products/datasheets/waterproofing/ARDEX%20WPM%20300%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/waterproofing/ARDEX_WPM_300_Part_A_SDS.pdf' },
+  'ys-11': { tds:'https://ardexaustralia.com/pdf/products/datasheets/tiling/ARDEX%20ST%20Silicone%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/tiling/ARDEX%20SE%20Silicone%20SDS.pdf' },
+  'ys-15': { tds:'https://ardexaustralia.com/pdf/products/datasheets/waterproofing/ARDEX%20WPM%20270%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/waterproofing/ARDEX%20WPM%20270%20SDS.pdf' },
+  'ys-17': { tds:'https://ardexaustralia.com/pdf/products/datasheets/waterproofing/ARDEX%20WA98%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/waterproofing/ARDEX%20WA98%20SDS.pdf' },
+  'ys-18': { tds:'https://ardexaustralia.com/pdf/products/datasheets/tiling/ARDEX%20X18%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/tiling/ARDEX%20X18%20SDS.pdf' },
+  'ys-19': { tds:'https://ardexaustralia.com/pdf/products/datasheets/waterproofing/ARDEX%20WPM%201000%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/waterproofing/ARDEX%20WPM%201000%20SDS.pdf' },
+  'ys-21': { tds:'https://ardexaustralia.com/pdf/products/datasheets/general%20construction/ARDEX%20RA%20050%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/general%20construction/ARDEX%20RA%20050%20SDS.pdf' },
+  // Fosroc — direct TDS PDFs confirmed from fosroc.com.au, SDS via product page
+  'ys-32': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Renderoc_HB40_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/renderoc-hb40' },
+  'ys-33': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Renderoc_LA55_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/renderoc-la55' },
+  'ys-24': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Cemtop_GP_Advanced_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/cemtop-gp-advanced' },
+  'ys-31': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Renderoc_ST06_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/renderoc-st-06' },
+  'ys-29': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Nitobond_HAR_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/nitobond-har' },
+  'ys-34': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Cemtop_Screed_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/cemtop-screed' },
 };
 
 function renderYard() {
@@ -3493,8 +3755,9 @@ function renderYardOrder() {
   const cats = ['All', 'Waterproofing', 'Protection', 'PPE', 'Safety', 'Structural Repair',
     'Tiling', 'Screeding', 'Sand', 'Cement', 'Concrete', 'Timber', 'Aluminium',
     'Fixings', 'Structural', 'Sealants', 'Adhesives', 'Plastering', 'Cleaning',
-    'Tools', 'Site Consumables', 'Site Office'];
-  let items = SEED_YARD_STOCK;
+    'Site Consumables', 'Site Office'];
+  // Note: Tools/Equipment are in the Asset Tracker module (coming soon)
+  let items = SEED_YARD_STOCK.filter(i => i.category !== 'Assets');
   if (yardCategory !== 'All') items = items.filter(i => i.category === yardCategory);
   if (yardSearch) items = items.filter(i => i.name.toLowerCase().includes(yardSearch.toLowerCase()) || (i.brand||'').toLowerCase().includes(yardSearch.toLowerCase()));
 
@@ -3506,25 +3769,84 @@ function renderYardOrder() {
       ).join('')}
     </div>
     <div style="font-size:12px;color:var(--text3);margin-bottom:8px">${items.length} item${items.length!==1?'s':''}</div>
-    ${items.map(item => `
-      <div onclick="openYardDetail('${item.id}')" style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--card);border:0.5px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer">
+    ${items.map(item => {
+      const status = getStockStatus(item);
+      return `
+      <div onclick="openYardDetail('${item.id}')" style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--card);border:0.5px solid ${status.urgent?'#ef4444':'var(--border)'};border-radius:8px;margin-bottom:6px;cursor:pointer">
         <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
           <div style="width:40px;height:40px;border-radius:6px;background:var(--card2);flex-shrink:0;overflow:hidden">
             <img src="${YARD_ITEM_PHOTOS[item.id]||YARD_CATEGORY_PHOTOS[item.category]||YARD_CATEGORY_PHOTOS['default']}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
           </div>
-          <div style="min-width:0">
+          <div style="min-width:0;flex:1">
             <div style="font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</div>
             <div style="font-size:11px;color:var(--text3)">${item.brand||''}${item.notes?' · '+item.notes:''}</div>
+            ${item.fullStock ? `
+            <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
+              <div style="flex:1;background:var(--border);border-radius:3px;height:4px;overflow:hidden">
+                <div style="height:4px;border-radius:3px;background:${status.color};width:${Math.min(100,Math.round(status.pct*100))}%"></div>
+              </div>
+              <span style="font-size:10px;padding:1px 6px;border-radius:10px;background:${status.bg};color:${status.color};white-space:nowrap">${status.label}</span>
+            </div>` : ''}
           </div>
         </div>
-        <div style="font-size:16px;font-weight:700;color:${item.qty===0?'#ef4444':item.qty<5?'#f97316':'var(--primary)'};flex-shrink:0;margin-left:8px">${item.qty}</div>
-      </div>`).join('')}`;
+        <div style="flex-shrink:0;margin-left:8px;text-align:right">
+          <div style="font-size:16px;font-weight:700;color:${status.urgent?'#ef4444':item.qty<5&&item.qty>0?'#f97316':'var(--primary)'}">${item.qty}</div>
+          <div style="font-size:11px;color:var(--text3)">${item.price>0?'$'+item.price.toFixed(2):'Price TBC'}</div>
+        </div>
+      </div>`}).join('')}`;
 }
 
-function yardAddToCart(id) {
+function getUserDefaultPO() {
+  if (!currentUser) return '';
+  // If a job is currently selected use that
+  if (currentJobSite) {
+    const site = SEED_JOBSITES.find(j => j.procore === currentJobSite);
+    if (site) return site.po;
+  }
+  // Otherwise find their assigned job
+  const myJobs = getMyJobs();
+  if (myJobs.length === 1) return myJobs[0].po;
+  return '';
+}
+
+function editYardPrice(id) {
   const item = SEED_YARD_STOCK.find(i => i.id === id);
   if (!item) return;
-  alert('Added ' + item.name + ' to internal order — full cart coming soon');
+  const newPrice = prompt(`Update price for ${item.name} (ex GST):`, item.price||'');
+  if (newPrice === null) return;
+  const parsed = parseFloat(newPrice);
+  if (isNaN(parsed) || parsed < 0) { alert('Enter a valid price'); return; }
+  item.price = parsed;
+  renderYardDetail();
+}
+
+function editStockLevels(id) {
+  const item = SEED_YARD_STOCK.find(i => i.id === id);
+  if (!item) return;
+  const min = prompt(`Min stock level for ${item.name}:`, item.minStock||'');
+  if (min === null) return;
+  const full = prompt(`Full stock level for ${item.name}:`, item.fullStock||'');
+  if (full === null) return;
+  const reorder = prompt(`Reorder quantity for ${item.name}:`, item.reorderQty||'');
+  if (reorder === null) return;
+  item.minStock = parseInt(min)||0;
+  item.fullStock = parseInt(full)||0;
+  item.reorderQty = parseInt(reorder)||0;
+  renderYardDetail();
+  checkReorderAlerts();
+}
+
+let reorderList = [];
+
+function addToReorder(id) {
+  const item = SEED_YARD_STOCK.find(i => i.id === id);
+  if (!item) return;
+  if (!reorderList.find(r => r.id === id)) {
+    reorderList.push({ id, name: item.name, qty: item.reorderQty||Math.round(item.fullStock-item.qty), price: item.price });
+    showToast(`${item.name} added to reorder list`);
+  } else {
+    showToast(`${item.name} already on reorder list`);
+  }
 }
 
 function openYardDetail(id) {
@@ -3562,6 +3884,56 @@ function renderYardDetail() {
         ${item.brand ? `<div style="font-size:13px;color:var(--text3);margin-bottom:4px">${item.brand}</div>` : ''}
         ${item.notes ? `<div style="font-size:13px;color:var(--text3);margin-bottom:12px">${item.notes}</div>` : ''}
 
+        <!-- Price -->
+        <div style="background:var(--card2);border-radius:10px;padding:.75rem 1rem;margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em">Unit price (ex GST)</div>
+            <button onclick="editYardPrice('${item.id}')" style="font-size:11px;color:var(--primary);background:none;border:none;cursor:pointer;padding:0">Edit</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:28px;font-weight:700;color:var(--primary)">${item.price>0?'$'+item.price.toFixed(2):'Price TBC'}</div>
+            ${item.price>0?`<div style="text-align:right"><div style="font-size:11px;color:var(--text3)">inc GST</div><div style="font-size:16px;font-weight:600;color:var(--text)">$${(item.price*1.1).toFixed(2)}</div></div>`:''}
+          </div>
+        </div>
+
+        <!-- Stock levels -->
+        ${item.fullStock ? `
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.75rem 1rem;margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em">Stock levels</div>
+            <button onclick="editStockLevels('${item.id}')" style="font-size:11px;color:var(--primary);background:none;border:none;cursor:pointer">Edit</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+            <div style="text-align:center;background:var(--card2);border-radius:8px;padding:8px">
+              <div style="font-size:18px;font-weight:700;color:${getStockStatus(item).color}">${item.qty}</div>
+              <div style="font-size:10px;color:var(--text3)">Current</div>
+            </div>
+            <div style="text-align:center;background:var(--card2);border-radius:8px;padding:8px">
+              <div style="font-size:18px;font-weight:700;color:#f97316">${item.minStock}</div>
+              <div style="font-size:10px;color:var(--text3)">Min level</div>
+            </div>
+            <div style="text-align:center;background:var(--card2);border-radius:8px;padding:8px">
+              <div style="font-size:18px;font-weight:700;color:var(--text)">${item.fullStock}</div>
+              <div style="font-size:10px;color:var(--text3)">Full level</div>
+            </div>
+          </div>
+          <div style="background:var(--border);border-radius:4px;height:8px;overflow:hidden;margin-bottom:6px">
+            <div style="height:8px;border-radius:4px;background:${getStockStatus(item).color};width:${Math.min(100,Math.round((item.qty/item.fullStock)*100))}%;transition:width .3s"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:11px;color:var(--text3)">${Math.round((item.qty/item.fullStock)*100)}% of full stock</span>
+            <span style="font-size:11px;font-weight:500;color:${getStockStatus(item).color}">${getStockStatus(item).label}</span>
+          </div>
+          ${item.qty<=item.minStock||item.qty<item.fullStock*0.5?`
+          <button onclick="addToReorder('${item.id}')" style="width:100%;margin-top:10px;padding:10px;background:#f97316;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer">
+            🛒 Add to reorder — ${item.reorderQty||Math.round(item.fullStock-item.qty)} units
+          </button>`:''} 
+        </div>` : `
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:.75rem 1rem;margin-bottom:12px">
+          <div style="font-size:13px;color:var(--text3);margin-bottom:8px">No stock levels set</div>
+          <button onclick="editStockLevels('${item.id}')" style="font-size:12px;color:var(--primary);background:none;border:none;cursor:pointer;padding:0">+ Set min / full stock levels</button>
+        </div>`}
+
         <!-- Stock qty -->
         <div style="background:var(--card2);border-radius:10px;padding:.75rem 1rem;margin-bottom:12px">
           <div style="font-size:12px;color:var(--text3);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:.05em">Current stock</div>
@@ -3584,7 +3956,28 @@ function renderYardDetail() {
             <input type="number" id="adj-qty" value="1" min="1" style="flex:1;text-align:center;font-size:18px;font-weight:600;border:0.5px solid var(--border);border-radius:8px;padding:6px;background:var(--card);color:var(--text)">
             <button onclick="var n=document.getElementById('adj-qty');n.value=parseInt(n.value||1)+1" style="width:36px;height:36px;border-radius:8px;border:0.5px solid var(--border);background:var(--card2);cursor:pointer;font-size:20px;color:var(--text)">+</button>
           </div>
-          <input placeholder="Job/PO number (required for take out)" class="inp" style="width:100%;margin-top:8px;font-size:13px" id="adj-po">
+          ${(() => {
+            const myJobs = getMyJobs();
+            const defaultPO = getUserDefaultPO();
+            if (myJobs.length === 1) {
+              return `<div style="background:var(--card2);border-radius:8px;padding:8px 12px;margin-top:8px;font-size:13px;color:var(--text)">
+                Job: <strong>${myJobs[0].address.split(',')[0]}</strong> · PO: <strong>${myJobs[0].po}</strong>
+                <input type="hidden" id="adj-po" value="${myJobs[0].po}">
+              </div>`;
+            } else if (myJobs.length > 1) {
+              return `<select id="adj-po" class="inp" style="width:100%;margin-top:8px;font-size:13px">
+                <option value="">Select job...</option>
+                ${myJobs.map(j => `<option value="${j.po}">${j.address.split(',')[0]} — ${j.po}</option>`).join('')}
+              </select>`;
+            } else {
+              return `<input placeholder="Job/PO number (required)" class="inp" style="width:100%;margin-top:8px;font-size:13px" id="adj-po" value="${defaultPO}">`;
+            }
+          })()}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+            <div onclick="document.getElementById('adj-deliver').classList.add('active');document.getElementById('adj-pickup').classList.remove('active');document.getElementById('adj-method').value='delivery'" id="adj-deliver" class="a-tab" style="text-align:center;padding:8px">🚛 Delivery to site</div>
+            <div onclick="document.getElementById('adj-pickup').classList.add('active');document.getElementById('adj-deliver').classList.remove('active');document.getElementById('adj-method').value='pickup'" id="adj-pickup" class="a-tab" style="text-align:center;padding:8px">🚗 Picked up</div>
+          </div>
+          <input type="hidden" id="adj-method" value="delivery">
           <button onclick="confirmYardAdj('${item.id}')" style="width:100%;margin-top:8px;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer">Confirm</button>
         </div>
 
@@ -3612,7 +4005,7 @@ function renderYardDetail() {
             </div>
             <div style="display:flex;gap:6px">
               <a href="${docs.tds}" target="_blank" style="padding:5px 10px;border-radius:6px;background:var(--primary);color:#fff;text-decoration:none;font-size:12px;font-weight:500">Open</a>
-              <a href="${docs.tds}" download style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);color:var(--text);text-decoration:none;font-size:12px">↓</a>
+              <a href="${docs.tds}" download target="_blank" style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);color:var(--text);text-decoration:none;font-size:12px">↓</a>
               <button onclick="window.print()" style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);color:var(--text);font-size:12px;cursor:pointer">⎙</button>
             </div>
           </div>` : `
@@ -3628,7 +4021,7 @@ function renderYardDetail() {
             </div>
             <div style="display:flex;gap:6px">
               <a href="${docs.sds}" target="_blank" style="padding:5px 10px;border-radius:6px;background:#EEEDFE;color:#3C3489;text-decoration:none;font-size:12px;font-weight:500">Open</a>
-              <a href="${docs.sds}" download style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);color:var(--text);text-decoration:none;font-size:12px">↓</a>
+              <a href="${docs.sds}" download target="_blank" style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);color:var(--text);text-decoration:none;font-size:12px">↓</a>
             </div>
           </div>` : `
           <div style="padding:8px 0">
@@ -3638,7 +4031,7 @@ function renderYardDetail() {
         </div>
 
         <!-- Order more -->
-        <button class="btn btn-primary btn-full" onclick="nav('browse')">Order more from supplier</button>
+        ${getUserAccessLevel() >= 4 ? `<button class="btn btn-primary btn-full" onclick="nav('browse')">Order more from supplier</button>` : ''}
       </div>
     </div>`;
 }
@@ -3647,16 +4040,19 @@ function confirmYardAdj(id) {
   const mode = document.getElementById('adj-mode')?.textContent;
   const qty = parseInt(document.getElementById('adj-qty')?.value || 0);
   const po = document.getElementById('adj-po')?.value;
+  const method = document.getElementById('adj-method')?.value || 'delivery';
   if (mode === 'SELECT ACTION') { alert('Please select Take from yard or Add to yard'); return; }
   if (mode === 'TAKE OUT' && !po) { alert('PO/Job number is required when taking stock out'); return; }
   const item = SEED_YARD_STOCK.find(i => i.id === id);
   if (!item) return;
   if (mode === 'TAKE OUT') {
     item.qty = Math.max(0, item.qty - qty);
-    alert('✓ ' + qty + ' × ' + item.name + ' taken out\nJob: ' + po + '\nNew qty: ' + item.qty);
+    const methodLabel = method === 'pickup' ? 'Picked up from yard' : 'Delivery to site';
+    showToast(`✓ ${qty} × ${item.name} — ${methodLabel}`);
+    checkReorderAlerts();
   } else {
     item.qty = item.qty + qty;
-    alert('✓ ' + qty + ' × ' + item.name + ' added to yard\nNew qty: ' + item.qty);
+    showToast(`✓ ${qty} × ${item.name} added to yard`);
   }
   showPage('yard');
 }
@@ -3666,21 +4062,759 @@ function renderYardMyOrders() {
 }
 
 function renderYardTrucks() {
+  // Try to load real calendar events
+  fetchCalendarEvents().then(events => {
+    const el = document.getElementById('truck-cal-events');
+    if (!el) return;
+    if (!events || !events.length) {
+      el.innerHTML = '<div style="font-size:12px;color:var(--text3)">No upcoming events found — calendar may be private.</div>';
+      return;
+    }
+    el.innerHTML = events.slice(0,8).map(e => {
+      const dateStr = e.date ? e.date.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'}) : '';
+      const timeStr = e.date ? e.date.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}) : '';
+      return `
+        <div style="display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);align-items:flex-start">
+          <div style="background:var(--primary);border-radius:6px;padding:4px 8px;text-align:center;flex-shrink:0;min-width:44px">
+            <div style="color:#fff;font-size:11px;font-weight:600">${dateStr.split(' ')[1]||''}</div>
+            <div style="color:rgba(255,255,255,.7);font-size:9px">${dateStr.split(' ')[0]||''}</div>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:500;color:var(--text)">${e.summary}</div>
+            ${e.location ? `<div style="font-size:11px;color:var(--text3)">${e.location}</div>` : ''}
+            ${timeStr ? `<div style="font-size:11px;color:var(--text3)">${timeStr}</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  });
+
   return `
     <div class="card" style="margin-bottom:12px">
-      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px">Today's truck slots</div>
-      ${['7:30am – 9:30am', '10:00am – 12:00pm', '1:00pm – 3:00pm'].map(slot => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)">
-          <div style="font-size:13px;color:var(--text)">${slot}</div>
-          <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:#E1F5EE;color:#085041">2 of 2 left</span>
-        </div>`).join('')}
-      <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="openCalendarBooking()">Book a truck slot</button>
-      <button class="btn btn-outline btn-full" style="margin-top:8px" onclick="viewCalendar()">View Dapcor calendar</button>
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px">Dapcor calendar</div>
+      <div id="truck-cal-events">
+        <div style="font-size:12px;color:var(--text3)">Loading calendar events...</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-primary" style="flex:1" onclick="openCalendarBooking()">Book a truck slot</button>
+        <button class="btn" style="flex:1;border:0.5px solid var(--border)" onclick="viewCalendar()">Open calendar</button>
+      </div>
     </div>`;
 }
+// Job site coordinates for weather
+const JOB_COORDS = {
+  '25044': { lat:-33.9391, lon:151.1942 },
+  '25008': { lat:-33.9391, lon:151.1942 },
+  '25011': { lat:-33.7697, lon:151.2700 },
+  '24103': { lat:-33.9158, lon:151.2421 },
+  '24094': { lat:-33.8927, lon:151.2057 },
+  '25105': { lat:-33.8260, lon:151.1020 },
+  'F25005':{ lat:-33.8294, lon:151.2286 },
+  '25049': { lat:-33.8745, lon:151.1960 },
+  '24105': { lat:-33.9051, lon:151.1936 },
+  '25109': { lat:-33.7236, lon:150.9567 },
+  '25088': { lat:-33.8822, lon:151.2096 },
+  '25003': { lat:-33.9814, lon:151.1027 },
+  '25127': { lat:-33.8729, lon:151.2277 },
+};
+
+const weatherCache = {};
+
+async function fetchJobWeather(procore) {
+  if (weatherCache[procore]) return weatherCache[procore];
+  const coords = JOB_COORDS[procore];
+  if (!coords) return null;
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Australia/Sydney&forecast_days=5`;
+    const res = await fetch(url);
+    const data = await res.json();
+    weatherCache[procore] = data.daily;
+    return data.daily;
+  } catch(e) { return null; }
+}
+
+function weatherIcon(code) {
+  if (code === 0) return '☀️';
+  if (code <= 2) return '⛅';
+  if (code <= 3) return '☁️';
+  if (code <= 48) return '🌫️';
+  if (code <= 67) return '🌧️';
+  if (code <= 77) return '🌨️';
+  if (code <= 82) return '🌦️';
+  if (code <= 99) return '⛈️';
+  return '🌤️';
+}
+
+function dayName(dateStr) {
+  const d = new Date(dateStr);
+  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+}
+
+async function loadWeatherForJob(procore) {
+  const w = await fetchJobWeather(procore);
+  const el = document.getElementById('weather-' + procore);
+  if (!el || !w) return;
+  el.innerHTML = w.time.slice(0,5).map((t,i) => `
+    <div style="text-align:center;flex:1">
+      <div style="font-size:10px;color:var(--text3)">${dayName(t)}</div>
+      <div style="font-size:18px;line-height:1.4">${weatherIcon(w.weather_code[i])}</div>
+      <div style="font-size:11px;font-weight:500;color:var(--text)">${Math.round(w.temperature_2m_max[i])}°</div>
+      <div style="font-size:10px;color:var(--text3)">${Math.round(w.temperature_2m_min[i])}°</div>
+      ${w.precipitation_probability_max[i] > 30 ? `<div style="font-size:9px;color:#185FA5">${w.precipitation_probability_max[i]}%💧</div>` : ''}
+    </div>`).join('');
+}
+
+let currentJobSite = null;
+
+function getStockStatus(item) {
+  if (!item.fullStock) return { color:'var(--primary)', bg:'var(--card2)', label:'', pct:null };
+  const pct = item.qty / item.fullStock;
+  if (item.qty <= item.minStock) return { color:'#ef4444', bg:'#FEE2E2', label:'Reorder now', pct, urgent:true };
+  if (pct < 0.5) return { color:'#f97316', bg:'#FEF3C7', label:'Running low', pct, urgent:false };
+  return { color:'#085041', bg:'#E1F5EE', label:'OK', pct, urgent:false };
+}
+
+function checkReorderAlerts() {
+  const alerts = SEED_YARD_STOCK.filter(i => i.minStock && i.qty <= i.minStock);
+  if (!alerts.length) return;
+  // Show alert banner
+  const existing = document.getElementById('reorder-alert-banner');
+  if (existing) existing.remove();
+  const banner = document.createElement('div');
+  banner.id = 'reorder-alert-banner';
+  banner.style.cssText = 'position:fixed;top:60px;left:0;right:0;max-width:480px;margin:0 auto;background:#FEE2E2;border-bottom:2px solid #ef4444;padding:10px 16px;z-index:150;display:flex;align-items:center;gap:10px;cursor:pointer';
+  banner.onclick = () => { yardCategory='All'; yardSearch=''; nav('yard'); banner.remove(); };
+  banner.innerHTML = `
+    <span style="font-size:18px">🔴</span>
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:600;color:#991B1B">${alerts.length} item${alerts.length>1?'s':''} at reorder level</div>
+      <div style="font-size:11px;color:#7F1D1D">${alerts.map(i=>i.name).join(', ')}</div>
+    </div>
+    <span style="font-size:11px;color:#991B1B;font-weight:500">View →</span>`;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 8000);
+}
+
+function getMyJobs() {
+  if (!currentUser) return [];
+  const level = currentUser.accessLevel;
+  // Full access — see all jobs
+  if (level >= 4) return SEED_JOBSITES;
+  // PM — see assigned jobs
+  if (level >= 3) {
+    const pmCodes = { 'Mitchell Reilly':'MR', 'Steven Wilson':'SW', 'Kata Raju':'KR',
+      'Alexander Han':'AH', 'Jack Dwyer':'JD', 'Raphael Nacamae':'RN',
+      'Ariyan Yousefi':'AY', 'Taj Beesley':'TB', 'Evan Kapatos':'EK',
+      'Nick Bagherinezhad':'NB', 'Alac Kdouh':'AK' };
+    return SEED_JOBSITES.filter(j => j.pm === currentUser.name || j.apm === currentUser.name);
+  }
+  // Foreman/Site Manager — jobs where they are listed as foreman or in notes
+  return SEED_JOBSITES.filter(j =>
+    j.foreman === currentUser.name ||
+    j.leadingHand === currentUser.name ||
+    (j.notes && j.notes.toLowerCase().includes(currentUser.name.split(' ')[0].toLowerCase()))
+  );
+}
+
+function renderMyYard() {
+  const el = document.getElementById('page-myyard');
+
+  // Stock alerts — at or below min, or below 50%
+  const urgent = SEED_YARD_STOCK.filter(i => i.minStock && i.qty <= i.minStock);
+  const low = SEED_YARD_STOCK.filter(i => i.fullStock && !urgent.find(u=>u.id===i.id) && (i.qty/i.fullStock) < 0.5);
+
+  // Today's calendar events
+  const todayEvents = [
+    { time:'7:30am', title:'Ardex delivery — WPM270 x20, CA20P x60', type:'Delivery', color:'#085041', bg:'#E1F5EE' },
+    { time:'10:00am', title:'Sandhub — Sydney Sand x10 bags', type:'Delivery', color:'#085041', bg:'#E1F5EE' },
+    { time:'2:00pm', title:'Anthony — Bella Vista run', type:'Truck', color:'#185FA5', bg:'#E6F1FB' },
+  ];
+
+  // Today's orders
+  const todayOrders = [
+    { supplier:'Ardex', items:'WPM270 x20, CA20P x60', status:'En route', statusColor:'#085041', statusBg:'#E1F5EE', po:'25105', value:'$7,188' },
+    { supplier:'Parchem', items:'LA55 x10, HB40 x5', status:'Processing', statusColor:'#185FA5', statusBg:'#E6F1FB', po:'24094', value:'$771' },
+  ];
+
+  el.innerHTML = `
+    <div style="padding:0 1rem 1rem">
+      <div style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.05em;text-transform:uppercase;padding:.75rem 0 .5rem">
+        Good ${new Date().getHours()<12?'morning':'afternoon'}, ${currentUser?.name.split(' ')[0]||'Ben'} 👋
+      </div>
+
+      <!-- Stock alerts -->
+      ${urgent.length ? `
+      <div style="background:#FEE2E2;border:1px solid #ef4444;border-radius:12px;padding:12px;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:600;color:#991B1B;margin-bottom:8px">🔴 Reorder now — ${urgent.length} item${urgent.length>1?'s':''}</div>
+        ${urgent.map(i => `
+          <div onclick="openYardDetail('${i.id}')" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid #FECACA;cursor:pointer">
+            <div>
+              <div style="font-size:13px;font-weight:500;color:#7F1D1D">${i.name}</div>
+              <div style="font-size:11px;color:#991B1B">Qty: ${i.qty} · Min: ${i.minStock} · Reorder: ${i.reorderQty||''}</div>
+            </div>
+            <button onclick="event.stopPropagation();addToReorder('${i.id}')" style="padding:4px 10px;background:#ef4444;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;flex-shrink:0">Reorder</button>
+          </div>`).join('')}
+      </div>` : ''}
+
+      ${low.length ? `
+      <div style="background:#FEF3C7;border:0.5px solid #f97316;border-radius:12px;padding:12px;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:600;color:#92400E;margin-bottom:8px">🟡 Running low — ${low.length} item${low.length>1?'s':''}</div>
+        ${low.slice(0,4).map(i => `
+          <div onclick="openYardDetail('${i.id}')" style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid #FDE68A;cursor:pointer">
+            <div>
+              <div style="font-size:12px;font-weight:500;color:#78350F">${i.name}</div>
+              <div style="font-size:10px;color:#92400E">${i.qty} of ${i.fullStock} — ${Math.round((i.qty/i.fullStock)*100)}%</div>
+            </div>
+            <button onclick="event.stopPropagation();addToReorder('${i.id}')" style="padding:3px 8px;background:#f97316;color:#fff;border:none;border-radius:5px;font-size:11px;cursor:pointer;flex-shrink:0">Flag</button>
+          </div>`).join('')}
+        ${low.length>4?`<div style="font-size:11px;color:#92400E;text-align:center;margin-top:6px">+${low.length-4} more — tap Stock to view all</div>`:''}
+      </div>` : ''}
+
+      ${!urgent.length && !low.length ? `
+      <div style="background:#E1F5EE;border:0.5px solid #1D9E75;border-radius:12px;padding:12px;margin-bottom:10px;text-align:center">
+        <div style="font-size:20px;margin-bottom:4px">✅</div>
+        <div style="font-size:13px;font-weight:500;color:#085041">All stock levels healthy</div>
+      </div>` : ''}
+
+      <!-- Today's calendar -->
+      <div style="font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Today</div>
+      <div class="card" style="margin-bottom:10px">
+        ${todayEvents.map(e => `
+          <div style="display:flex;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);align-items:center">
+            <div style="font-size:11px;color:var(--text3);width:44px;flex-shrink:0;text-align:right">${e.time}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:500;color:var(--text)">${e.title}</div>
+            </div>
+            <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:${e.bg};color:${e.color};flex-shrink:0">${e.type}</span>
+          </div>`).join('')}
+        <button onclick="yardTab='trucks';nav('yard')" style="width:100%;margin-top:10px;padding:8px;background:none;border:0.5px solid var(--border);border-radius:8px;font-size:12px;color:var(--text3);cursor:pointer">View full calendar →</button>
+      </div>
+
+      <!-- Today's orders -->
+      <div style="font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Active orders</div>
+      <div class="card" style="margin-bottom:10px">
+        ${todayOrders.map(o => `
+          <div style="padding:8px 0;border-bottom:0.5px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div style="font-size:13px;font-weight:500;color:var(--text)">${o.supplier}</div>
+                <div style="font-size:11px;color:var(--text3)">${o.items}</div>
+                <div style="font-size:11px;color:var(--text3)">PO: ${o.po}</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0;margin-left:8px">
+                <div style="font-size:13px;font-weight:600;color:var(--primary)">${o.value}</div>
+                <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:${o.statusBg};color:${o.statusColor}">${o.status}</span>
+              </div>
+            </div>
+          </div>`).join('')}
+        <button onclick="nav('comms')" style="width:100%;margin-top:10px;padding:8px;background:none;border:0.5px solid var(--border);border-radius:8px;font-size:12px;color:var(--text3);cursor:pointer">View all orders →</button>
+      </div>
+
+      <!-- Quick actions -->
+      <div style="font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Quick actions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="nav('yard')" class="card" style="padding:14px;text-align:center;border:none;cursor:pointer">
+          <div style="font-size:22px;margin-bottom:4px">📦</div>
+          <div style="font-size:12px;font-weight:500;color:var(--text)">Browse stock</div>
+        </button>
+        <button onclick="yardTab='trucks';nav('yard')" class="card" style="padding:14px;text-align:center;border:none;cursor:pointer">
+          <div style="font-size:22px;margin-bottom:4px">🚛</div>
+          <div style="font-size:12px;font-weight:500;color:var(--text)">Book truck</div>
+        </button>
+        <button onclick="nav('browse')" class="card" style="padding:14px;text-align:center;border:none;cursor:pointer">
+          <div style="font-size:22px;margin-bottom:4px">🛒</div>
+          <div style="font-size:12px;font-weight:500;color:var(--text)">Order from supplier</div>
+        </button>
+        <button onclick="nav('claude')" class="card" style="padding:14px;text-align:center;border:none;cursor:pointer">
+          <div style="font-size:22px;margin-bottom:4px">🤖</div>
+          <div style="font-size:12px;font-weight:500;color:var(--text)">Ask Claude</div>
+        </button>
+      </div>
+    </div>`;
+}
+
+function renderMyJobs() {
+  const el = document.getElementById('page-myjobs');
+  const jobs = getMyJobs();
+  const user = currentUser;
+
+  // Mock data for demo
+  const mockOrders = {
+    '25105': [
+      { name:'Ardex WPM270 × 20', date:'16 Jun', supplier:'Ardex', amount:'$5,782', status:'En route', statusColor:'#085041', statusBg:'#E1F5EE' },
+      { name:'Fosroc LA55 × 10', date:'15 Jun', supplier:'Parchem', amount:'$476', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
+    ],
+    '25109': [
+      { name:'Coreflute 1800x1200 × 50', date:'14 Jun', supplier:'Protrade', amount:'$892', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
+    ]
+  };
+
+  const mockCal = {
+    '25105': [
+      { day:'16', dayName:'MON', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
+      { day:'16', dayName:'MON', title:'JMB Waterproofing — Courtyard', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'17', dayName:'TUE', title:'Tiling — Unit 1 & 2', sub:'7am · Lim Tiling', type:'Tiling', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'17', dayName:'TUE', title:'ELD Testing — Unit 1 & 2', sub:'Morning · Inspector on site', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+      { day:'17', dayName:'TUE', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'18', dayName:'WED', title:'JMB Waterproofing — Unit 1 & 2 balcony', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'18', dayName:'WED', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
+      { day:'19', dayName:'THU', title:'JMB Waterproofing — Unit 3 & 4 balcony', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'19', dayName:'THU', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
+      { day:'20', dayName:'FRI', title:'JMB Waterproofing — Unit 12 & 13 balcony', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'20', dayName:'FRI', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
+    ],
+    '25109': [
+      { day:'17', dayName:'TUE', title:'Waterproofing inspection — Level 2', sub:'9am · Engineer on site', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'18', dayName:'WED', title:'Truck delivery — protection materials', sub:'8am · Anthony', type:'Delivery', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'19', dayName:'THU', title:'Ardex WPM270 delivery', sub:'7:30am · Anthony', type:'Delivery', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'20', dayName:'FRI', title:'Scaffold inspection', sub:'Morning · Oceania scaffolding', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+    ]
+  };
+
+  const mockTradies = {
+    '25105': [
+      { initials:'JB', name:'Joe Brady', trade:'JMB Waterproofing', phone:'0431436561', color:'#085041', bg:'#E1F5EE' },
+      { initials:'TT', name:'Tom Trayers', trade:'DC Demo', phone:'0423912544', color:'#633806', bg:'#FAEEDA' },
+      { initials:'LT', name:'Lim', trade:'Lim Tiling', phone:'0413294540', color:'#3C3489', bg:'#EEEDFE' }
+    ],
+    '25109': [
+      { initials:'JB', name:'Joe Brady', trade:'JMB Waterproofing', phone:'0431436561', color:'#085041', bg:'#E1F5EE' }
+    ],
+  };
+
+  const mockExp = {
+    '25105': { budget:180000, spent:42800, billable:31200, protection:7400, ppe:4200 },
+    '25109': { budget:95000, spent:12400, billable:8900, protection:2100, ppe:1400 }
+  };
+
+  if (!currentJobSite && jobs.length === 1) currentJobSite = jobs[0].procore;
+
+  el.innerHTML = `
+    <div style="padding:0 1rem 1rem">
+      <div style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.05em;text-transform:uppercase;padding:.75rem 0 .5rem">
+        ${user ? 'Welcome, ' + user.name.split(' ')[0] : 'My jobs'}
+      </div>
+      ${jobs.map(j => {
+        const isActive = currentJobSite === j.procore;
+        const orders = mockOrders[j.procore] || [];
+        const cal = mockCal[j.procore] || [];
+        const tradies = mockTradies[j.procore] || [];
+        const exp = mockExp[j.procore] || { budget:100000, spent:0, billable:0, protection:0, ppe:0 };
+        const pct = Math.round((exp.spent / exp.budget) * 100);
+
+        return `
+          <div style="background:var(--card);border:${isActive?'1.5px solid var(--primary)':'0.5px solid var(--border)'};border-radius:14px;margin-bottom:10px;overflow:hidden">
+            <div onclick="currentJobSite=currentJobSite==='${j.procore}'?null:'${j.procore}';renderMyJobs()" style="padding:12px;cursor:pointer">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14px;font-weight:600;color:var(--text)">${j.address}</div>
+                  <div style="font-size:11px;color:var(--text3);margin-top:2px">PO: ${j.po} · PM: ${j.pm}</div>
+                  <div style="font-size:11px;color:var(--text3)">${j.notes||''}</div>
+                </div>
+                ${j.liveSite ? `<span style="font-size:9px;padding:2px 8px;border-radius:20px;background:#E1F5EE;color:#085041;flex-shrink:0;white-space:nowrap">● Live</span>` : ''}
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+                <div style="background:var(--card2);border-radius:8px;padding:8px 10px">
+                  <div style="font-size:15px;font-weight:600;color:var(--primary)">$${(exp.spent/1000).toFixed(1)}k</div>
+                  <div style="font-size:10px;color:var(--text3)">Spent this month</div>
+                </div>
+                <div style="background:var(--card2);border-radius:8px;padding:8px 10px">
+                  <div style="font-size:15px;font-weight:600;color:var(--text)">${orders.length}</div>
+                  <div style="font-size:10px;color:var(--text3)">Orders pending</div>
+                </div>
+              </div>
+            </div>
+
+            ${isActive ? `
+            <div style="border-top:0.5px solid var(--border)">
+
+              <!-- Weather -->
+              <div style="padding:10px 12px;border-bottom:0.5px solid var(--border)">
+                <div style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">5-day forecast — ${j.address.split(',')[1]?.trim()||'site'}</div>
+                <div id="weather-${j.procore}" style="display:flex;gap:4px;justify-content:space-between">
+                  <div style="font-size:12px;color:var(--text3)">Loading weather...</div>
+                </div>
+              </div>
+              <div style="padding:10px 12px">
+                <div style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">This week</div>
+                ${cal.length ? cal.map(c => `
+                  <div style="display:flex;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--border);align-items:flex-start">
+                    <div style="background:var(--primary);border-radius:6px;padding:4px 7px;text-align:center;flex-shrink:0;min-width:32px">
+                      <div style="color:#fff;font-size:14px;font-weight:600;line-height:1">${c.day}</div>
+                      <div style="color:rgba(255,255,255,.7);font-size:9px">${c.dayName}</div>
+                    </div>
+                    <div style="flex:1">
+                      <div style="font-size:12px;font-weight:500;color:var(--text)">${c.title}</div>
+                      <div style="font-size:10px;color:var(--text3);margin-top:1px">${c.sub}</div>
+                      <span style="font-size:9px;padding:2px 6px;border-radius:4px;background:${c.typeBg};color:${c.typeColor};display:inline-block;margin-top:3px">${c.type}</span>
+                    </div>
+                  </div>`).join('') : '<div style="font-size:12px;color:var(--text3);padding:4px 0">No events this week</div>'}
+              </div>
+
+              <!-- Tradies -->
+              ${tradies.length ? `
+              <div style="padding:10px 12px;border-top:0.5px solid var(--border)">
+                <div style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">My tradies</div>
+                ${tradies.map(t => `
+                  <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:0.5px solid var(--border)">
+                    <div style="width:32px;height:32px;border-radius:50%;background:${t.bg};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:${t.color};flex-shrink:0">${t.initials}</div>
+                    <div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">${t.name}</div><div style="font-size:10px;color:var(--text3)">${t.trade}</div></div>
+                    <a href="tel:${t.phone}" style="width:32px;height:32px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;text-decoration:none">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#085041" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.9 12.3 19.79 19.79 0 0 1 1.87 3.69 2 2 0 0 1 3.84 1.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    </a>
+                  </div>`).join('')}
+              </div>` : ''}
+
+              <!-- Orders -->
+              <div style="padding:10px 12px;border-top:0.5px solid var(--border)">
+                <div style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">My orders</div>
+                ${orders.length ? orders.map(o => `
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border)">
+                    <div><div style="font-size:12px;font-weight:500;color:var(--text)">${o.name}</div><div style="font-size:10px;color:var(--text3)">${o.date} · ${o.supplier}</div></div>
+                    <div style="text-align:right;flex-shrink:0;margin-left:8px">
+                      <div style="font-size:12px;font-weight:600;color:var(--primary)">${o.amount}</div>
+                      <span style="font-size:9px;padding:2px 6px;border-radius:4px;background:${o.statusBg};color:${o.statusColor}">${o.status}</span>
+                    </div>
+                  </div>`).join('') : '<div style="font-size:12px;color:var(--text3);padding:4px 0">No orders yet</div>'}
+              </div>
+
+              <!-- Expenditure -->
+              <div style="padding:10px 12px;border-top:0.5px solid var(--border)">
+                <div style="font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">My expenditure</div>
+                <div style="background:var(--card2);border-radius:10px;padding:10px 12px">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                    <span style="font-size:12px;color:var(--text3)">Budget</span>
+                    <span style="font-size:12px;font-weight:500;color:var(--text)">$${(exp.budget/1000).toFixed(0)}k</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                    <span style="font-size:12px;color:var(--text3)">Spent</span>
+                    <span style="font-size:12px;font-weight:600;color:var(--primary)">$${(exp.spent/1000).toFixed(1)}k</span>
+                  </div>
+                  <div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden">
+                    <div style="height:6px;border-radius:4px;background:${pct>80?'#ef4444':pct>60?'#f97316':'var(--primary)'};width:${pct}%"></div>
+                  </div>
+                  <div style="font-size:10px;color:var(--text3);text-align:right;margin-top:3px">${pct}% of budget</div>
+                  <div style="border-top:0.5px solid var(--border);margin-top:8px;padding-top:8px">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:var(--text3)">Billable</span><span style="font-size:11px;font-weight:500;color:var(--text)">$${(exp.billable/1000).toFixed(1)}k</span></div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:var(--text3)">Protection</span><span style="font-size:11px;font-weight:500;color:var(--text)">$${(exp.protection/1000).toFixed(1)}k</span></div>
+                    <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text3)">PPE</span><span style="font-size:11px;font-weight:500;color:var(--text)">$${(exp.ppe/1000).toFixed(1)}k</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding:10px 12px;border-top:0.5px solid var(--border);display:flex;gap:8px">
+                <button class="btn btn-primary" style="flex:1" onclick="nav('browse')">Order materials</button>
+                <button class="btn" style="flex:1;border:0.5px solid var(--border)" onclick="nav('yard')">Yard stock</button>
+              </div>
+
+            </div>` : ''}
+          </div>`;
+      }).join('')}
+    </div>`;
+
+  // Load weather for expanded job
+  if (currentJobSite) {
+    setTimeout(() => loadWeatherForJob(currentJobSite), 100);
+  }
+}
 // ============================================================
-// GOOGLE CALENDAR
+// ASSETS & COMPLIANCE
 // ============================================================
+let assetsTab = 'harnesses';
+let selectedAssetId = null;
+let selectedAssetType = null;
+let inspectionAnswers = {};
+
+function getAssetStatus(item) {
+  const today = new Date();
+  const due = new Date(item.nextCalibration || item.nextFullInspection || item.nextTest || item.tagTestDue || '');
+  if (!due || isNaN(due)) return { color:'var(--text3)', bg:'var(--card2)', label:'No date set', icon:'⚪' };
+  const daysLeft = Math.round((due - today) / 86400000);
+  if (daysLeft < 0) return { color:'#ef4444', bg:'#FEE2E2', label:'OVERDUE', icon:'🔴', urgent:true };
+  if (daysLeft <= 30) return { color:'#f97316', bg:'#FEF3C7', label:`Due in ${daysLeft}d`, icon:'🟡', urgent:false };
+  return { color:'#085041', bg:'#E1F5EE', label:'Current', icon:'🟢', urgent:false };
+}
+
+function renderAssets() {
+  const el = document.getElementById('page-assets');
+  const harnesses = SEED_ASSETS.harnesses;
+  const calibration = SEED_ASSETS.calibration;
+  const tagtest = SEED_ASSETS.tagtest;
+  const tools = SEED_ASSETS.tools;
+
+  const urgentCount = [
+    ...harnesses.map(h => getAssetStatus({nextFullInspection: h.nextFullInspection})),
+    ...calibration.map(c => getAssetStatus({nextCalibration: c.nextCalibration})),
+    ...tagtest.map(t => getAssetStatus({nextTest: t.nextTest})),
+  ].filter(s => s.urgent).length;
+
+  el.innerHTML = `
+    <div style="padding:0 1rem 1rem">
+      ${urgentCount ? `
+      <div style="background:#FEE2E2;border:1px solid #ef4444;border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">🔴</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#991B1B">${urgentCount} item${urgentCount>1?'s':''} overdue</div>
+          <div style="font-size:11px;color:#7F1D1D">Action required — see details below</div>
+        </div>
+      </div>` : `
+      <div style="background:#E1F5EE;border:0.5px solid #1D9E75;border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">✅</span>
+        <div style="font-size:13px;font-weight:500;color:#085041">All compliance items current</div>
+      </div>`}
+
+      <div class="admin-tabs" style="margin-bottom:12px">
+        <div class="a-tab ${assetsTab==='harnesses'?'active':''}" onclick="assetsTab='harnesses';renderAssets()">Harnesses</div>
+        <div class="a-tab ${assetsTab==='calibration'?'active':''}" onclick="assetsTab='calibration';renderAssets()">Calibration</div>
+        <div class="a-tab ${assetsTab==='tagtest'?'active':''}" onclick="assetsTab='tagtest';renderAssets()">Tag & Test</div>
+        <div class="a-tab ${assetsTab==='tools'?'active':''}" onclick="assetsTab='tools';renderAssets()">Tools</div>
+      </div>
+
+      ${assetsTab === 'harnesses' ? renderHarnessTab(harnesses) :
+        assetsTab === 'calibration' ? renderCalibrationTab(calibration) :
+        assetsTab === 'tagtest' ? renderTagTestTab(tagtest) :
+        renderToolsTab(tools)}
+    </div>`;
+}
+
+function renderHarnessTab(harnesses) {
+  return harnesses.map(h => {
+    const fullStatus = getAssetStatus({nextFullInspection: h.nextFullInspection});
+    const strapStatus = getAssetStatus({nextFullInspection: h.nextStrapInspection});
+    const worst = fullStatus.urgent ? fullStatus : strapStatus.urgent ? strapStatus : fullStatus;
+    return `
+    <div onclick="selectedAssetId='${h.id}';selectedAssetType='harness';inspectionAnswers={};showPage('asset-detail')"
+         style="background:var(--card);border:0.5px solid ${worst.urgent?'#ef4444':'var(--border)'};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:20px">🦺</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text)">${h.brand} ${h.model} — ${h.number}</div>
+              <div style="font-size:11px;color:var(--text3)">S/N: ${h.serial}</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:8px">📍 ${h.assignedTo} · ${h.location}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div style="background:${fullStatus.bg};border-radius:8px;padding:6px 8px">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Full inspection</div>
+              <div style="font-size:11px;font-weight:600;color:${fullStatus.color}">${fullStatus.icon} ${fullStatus.label}</div>
+              <div style="font-size:10px;color:var(--text3)">${new Date(h.nextFullInspection).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
+            </div>
+            <div style="background:${strapStatus.bg};border-radius:8px;padding:6px 8px">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Strap inspection</div>
+              <div style="font-size:11px;font-weight:600;color:${strapStatus.color}">${strapStatus.icon} ${strapStatus.label}</div>
+              <div style="font-size:10px;color:var(--text3)">${new Date(h.nextStrapInspection).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
+            </div>
+          </div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>`;
+  }).join('') + `<button onclick="alert('Add harness — coming soon')" class="btn btn-primary btn-full" style="margin-top:4px">+ Register new harness</button>`;
+}
+
+function renderCalibrationTab(items) {
+  return items.map(c => {
+    const status = getAssetStatus({nextCalibration: c.nextCalibration});
+    return `
+    <div style="background:var(--card);border:0.5px solid ${status.urgent?'#ef4444':'var(--border)'};border-radius:12px;padding:12px;margin-bottom:10px">
+      <div style="font-size:14px;font-weight:600;color:var(--text)">${c.name}</div>
+      <div style="font-size:11px;color:var(--text3)">${c.brand} ${c.model} · S/N: ${c.serial}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px">📍 ${c.assignedTo} · ${c.location}</div>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:13px;font-weight:600;color:${status.color};background:${status.bg};padding:3px 10px;border-radius:20px">${status.icon} ${status.label}</span>
+        <span style="font-size:11px;color:var(--text3)">Due: ${new Date(c.nextCalibration).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</span>
+      </div>
+      ${status.urgent ? `<button onclick="alert('Log calibration certificate — coming soon')" style="width:100%;margin-top:10px;padding:8px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer">⚠️ Upload calibration certificate</button>` : ''}
+    </div>`;
+  }).join('') + `<button onclick="alert('Add item — coming soon')" class="btn btn-primary btn-full" style="margin-top:4px">+ Add calibration item</button>`;
+}
+
+function renderTagTestTab(items) {
+  return items.map(t => {
+    const status = getAssetStatus({nextTest: t.nextTest});
+    return `
+    <div style="background:var(--card);border:0.5px solid ${status.urgent?'#ef4444':'var(--border)'};border-radius:12px;padding:12px;margin-bottom:10px">
+      <div style="font-size:14px;font-weight:600;color:var(--text)">${t.name}</div>
+      <div style="font-size:11px;color:var(--text3)">S/N: ${t.serial} · ${t.testClass}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px">📍 ${t.location}</div>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:13px;font-weight:600;color:${status.color};background:${status.bg};padding:3px 10px;border-radius:20px">${status.icon} ${status.label}</span>
+        <span style="font-size:11px;color:var(--text3)">Due: ${new Date(t.nextTest).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</span>
+      </div>
+      ${status.urgent ? `<button onclick="alert('Log test — coming soon')" style="width:100%;margin-top:10px;padding:8px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer">⚠️ Log new test</button>` : ''}
+    </div>`;
+  }).join('') + `<button onclick="alert('Add item — coming soon')" class="btn btn-primary btn-full" style="margin-top:4px">+ Add electrical item</button>`;
+}
+
+function renderToolsTab(tools) {
+  const statusLabel = s => s==='on_site'?'On site':s==='in_yard'?'In yard':'Unknown';
+  const statusColor = s => s==='on_site'?'#185FA5':s==='in_yard'?'#085041':'var(--text3)';
+  const statusBg = s => s==='on_site'?'#E6F1FB':s==='in_yard'?'#E1F5EE':'var(--card2)';
+  return tools.map(t => `
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600;color:var(--text)">${t.name}</div>
+          <div style="font-size:11px;color:var(--text3)">${t.brand} ${t.model} · S/N: ${t.serial}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">📍 ${t.assignedTo} · ${t.location}</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+            <span style="font-size:11px;font-weight:500;padding:2px 8px;border-radius:10px;background:${statusBg(t.status)};color:${statusColor(t.status)}">${statusLabel(t.status)}</span>
+            <span style="font-size:11px;color:var(--text3)">Value: $${t.replacementValue.toLocaleString()}</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+          <button onclick="alert('Transfer tool — coming soon')" style="font-size:11px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);cursor:pointer;color:var(--text)">Transfer</button>
+          <button onclick="alert('Log repair — coming soon')" style="font-size:11px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--border);background:var(--card2);cursor:pointer;color:var(--text)">Repair</button>
+        </div>
+      </div>
+    </div>`).join('') + `<button onclick="alert('Register tool — coming soon')" class="btn btn-primary btn-full" style="margin-top:4px">+ Register new tool</button>`;
+}
+
+function renderAssetDetail() {
+  const el = document.getElementById('page-asset-detail');
+  if (selectedAssetType !== 'harness') { showPage('assets'); return; }
+  const h = SEED_ASSETS.harnesses.find(h => h.id === selectedAssetId);
+  if (!h) { showPage('assets'); return; }
+
+  const fullStatus = getAssetStatus({nextFullInspection: h.nextFullInspection});
+  const strapStatus = getAssetStatus({nextFullInspection: h.nextStrapInspection});
+  const sections = [...new Set(HARNESS_INSPECTION_QUESTIONS.map(q => q.section))];
+
+  el.innerHTML = `
+    <div style="padding:0 0 2rem">
+      <div style="display:flex;align-items:center;gap:10px;padding:.75rem 1rem;border-bottom:0.5px solid var(--border)">
+        <button onclick="showPage('assets')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:20px;padding:0;display:flex">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:600;color:var(--text)">${h.number} — ${h.brand} ${h.model}</div>
+          <div style="font-size:11px;color:var(--text3)">S/N: ${h.serial}</div>
+        </div>
+        <span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:${fullStatus.bg};color:${fullStatus.color}">${fullStatus.icon} ${fullStatus.label}</span>
+      </div>
+      <div style="padding:1rem">
+        <div class="card" style="margin-bottom:12px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div><div style="font-size:10px;color:var(--text3)">Assigned to</div><div style="font-size:13px;font-weight:500;color:var(--text)">${h.assignedTo}</div></div>
+            <div><div style="font-size:10px;color:var(--text3)">Location</div><div style="font-size:13px;font-weight:500;color:var(--text)">${h.location}</div></div>
+            <div><div style="font-size:10px;color:var(--text3)">Purchase date</div><div style="font-size:13px;color:var(--text)">${new Date(h.purchaseDate).toLocaleDateString('en-AU')}</div></div>
+            <div><div style="font-size:10px;color:var(--text3)">Value</div><div style="font-size:13px;color:var(--text)">$${h.purchasePrice}</div></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div style="background:${fullStatus.bg};border-radius:10px;padding:10px 12px">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Full inspection (6 monthly)</div>
+            <div style="font-size:13px;font-weight:600;color:${fullStatus.color}">${fullStatus.icon} ${fullStatus.label}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">Last: ${new Date(h.lastFullInspection).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</div>
+            <div style="font-size:11px;color:var(--text3)">Next: ${new Date(h.nextFullInspection).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
+          </div>
+          <div style="background:${strapStatus.bg};border-radius:10px;padding:10px 12px">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Strap inspection (3 monthly)</div>
+            <div style="font-size:13px;font-weight:600;color:${strapStatus.color}">${strapStatus.icon} ${strapStatus.label}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">Last: ${new Date(h.lastStrapInspection).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</div>
+            <div style="font-size:11px;color:var(--text3)">Next: ${new Date(h.nextStrapInspection).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">Start new inspection</div>
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px">
+          ${sections.map(section => {
+            const qs = HARNESS_INSPECTION_QUESTIONS.filter(q => q.section === section);
+            return `
+            <div style="padding:10px 12px;border-bottom:0.5px solid var(--border);background:var(--card2)">
+              <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">${section}</div>
+            </div>
+            ${qs.map(q => `
+              <div style="padding:10px 12px;border-bottom:0.5px solid var(--border)">
+                <div style="font-size:13px;color:var(--text);margin-bottom:8px">${q.question}</div>
+                ${q.type === 'text' ? `
+                <input placeholder="Enter value" class="inp" style="width:100%;font-size:13px"
+                  oninput="inspectionAnswers['${q.id}']=this.value" value="${inspectionAnswers[q.id]||''}">
+                ` : q.type === 'pass_fail_na' ? `
+                <div style="display:flex;gap:10px;margin-top:4px">
+                  <button onclick="inspectionAnswers['${q.id}']='pass';renderAssetDetail()"
+                    style="width:52px;height:52px;border-radius:50%;border:2px solid ${inspectionAnswers[q.id]==='pass'?'#085041':'#444'};background:${inspectionAnswers[q.id]==='pass'?'#085041':'transparent'};cursor:pointer;display:flex;align-items:center;justify-content:center">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${inspectionAnswers[q.id]==='pass'?'#fff':'#085041'}" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  </button>
+                  <button onclick="inspectionAnswers['${q.id}']='fail';renderAssetDetail()"
+                    style="width:52px;height:52px;border-radius:50%;border:2px solid ${inspectionAnswers[q.id]==='fail'?'#ef4444':'#444'};background:${inspectionAnswers[q.id]==='fail'?'#ef4444':'transparent'};cursor:pointer;display:flex;align-items:center;justify-content:center">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${inspectionAnswers[q.id]==='fail'?'#fff':'#ef4444'}" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                  <button onclick="inspectionAnswers['${q.id}']='na';renderAssetDetail()"
+                    style="width:52px;height:52px;border-radius:50%;border:2px solid ${inspectionAnswers[q.id]==='na'?'var(--text)':'#444'};background:transparent;cursor:pointer;font-size:12px;font-weight:700;color:${inspectionAnswers[q.id]==='na'?'var(--text)':'#888'}">NA</button>
+                </div>` : `
+                <button onclick="alert('Camera available on hosted version')" style="width:100%;padding:8px;border-radius:8px;border:0.5px solid var(--border);background:var(--card2);color:var(--text3);font-size:13px;cursor:pointer">📷 Take photo</button>`}
+              </div>`).join('')}`;
+          }).join('')}
+          <div style="padding:10px 12px">
+            <input placeholder="Inspector name" class="inp" style="width:100%;margin-bottom:8px;font-size:13px" id="inspector-name">
+            <button onclick="submitHarnessInspection('${h.id}')" style="width:100%;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">Submit inspection report</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function submitHarnessInspection(id) {
+  const inspector = document.getElementById('inspector-name')?.value;
+  if (!inspector) { alert('Please enter inspector name'); return; }
+  const questions = HARNESS_INSPECTION_QUESTIONS.filter(q => q.type === 'pass_fail_na');
+  const unanswered = questions.filter(q => !inspectionAnswers[q.id]);
+  if (unanswered.length) { alert('Please answer all ' + unanswered.length + ' remaining questions'); return; }
+  const failed = questions.filter(q => inspectionAnswers[q.id] === 'fail');
+  const h = SEED_ASSETS.harnesses.find(h => h.id === id);
+  if (h) {
+    const today = new Date().toISOString().split('T')[0];
+    h.lastFullInspection = today;
+    h.nextFullInspection = new Date(Date.now() + 180*86400000).toISOString().split('T')[0];
+    h.lastStrapInspection = today;
+    h.nextStrapInspection = new Date(Date.now() + 90*86400000).toISOString().split('T')[0];
+    h.status = failed.length ? 'failed' : 'current';
+  }
+  if (failed.length) {
+    alert('⚠️ Inspection FAILED — ' + failed.length + ' item' + (failed.length>1?'s':'') + ' failed.\n\nHarness ' + h?.number + ' has been flagged.\nBen and Mitch notified.');
+  } else {
+    showToast('✓ Inspection passed — ' + h?.number + ' cleared for use');
+  }
+  showPage('assets');
+}
+
+async function fetchCalendarEvents() {
+  try {
+    const calId = encodeURIComponent(DAPCOR_CALENDAR_ID);
+    // Try iCal feed first — works if calendar is public or domain-shared
+    const icalUrl = `https://calendar.google.com/calendar/ical/${calId}/public/basic.ics`;
+    const res = await fetch(icalUrl);
+    if (res.ok) {
+      const ical = await res.text();
+      return parseIcal(ical);
+    }
+    return null;
+  } catch(e) { return null; }
+}
+
+function parseIcal(ical) {
+  const events = [];
+  const blocks = ical.split('BEGIN:VEVENT');
+  blocks.slice(1).forEach(block => {
+    const get = (key) => (block.match(new RegExp(key + '[^:]*:(.+)')) || [])[1]?.trim().replace(/\\n/g,' ');
+    const summary = get('SUMMARY');
+    const start = get('DTSTART');
+    const location = get('LOCATION');
+    const description = get('DESCRIPTION');
+    if (summary && start) {
+      const d = start.length >= 8 ? new Date(
+        start.slice(0,4)+'-'+start.slice(4,6)+'-'+start.slice(6,8)+
+        (start.includes('T') ? 'T'+start.slice(9,11)+':'+start.slice(11,13)+':00' : '')
+      ) : null;
+      events.push({ summary, date: d, location, description });
+    }
+  });
+  return events.sort((a,b) => (a.date||0) - (b.date||0));
+}
+
 function openCalendarBooking() {
   const site = currentUser ? (SEED_JOBSITES[0]?.address || 'Site TBC') : 'Site TBC';
   const user = currentUser ? currentUser.name : 'Ben Lawrence';
@@ -3735,7 +4869,43 @@ function renderClaude() {
         <span onclick="claudePageQuick('Update a product price')" style="font-size:11px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer">Update price</span>
       </div>
     </div>`;
-  claudePageAddMsg('Hi Ben — what do you need? I can add products, suppliers, check quotes, book labour, or read an invoice. You can also drop a file above.', false);
+  claudePageAddMsg('Hi — what do you need? I can check materials, read invoices, book labour, or answer any site question.', false);
+  
+  // Staged demo — plays automatically
+  setTimeout(() => runClaudeDemo(), 800);
+}
+
+function runClaudeDemo() {
+  const question = 'I need to build a wall — external CFC skin, timber frame, Gyprock internal skin. What framing timber and CFC do I need and who supplies it?';
+  
+  claudePageAddMsg(question, true);
+  claudePageAddMsg('<span class="typing-dots">Thinking<span>.</span><span>.</span><span>.</span></span>', false, 'claude-typing');
+
+  setTimeout(() => {
+    document.getElementById('claude-typing')?.remove();
+    const reply = `Good question — here's what you need for that wall build-up:
+
+🪵 FRAMING TIMBER
+LVL 90x45 E10 (6m lengths) — structural grade, ideal for external wall frames.
+• Supplier: Covert Procurement
+• You have 16 lengths in yard stock right now
+• For a standard wall frame, allow 1 length per 900mm of wall run plus top/bottom plates and noggings
+
+📋 CFC SHEETING (External skin)
+James Hardie Hardifine Texture Cladding 8.5mm — confirmed in yard stock (1 sheet)
+CFC 2400x1200 10mm External — also in yard stock (4 sheets)
+
+For a full external CFC build you'll likely need more. Covert Procurement supplies both — same supplier as your LVL timber so you can consolidate the order and save on freight.
+
+💡 Build-up reminder:
+External → CFC 10mm → 90x45 LVL frame @ 450 ctrs → R2.0 batts → Gyprock 13mm internal
+
+Want me to calculate quantities based on the wall area, or send a quote request to Covert Procurement?`;
+
+    claudePageAddMsg(reply, false);
+    claudePageHistory.push({ role: 'user', content: question });
+    claudePageHistory.push({ role: 'assistant', content: reply });
+  }, 2800);
 }
 
 var claudePageHistory = [];
@@ -3797,7 +4967,7 @@ Keep responses concise and action-focused. When adding a product, confirm all fi
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, system: systemPrompt, messages })
+      body: JSON.stringify({ model: 'claude-opus-4-6', max_tokens: 1000, system: systemPrompt, messages })
     });
     const data = await res.json();
     const reply = data.content?.map(c => c.text || '').join('') || 'Sorry, I could not get a response.';
@@ -3823,93 +4993,15 @@ function claudePageAddMsg(text, isUser, id) {
   msgs.scrollTop = msgs.scrollHeight;
 }
 
-// ============================================================
-// CLAUDE FLOAT
-// ============================================================
-var floatOpen = false;
-var floatHistory = [];
 
-function toggleClaudeFloat() {
-  floatOpen = !floatOpen;
-  document.getElementById('claude-float').style.display = floatOpen ? 'block' : 'none';
-  if (floatOpen) document.getElementById('float-input').focus();
-}
 
-function floatQuick(text) {
-  document.getElementById('float-input').value = text;
-  floatSend();
-}
 
-async function floatSend() {
-  const input = document.getElementById('float-input');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  floatAddMsg(text, true);
-  floatAddMsg('<span class="typing-dots">...</span>', false, 'float-typing');
-
-  const systemPrompt = `You are the Dapcor BCO assistant. Keep replies very short — max 3 sentences. Help with adding products, suppliers, quotes, booking labour, checking invoices. Yard Manager is Ben Lawrence at Dapcor Building Services, 16 Booralee St Botany NSW 2019.`;
-
-  try {
-    const messages = [...floatHistory, { role: 'user', content: text }];
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 300, system: systemPrompt, messages })
-    });
-    const data = await res.json();
-    const reply = data.content?.map(c => c.text || '').join('') || 'Sorry, try again.';
-    floatHistory.push({ role: 'user', content: text });
-    floatHistory.push({ role: 'assistant', content: reply });
-    if (floatHistory.length > 10) floatHistory = floatHistory.slice(-10);
-    document.getElementById('float-typing')?.remove();
-    floatAddMsg(reply, false);
-  } catch(e) {
-    document.getElementById('float-typing')?.remove();
-    floatAddMsg('Connection error.', false);
-  }
-}
-
-function floatAddMsg(text, isUser, id) {
-  const msgs = document.getElementById('float-msgs');
-  if (!msgs) return;
-  const div = document.createElement('div');
-  if (id) div.id = id;
-  div.style.cssText = `display:flex;justify-content:${isUser?'flex-end':'flex-start'};margin-bottom:.5rem`;
-  div.innerHTML = `<div style="max-width:90%;padding:.5rem .75rem;border-radius:${isUser?'10px 3px 10px 10px':'3px 10px 10px 10px'};background:${isUser?'#6366f1':'var(--card2)'};color:${isUser?'#fff':'var(--text)'};font-size:12px;line-height:1.5">${text}</div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
 loadLocal();
 DB.users = SEED_USERS;
 showPage('login', false);
 updateBadge();
 checkBroadcastHash();
 if (getSetting('scriptUrl')) setTimeout(syncFromSheets, 800);
-
-// Claude welcome popup
-setTimeout(function() {
-  const popup = document.createElement('div');
-  popup.id = 'claude-popup';
-  popup.style.cssText = 'position:fixed;bottom:70px;left:12px;right:12px;max-width:456px;margin:0 auto;background:#1e1e32;border:1px solid #f97316;border-radius:14px;padding:14px 16px;z-index:999;box-shadow:0 4px 24px rgba(0,0,0,0.6)';
-  popup.innerHTML = `
-    <div style="display:flex;align-items:flex-start;gap:10px">
-      <div style="width:32px;height:32px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#3C3489;flex-shrink:0">AI</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:600;color:#f97316;margin-bottom:6px">Dapcor assistant</div>
-        <div style="font-size:13px;color:#e2e8f0;line-height:1.5">Hi Ben — you have <strong style="color:#22c55e">3 new quote replies</strong> for <strong>Ardex LA55</strong>.<br><br>
-        🟢 <strong>Hardware &amp; General</strong> — $38.90/unit (best price)<br>
-        🟢 <strong>Komerco</strong> — $40.00/unit<br>
-        🟢 <strong>Ardex</strong> — $42.50/unit<br><br>
-        Still waiting on <strong style="color:#eab308">Sandhub</strong> and <strong style="color:#eab308">Kim's</strong>. Want me to send them a follow-up?</div>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <button onclick="document.getElementById('claude-popup').remove()" style="flex:1;padding:8px;background:#f97316;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">View quotes</button>
-          <button onclick="document.getElementById('claude-popup').remove()" style="flex:1;padding:8px;background:transparent;color:#94a3b8;border:1px solid #2d2d50;border-radius:8px;font-size:13px;cursor:pointer">Dismiss</button>
-        </div>
-      </div>
-    </div>`;
-  document.body.appendChild(popup);
-}, 1200);
 </script>
 </body>
 </html>
