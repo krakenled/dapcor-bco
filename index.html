@@ -993,7 +993,8 @@ const SEED_USERS = [
   { id:'usr-samuel', name:'Samuel Hai', position:'Site Foreman', email:'samuel@dapcor.com.au', phone:'0433 533 969', accessLevel:1 },
   { id:'usr-tim', name:'Tim Kartzke', position:'Site Foreman', email:'tim@dapcor.com.au', phone:'0422 786 185', accessLevel:1 },
   { id:'usr-ayden', name:'Ayden Murrell', position:'Leading Hand', email:'ayden@dapcor.com.au', phone:'0409 244 148', accessLevel:1 },
-  { id:'usr-mattia', name:'Mattia Tomasin', position:'Leading Hand', email:'mattia@dapcor.com.au', phone:'0408 954 612', accessLevel:1 }
+  { id:'usr-mattia', name:'Mattia Tomasin', position:'Leading Hand', email:'mattia@dapcor.com.au', phone:'0408 954 612', accessLevel:1 },
+  { id:'usr-nick', name:'Nick', position:'Draftsman', email:'nick@dapcor.com.au', phone:'', accessLevel:2 }
 ];
 
 const SEED_QUOTES = [
@@ -1837,7 +1838,7 @@ function renderOrder() {
     ${orderType==='order' ? `
     <div class="fg">
       <label>Purchase Order Number</label>
-      <input class="inp" id="o-po" placeholder="e.g. PO-2025-0042" value="${localStorage.getItem('lastPO')||''}">
+      <input class="inp" id="o-po" placeholder="e.g. PO-2025-0042" value="${localStorage.getItem('lastJobNo')||''}">
     </div>` : ''}
     <div class="fg">
       <label>Job / Project Name</label>
@@ -2013,7 +2014,7 @@ function buildEmailBody(d) {
     ? `PRICE INQUIRY — ${getSetting('companyName')}\n`
     : `PURCHASE ORDER — ${getSetting('companyName')}\n`;
   body += '='.repeat(44) + '\n';
-  if (d.poNumber) body += `PO Number:       ${d.poNumber}\n`;
+  if (d.poNumber) body += `Job Number:       ${d.poNumber}\n`;
   body += `Date:            ${new Date().toLocaleDateString('en-AU')}\n`;
   if (d.jobName) body += `Job:             ${d.jobName}\n`;
   body += deliveryMethod === 'delivery'
@@ -2062,7 +2063,7 @@ function buildEmailBody(d) {
 
 function sendEmail(dest) {
   const d = gatherOrderData();
-  if (d.poNumber) localStorage.setItem('lastPO', d.poNumber);
+  if (d.poNumber) localStorage.setItem('lastJobNo', d.poNumber);
   if (d.jobName)  localStorage.setItem('lastJob', d.jobName);
   if (d.address)  localStorage.setItem('lastAddr', d.address);
   if (d.notes)    localStorage.setItem('lastNotes', d.notes);
@@ -2589,7 +2590,7 @@ function renderAdminJobs(el) {
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
           <div style="flex:1;min-width:0">
             <div style="font-size:13px;font-weight:500;color:var(--text)">${j.address}</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px">PO: ${j.po} · PM: ${j.pm}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">Job: ${j.po} · PM: ${j.pm}</div>
             <div style="font-size:11px;color:var(--text3)">Foreman: ${j.foreman}</div>
             ${j.notes ? `<div style="font-size:11px;color:var(--text3);font-style:italic;margin-top:2px">${j.notes}</div>` : ''}
           </div>
@@ -3181,7 +3182,7 @@ function broadcastCurrentOrder() {
       supplierId: c.supplierId,
       orderType:  c.orderType,
       qty:        c.qty,
-      poNumber:   localStorage.getItem('lastPO') || '',
+      poNumber:   localStorage.getItem('lastJobNo') || '',
       orderedBy:  name
     }))
   };
@@ -3247,17 +3248,17 @@ function openJoinModal(bcId) {
   ov.innerHTML = `<div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Join Delivery — ${bc.jobName || bc.createdBy}</div>
-    <div class="t-xs t-dim mb12">You'll add your own items to this truck. Each person gets their own PO and email — freight is split across all items.</div>
+    <div class="t-xs t-dim mb12">You'll add your own items to this truck. each person gets their own job number and email — freight is split across all items.</div>
 
     <div class="fg"><label>Your Name</label>
       <input class="inp" id="jn-name" value="${getSetting('userName')||''}"></div>
-    <div class="fg"><label>Your PO Number</label>
-      <input class="inp" id="jn-po" placeholder="e.g. PO-2025-0099" value="${localStorage.getItem('lastPO')||''}"></div>
+    <div class="fg"><label>Job Number</label>
+      <input class="inp" id="jn-po" placeholder="5-digit job number" value="${localStorage.getItem('lastJobNo')||''}"></div>
     <div class="fg"><label>Your Email</label>
       <input class="inp" id="jn-email" type="email" value="${getSetting('userEmail')||''}"></div>
 
     <div class="sec-title mt12">Add Items to This Truck</div>
-    <div class="t-xs t-dim mb8">Select products and qty to add under your PO.</div>
+    <div class="t-xs t-dim mb8">Select products and qty to add under your job number.</div>
     <div id="join-items-list">
       ${DB.products.map(prod => {
         const types = [];
@@ -3295,7 +3296,7 @@ function submitJoin(bcId) {
   const po    = document.getElementById('jn-po')?.value.trim();
   const email = document.getElementById('jn-email')?.value.trim();
   if (!name) { showToast('Name required'); return; }
-  if (!po)   { showToast('PO number required'); return; }
+  if (!po)   { showToast('Job number required'); return; }
 
   const addedItems = [];
   DB.products.forEach(prod => {
@@ -3330,7 +3331,7 @@ function openJoinConfirmEmail(bc, items, joiner) {
     const p = getProd(i.productId); const s = getSup(i.supplierId);
     return `${p?.name||'?'} × ${i.qty} (${i.orderType}) — ${s?.name||'?'}`;
   }).join('\n');
-  const body = `Hi,\n\nI've joined the delivery for: ${bc.jobName||'upcoming order'} (${bc.deliveryAddress||'TBC'})\nDelivery date: ${bc.deliveryDate||'TBC'}\n\nMy PO: ${joiner.po}\nOrdered by: ${joiner.name}\n\nItems I'm adding:\n${lines}\n\nPlease include my items on the same truck.\n\n${getSetting('companyName')}\n${getSetting('companyPhone')}`;
+  const body = `Hi,\n\nI've joined the delivery for: ${bc.jobName||'upcoming order'} (${bc.deliveryAddress||'TBC'})\nDelivery date: ${bc.deliveryDate||'TBC'}\n\nJob: ${joiner.po}\nOrdered by: ${joiner.name}\n\nItems I'm adding:\n${lines}\n\nPlease include my items on the same truck.\n\n${getSetting('companyName')}\n${getSetting('companyPhone')}`;
   const subject = `Joining Delivery — ${bc.jobName||'Dapcor Order'} — PO ${joiner.po}`;
   const creatorEmail = bc.items[0] ? '' : '';
   ov.innerHTML = `<div class="modal">
@@ -3461,13 +3462,13 @@ function renderBroadcastCard(bc, myName) {
     <div class="row mb8" style="gap:6px;flex-wrap:wrap">
       <span class="chip chip-gray">🚛 ${totalFU.toFixed(1)} freight units</span>
       <span class="chip chip-gray">${fmt(freightPerFU)}/unit</span>
-      <span class="chip chip-gray">${Object.keys(poGroups).length} PO${Object.keys(poGroups).length!==1?'s':''}</span>
+      <span class="chip chip-gray">${Object.keys(poGroups).length} Job${Object.keys(poGroups).length!==1?'s':''}</span>
     </div>
 
     ${Object.values(poGroups).map(g => `
       <div class="bc-item">
         <div class="row-between mb4">
-          <span class="semi" style="font-size:12px">${g.orderedBy} — PO: ${g.po||'TBC'}</span>
+          <span class="semi" style="font-size:12px">${g.orderedBy} — Job: ${g.po||'TBC'}</span>
           <span class="chip chip-o" style="font-size:10px">${g.items.length} item${g.items.length!==1?'s':''}</span>
         </div>
         ${g.items.map(i => {
@@ -3821,6 +3822,24 @@ const YARD_DOCS = {
              sds:'https://www.fosroc.com.au/product/nitobond-har' },
   'ys-34': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Cemtop_Screed_TDS.pdf',
              sds:'https://www.fosroc.com.au/product/cemtop-screed' },
+  // Ardex — additional entries from Product Reference doc (17/06/2026)
+  'ys-9':  { tds:'https://ardexaustralia.com/pdf/products/datasheets/general%20construction/ARDEX%20RA%2088%20Datasheet.pdf' },
+  'ys-10': { tds:'https://ardexaustralia.com/pdf/products/datasheets/tiling/ARDEX%20FG8%20Datasheet.pdf' },
+  'ys-12': { tds:'https://ardexaustralia.com/pdf/products/datasheets/tiling/ARDEX%20E90%20Datasheet.pdf' },
+  'ys-13': { tds:'https://ardexaustralia.com/pdf/products/datasheets/tiling/ARDEX%20EG15%20Datasheet.pdf' },
+  'ys-14': { tds:'https://ardexaustralia.com/pdf/products/datasheets/waterproofing/ARDEX%20WPM%20002%20Datasheet.pdf',
+             sds:'https://ardexaustralia.com/pdf/products/msds/waterproofing/ARDEX%20WPM%20002%20Superflex%202%20Part%20Liquid%20SDS.pdf' },
+  'ys-16': { tds:'https://ardexaustralia.com/pdf/products/datasheets/waterproofing/ARDEX%20WPM%20368%20Datasheet.pdf' },
+  'ys-22': { tds:'https://ardexaustralia.com/pdf/products/datasheets/tiling/ARDEX%20FG8%20Datasheet.pdf' },
+  // Fosroc — additional entries from Product Reference doc (17/06/2026)
+  'ys-26': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Concure_WB30_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/concure-wb30' },
+  'ys-27': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Concure_WB30_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/concure-wb30' },
+  'ys-28': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Nitoproof_510_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/nitoproof-510' },
+  'ys-30': { tds:'https://www.fosroc.com.au/sites/default/files/products_file_storage/Fosroc_Nitoseal_MB180_TDS.pdf',
+             sds:'https://www.fosroc.com.au/product/nitoseal-mb180' },
 };
 
 function renderYard() {
@@ -3889,7 +3908,7 @@ function renderYardOrder() {
       </div>`}).join('')}`;
 }
 
-function getUserDefaultPO() {
+function getUserDefaultJobNo() {
   if (!currentUser) return '';
   // If a job is currently selected use that
   if (currentJobSite) {
@@ -4051,7 +4070,7 @@ function renderYardDetail() {
           </div>
           ${(() => {
             const myJobs = getMyJobs();
-            const defaultPO = getUserDefaultPO();
+            const defaultPO = getUserDefaultJobNo();
             if (myJobs.length === 1) {
               return `<div style="background:var(--card2);border-radius:8px;padding:8px 12px;margin-top:8px;font-size:13px;color:var(--text)">
                 Job: <strong>${myJobs[0].address.split(',')[0]}</strong> · PO: <strong>${myJobs[0].po}</strong>
@@ -4063,7 +4082,7 @@ function renderYardDetail() {
                 ${myJobs.map(j => `<option value="${j.po}">${j.address.split(',')[0]} — ${j.po}</option>`).join('')}
               </select>`;
             } else {
-              return `<input placeholder="Job/PO number (required)" class="inp" style="width:100%;margin-top:8px;font-size:13px" id="adj-po" value="${defaultPO}">`;
+              return `<input placeholder="Job number (pre-filled from your profile)" class="inp" style="width:100%;margin-top:8px;font-size:13px" id="adj-po" value="${defaultPO}">`;
             }
           })()}
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
@@ -4135,7 +4154,7 @@ function confirmYardAdj(id) {
   const po = document.getElementById('adj-po')?.value;
   const method = document.getElementById('adj-method')?.value || 'delivery';
   if (mode === 'SELECT ACTION') { alert('Please select Take from yard or Add to yard'); return; }
-  if (mode === 'TAKE OUT' && !po) { alert('PO/Job number is required when taking stock out'); return; }
+  if (mode === 'TAKE OUT' && !po) { alert('Job number is required when taking stock out'); return; }
   const item = SEED_YARD_STOCK.find(i => i.id === id);
   if (!item) return;
   if (mode === 'TAKE OUT') {
@@ -4387,7 +4406,7 @@ function renderMyYard() {
               <div>
                 <div style="font-size:13px;font-weight:500;color:var(--text)">${o.supplier}</div>
                 <div style="font-size:11px;color:var(--text3)">${o.items}</div>
-                <div style="font-size:11px;color:var(--text3)">PO: ${o.po}</div>
+                <div style="font-size:11px;color:var(--text3)">Job: ${o.po}</div>
               </div>
               <div style="text-align:right;flex-shrink:0;margin-left:8px">
                 <div style="font-size:13px;font-weight:600;color:var(--primary)">${o.value}</div>
@@ -4735,7 +4754,7 @@ function renderMyJobs() {
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
                 <div style="flex:1;min-width:0">
                   <div style="font-size:14px;font-weight:600;color:var(--text)">${j.address}</div>
-                  <div style="font-size:11px;color:var(--text3);margin-top:2px">PO: ${j.po} · PM: ${j.pm}</div>
+                  <div style="font-size:11px;color:var(--text3);margin-top:2px">Job: ${j.po} · PM: ${j.pm}</div>
                   <div style="font-size:11px;color:var(--text3)">${j.notes||''}</div>
                 </div>
                 ${j.liveSite ? `<span style="font-size:9px;padding:2px 8px;border-radius:20px;background:#E1F5EE;color:#085041;flex-shrink:0;white-space:nowrap">● Live</span>` : ''}
