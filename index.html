@@ -972,9 +972,10 @@ const SEED_USERS = [
   { id:'usr-lena', name:'Lena Kostoglou', position:'Office Manager', email:'lena@dapcor.com.au', phone:'', accessLevel:5 },
   { id:'usr-kiara', name:'Kiara Naidoo', position:'HR Manager', email:'kiara@dapcor.com.au', phone:'', accessLevel:3 },
   { id:'usr-evan', name:'Evan Kapatos', position:'Estimator', email:'evan@dapcor.com.au', phone:'', accessLevel:2 },
+  { id:'usr-oliver', name:'Oliver Reithmeier', position:'Managing Director', email:'oliver@dapcor.com.au', phone:'', accessLevel:6 },
   { id:'usr-alex-r', name:'Alex Reithmeier', position:'Director', email:'alex@dapcor.com.au', phone:'', accessLevel:6 },
   { id:'usr-alac', name:'Alac Kdouh', position:'Assistant Project Manager', email:'alac@dapcor.com.au', phone:'', accessLevel:3 },
-  { id:'usr-mitch', name:'Mitchell Reilly', position:'Project Manager', email:'mitchellreilly@dapcor.com.au', phone:'0425 424 755', accessLevel:4 },
+  { id:'usr-mitch', name:'Mitchell Reilly', position:'Project Manager / Warehouse Operations Manager', email:'mitchellreilly@dapcor.com.au', phone:'0425 424 755', accessLevel:4 },
   { id:'usr-steven', name:'Steven Wilson', position:'Project Manager', email:'steven@dapcor.com.au', phone:'0421 230 270', accessLevel:4 },
   { id:'usr-kata', name:'Kata Raju', position:'Project Manager', email:'kata@dapcor.com.au', phone:'0414 782 921', accessLevel:3 },
   { id:'usr-alexander', name:'Alexander Han', position:'Assistant Project Manager', email:'alexander@dapcor.com.au', phone:'0434 612 876', accessLevel:3 },
@@ -1395,7 +1396,7 @@ function renderBrowse() {
             </div>
             <div style="border-top:0.5px solid var(--border);padding-top:8px">
               ${unique.map(p => `
-                <div onclick="selectProduct('${p.id}')" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border);cursor:pointer">
+                <div onclick="openDetail('${p.id}')" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border);cursor:pointer">
                   <div>
                     <div style="font-size:13px;font-weight:500;color:var(--text)">${p.name}</div>
                     <div style="font-size:11px;color:var(--text3)">${p.category}</div>
@@ -4495,7 +4496,8 @@ function renderMyToolbox() {
         <div style="font-size:11px;color:var(--text3);margin-top:2px">📍 ${a.location}</div>
         ${status?.urgent ? `<div style="font-size:11px;color:#ef4444;margin-top:4px">⚠️ ${a.categoryName} compliance overdue</div>` : ''}
         <div style="display:flex;gap:6px;margin-top:8px">
-          <button onclick="returnGenericAsset('${a.id}','${a.category}')" style="flex:1;padding:7px;background:#E1F5EE;color:#085041;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer">📥 Return to yard</button>
+          <button onclick="returnGenericAsset('${a.id}','${a.category}')" style="flex:1;padding:7px;background:#E1F5EE;color:#085041;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer">📥 To yard</button>
+          <button onclick="openTransferModal('${a.id}','${a.category}','${a.name.replace(/'/g,"\\'")}')" style="flex:1;padding:7px;background:#EEEDFE;color:#3C3489;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer">🔄 Transfer</button>
           <button onclick="changeGenericAssetStatus('${a.id}','${a.category}')" style="padding:7px 10px;background:var(--card2);border:0.5px solid var(--border);color:var(--text);border-radius:8px;font-size:12px;cursor:pointer">⚙️</button>
           <button onclick="alert('Report damage — coming soon')" style="padding:7px 10px;background:#FEF3C7;border:0.5px solid #f97316;color:#92400E;border-radius:8px;font-size:12px;cursor:pointer">🔧</button>
         </div>
@@ -4879,6 +4881,50 @@ function getAssetStatus(item) {
   if (daysLeft < 0) return { color:'#ef4444', bg:'#FEE2E2', label:'OVERDUE', icon:'🔴', urgent:true };
   if (daysLeft <= 30) return { color:'#f97316', bg:'#FEF3C7', label:`Due in ${daysLeft}d`, icon:'🟡', urgent:false };
   return { color:'#085041', bg:'#E1F5EE', label:'Current', icon:'🟢', urgent:false };
+}
+
+function openTransferModal(assetId, category, assetName) {
+  const foremen = (DB.users || SEED_USERS).filter(u => u.id !== currentUser?.id && u.accessLevel <= 3);
+  const existing = document.getElementById('transfer-modal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'transfer-modal';
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal" style="padding-bottom:32px">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Transfer Tool</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:16px">${assetName}</div>
+      <div style="font-size:12px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Select foreman</div>
+      ${foremen.map(u => `
+        <div onclick="confirmTransfer('${assetId}','${category}','${u.id}','${u.name.replace(/'/g,"\\'")}','${assetName.replace(/'/g,"\\'")}');document.getElementById('transfer-modal').remove()"
+          style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--card);border:0.5px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer">
+          <div style="width:36px;height:36px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#3C3489;flex-shrink:0">${u.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:500;color:var(--text)">${u.name}</div>
+            <div style="font-size:12px;color:var(--text3)">${u.position}</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>`).join('')}
+      <button onclick="document.getElementById('transfer-modal').remove()" class="btn btn-outline btn-full" style="margin-top:8px">Cancel</button>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+function confirmTransfer(assetId, category, toUserId, toUserName, assetName) {
+  const toUser = (DB.users || SEED_USERS).find(u => u.id === toUserId);
+  if (!toUser) return;
+  // Update asset location in the relevant seed array
+  const arrays = { tools: SEED_TOOLS||[], machinery: SEED_MACHINERY||[], harnesses: SEED_HARNESSES||[] };
+  const arr = Object.values(arrays).flat();
+  const asset = arr.find(a => a.id === assetId);
+  if (asset) {
+    asset.location = toUserName;
+    asset.assignedTo = toUserId;
+  }
+  showToast(`✓ ${assetName} transferred to ${toUserName}`);
+  renderMyToolbox();
 }
 
 function renderAssets() {
