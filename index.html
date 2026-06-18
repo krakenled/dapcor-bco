@@ -3434,7 +3434,8 @@ function renderNav() {
     { page:'cart', label:'Order', svg:svgs.cart },
     { page:'yard', label:'Yard', svg:svgs.yard },
     { page:'trade', label:'Trade', svg:svgs.trade },
-    { page:'comms', label:'Comms', svg:svgs.comms }
+    { page:'comms', label:'Comms', svg:svgs.comms },
+    { page:'claude', label:'Claude', svg:svgs.claude }
   ];
   const yardExtra = [
     { page:'admin', label:'Admin', svg:svgs.admin },
@@ -4997,7 +4998,7 @@ function claudePageAddMsg(text, isUser, id) {
 
 
 loadLocal();
-DB.users = SEED_USERS;
+DB.users = JSON.parse(JSON.stringify(SEED_USERS));
 showPage('login', false);
 updateBadge();
 checkBroadcastHash();
