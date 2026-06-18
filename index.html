@@ -244,6 +244,7 @@ textarea.inp{resize:vertical;min-height:70px}
     <div id="page-login"     class="page active"></div>
     <div id="page-myjobs"    class="page"></div>
     <div id="page-myyard"    class="page"></div>
+    <div id="page-mytoolbox" class="page"></div>
     <div id="page-browse"    class="page"></div>
     <div id="page-detail"    class="page"></div>
     <div id="page-cart"      class="page"></div>
@@ -279,7 +280,7 @@ const DEFAULT_SETTINGS = {
   companyName: COMPANY.name, companyAddress: COMPANY.address,
   companyPhone: COMPANY.phone, companyEmail: COMPANY.email,
   companyWebsite: COMPANY.website, accountsEmail: COMPANY.accountsEmail,
-  scriptUrl: '', defaultFreight: '150',
+  scriptUrl: 'https://script.google.com/macros/s/AKfycbwiOFpdCfftktu975Q3DPz7zFJwuKKNIUBTQFZZ4p5tYcIsjYnYAvT8OOa9ebdwSGJFmg/exec', defaultFreight: '150',
   userName: 'Ben', userEmail: 'ben@dapcor.com.au', userPhone: '',
   adminPass: 'admin123', yardEmail: ''
 };
@@ -776,19 +777,19 @@ const SEED_ASSETS = {
   harnesses: [
     { id:'h-1', number:'H001', brand:'Petzl', model:'Vertex Best', serial:'PZ2024001', 
       purchaseDate:'2024-03-15', purchasePrice:485, replacementValue:520,
-      assignedTo:'Brenner Da Silva', location:'Rhodes — 25105', status:'current',
+      assignedTo:'Brenner Da Silva', location:'Rhodes — 25105', status:'working',
       lastFullInspection:'2025-12-10', nextFullInspection:'2026-06-10',
       lastStrapInspection:'2026-03-10', nextStrapInspection:'2026-06-10',
       inspectionHistory:[] },
     { id:'h-2', number:'H002', brand:'Petzl', model:'Vertex Best', serial:'PZ2024002',
       purchaseDate:'2024-03-15', purchasePrice:485, replacementValue:520,
-      assignedTo:'Regan Raveane', location:'Redfern — 24094', status:'due',
+      assignedTo:'Regan Raveane', location:'Redfern — 24094', status:'needs_repair',
       lastFullInspection:'2025-11-15', nextFullInspection:'2026-05-15',
       lastStrapInspection:'2026-02-15', nextStrapInspection:'2026-05-15',
       inspectionHistory:[] },
     { id:'h-3', number:'H003', brand:'Petzl', model:'Vertex Best', serial:'PZ2024003',
       purchaseDate:'2024-03-15', purchasePrice:485, replacementValue:520,
-      assignedTo:'In Yard', location:'Botany Yard', status:'current',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working',
       lastFullInspection:'2026-01-20', nextFullInspection:'2026-07-20',
       lastStrapInspection:'2026-04-20', nextStrapInspection:'2026-07-20',
       inspectionHistory:[] },
@@ -814,6 +815,93 @@ const SEED_ASSETS = {
       lastTest:'2025-12-01', nextTest:'2026-06-01', status:'overdue', testClass:'3 monthly' },
     { id:'t-3', name:'Power Lead 20m #1', serial:'PL001', location:'Botany Yard',
       lastTest:'2026-02-01', nextTest:'2026-08-01', status:'current', testClass:'6 monthly' },
+  ],
+  cordless: [
+    { id:'cl-1', name:'Cordless Drill 18V', brand:'Milwaukee', model:'M18 FPD2', serial:'MW2023001', assetNumber:'CD001',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working',
+      purchaseDate:'2023-03-10', supplier:'Total Tools', purchasePrice:680, warrantyExpiry:'2026-03-10',
+      chargerSerial:'MW2023001C', chargerTagTestDue:'2026-09-01',
+      photos:['photo1','serialPhoto'], repairHistory:[] },
+    { id:'cl-2', name:'Cordless Impact Driver 18V', brand:'Milwaukee', model:'M18 FID2', serial:'MW2023003', assetNumber:'CD002',
+      assignedTo:'Brenner Da Silva', location:'Rhodes — 25105', status:'working',
+      purchaseDate:'2023-03-10', supplier:'Total Tools', purchasePrice:580, warrantyExpiry:'2026-03-10',
+      chargerSerial:'MW2023003C', chargerTagTestDue:'2026-12-01',
+      photos:['photo1','serialPhoto'], repairHistory:[] },
+    { id:'cl-3', name:'Cordless Angle Grinder 18V', brand:'Makita', model:'DGA504', serial:'MK2023004', assetNumber:'CD003',
+      assignedTo:'Regan Raveane', location:'Redfern — 24094', status:'working',
+      purchaseDate:'2023-05-01', supplier:'Bunnings', purchasePrice:420, warrantyExpiry:'2026-05-01',
+      chargerSerial:'MK2023004C', chargerTagTestDue:'2026-08-01',
+      photos:['photo1','serialPhoto'], repairHistory:[] },
+    { id:'cl-4', name:'Cordless Reciprocating Saw 18V', brand:'Milwaukee', model:'M18 ONESX', serial:'MW2024001', assetNumber:'CD004',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working',
+      purchaseDate:'2024-01-15', supplier:'Total Tools', purchasePrice:520, warrantyExpiry:'2027-01-15',
+      chargerSerial:'MW2024001C', chargerTagTestDue:'2026-10-01',
+      photos:[], repairHistory:[] },
+  ],
+  lasers: [
+    { id:'ls-1', name:'Rotating Laser Level', brand:'Spectra', model:'LL300N', serial:'SP2021001', assetNumber:'LS001',
+      assignedTo:'Peter Yeboah', location:'Botany — 25044', status:'working',
+      lastCalibration:'2026-01-10', nextCalibration:'2027-01-10', purchasePrice:1200, replacementValue:1400, photos:[], repairHistory:[] },
+    { id:'ls-2', name:'Line Laser', brand:'Bosch', model:'GLL3-80', serial:'BS2022001', assetNumber:'LS002',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working',
+      lastCalibration:'2025-06-01', nextCalibration:'2026-06-01', purchasePrice:650, replacementValue:700, photos:[], repairHistory:[] },
+  ],
+  ladders: [
+    { id:'ld-1', name:'Aluminium Extension Ladder 4.5m', brand:'Bailey', model:'FS13971', serial:'BL2021001', assetNumber:'LA001',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working', purchaseDate:'2021-06-01', purchasePrice:420, replacementValue:480,
+      lastInspection:'2026-01-15', nextInspection:'2026-07-15', photos:[], repairHistory:[] },
+    { id:'ld-2', name:'Fibreglass Step Ladder 1.8m', brand:'Bailey', model:'P150', serial:'BL2022001', assetNumber:'LA002',
+      assignedTo:'Tim Kartzke', location:'Alexandria — 24105', status:'working', purchaseDate:'2022-03-01', purchasePrice:280, replacementValue:320,
+      lastInspection:'2026-02-01', nextInspection:'2026-08-01', photos:[], repairHistory:[] },
+  ],
+  machinery: [
+    { id:'ma-1', name:'SDS Rotary Hammer 8kg', brand:'Hilti', model:'TE 60', serial:'HL2022001', assetNumber:'MA001',
+      assignedTo:'Regan Raveane', location:'Redfern — 24094', status:'working', purchaseDate:'2022-06-01', purchasePrice:1850, replacementValue:2100,
+      warrantyExpiry:'2025-06-01', tagTestDue:'2026-09-01', photos:[], repairHistory:[] },
+    { id:'ma-2', name:'Angle Grinder 125mm', brand:'Makita', model:'GA5040', serial:'MK2023001', assetNumber:'MA002',
+      assignedTo:'Brenner Da Silva', location:'Rhodes — 25105', status:'working', purchaseDate:'2023-01-15', purchasePrice:320, replacementValue:350,
+      warrantyExpiry:'2026-01-15', tagTestDue:'2026-08-01', photos:[], repairHistory:[] },
+    { id:'ma-3', name:'Core Drill 110mm', brand:'Hilti', model:'DD 110-W', serial:'HL2021002', assetNumber:'MA003',
+      assignedTo:'In Yard', location:'Botany Yard', status:'needs_repair', purchaseDate:'2021-03-01', purchasePrice:3200, replacementValue:3800,
+      warrantyExpiry:'2024-03-01', tagTestDue:'2026-07-01', photos:[], repairHistory:[] },
+  ],
+  materialHandling: [
+    { id:'mh-1', name:'Pallet Jack 2500kg', brand:'Liftright', model:'PJ2500', serial:'LR2020001', assetNumber:'MH001',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working', purchaseDate:'2020-01-01', purchasePrice:850, replacementValue:950, photos:[] },
+    { id:'mh-2', name:'Hand Truck 250kg', brand:'Gorilla', model:'HT250', serial:'GR2021001', assetNumber:'MH002',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working', purchaseDate:'2021-06-01', purchasePrice:180, replacementValue:200, photos:[] },
+    { id:'mh-3', name:'Platform Trolley 500kg', brand:'Gorilla', model:'PT500', serial:'GR2022001', assetNumber:'MH003',
+      assignedTo:'Peter Yeboah', location:'Botany — 25044', status:'working', purchaseDate:'2022-01-01', purchasePrice:320, replacementValue:360, photos:[] },
+  ],
+  tempPower: [
+    { id:'tp-1', name:'Distro Box 32A', brand:'Kennards', model:'DB32', serial:'DB001', assetNumber:'TP001',
+      assignedTo:'Regan Raveane', location:'Redfern — 24094', status:'working',
+      lastTest:'2026-03-01', nextTest:'2026-09-01', testClass:'3 monthly', purchasePrice:1200, replacementValue:1400, photos:[] },
+    { id:'tp-2', name:'Distro Box 32A', brand:'Kennards', model:'DB32', serial:'DB002', assetNumber:'TP002',
+      assignedTo:'Brenner Da Silva', location:'Rhodes — 25105', status:'working',
+      lastTest:'2025-12-01', nextTest:'2026-06-01', testClass:'3 monthly', purchasePrice:1200, replacementValue:1400, photos:[] },
+    { id:'tp-3', name:'Power Lead 20m 10A', brand:'Italco', model:'PL20', serial:'PL001', assetNumber:'TP003',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working',
+      lastTest:'2026-02-01', nextTest:'2026-08-01', testClass:'6 monthly', purchasePrice:85, replacementValue:95, photos:[] },
+  ],
+  investigation: [
+    { id:'iv-1', name:'ELD Tester', brand:'Metrel', model:'MI3102H', serial:'MT2023001', assetNumber:'IV001',
+      assignedTo:'Brenner Da Silva', location:'Rhodes — 25105', status:'working',
+      lastCalibration:'2025-06-15', nextCalibration:'2026-06-15', purchasePrice:2800, replacementValue:3200, photos:[] },
+    { id:'iv-2', name:'Moisture Meter', brand:'Protimeter', model:'MMS3', serial:'PR2022001', assetNumber:'IV002',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working',
+      lastCalibration:'2026-01-10', nextCalibration:'2027-01-10', purchasePrice:680, replacementValue:750, photos:[] },
+    { id:'iv-3', name:'Thermal Camera FLIR', brand:'FLIR', model:'E8-XT', serial:'FL2021001', assetNumber:'IV003',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working',
+      lastCalibration:'2025-11-01', nextCalibration:'2026-11-01', purchasePrice:4200, replacementValue:5000, photos:[] },
+  ],
+  generalTools: [
+    { id:'gt-1', name:'Crow Bar 1600mm', brand:'', model:'', serial:'GT001', assetNumber:'GT001',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working', purchasePrice:45, replacementValue:55, photos:[] },
+    { id:'gt-2', name:'Sledge Hammer 6kg', brand:'', model:'', serial:'GT002', assetNumber:'GT002',
+      assignedTo:'In Yard', location:'Botany Yard', status:'working', purchasePrice:65, replacementValue:75, photos:[] },
+    { id:'gt-3', name:'Suction Cup Set', brand:'Trojan', model:'SC400', serial:'TR2021001', assetNumber:'GT003',
+      assignedTo:'Tim Kartzke', location:'Alexandria — 24105', status:'working', purchasePrice:280, replacementValue:320, photos:[] },
   ],
   tools: [
     { id:'tl-1', name:'SDS Rotary Hammer', brand:'Hilti', model:'TE 60', serial:'HL2022001',
@@ -889,9 +977,9 @@ const SEED_USERS = [
   { id:'usr-mitch', name:'Mitchell Reilly', position:'Project Manager', email:'mitchellreilly@dapcor.com.au', phone:'0425 424 755', accessLevel:4 },
   { id:'usr-steven', name:'Steven Wilson', position:'Project Manager', email:'steven@dapcor.com.au', phone:'0421 230 270', accessLevel:4 },
   { id:'usr-kata', name:'Kata Raju', position:'Project Manager', email:'kata@dapcor.com.au', phone:'0414 782 921', accessLevel:3 },
-  { id:'usr-alexander', name:'Alexander Han', position:'Assistant Project Manager', email:'alexander@dapcor.com.au', phone:'0434 612 876', accessLevel:2 },
-  { id:'usr-jack', name:'Jack Dwyer', position:'Assistant Project Manager', email:'jackd@dapcor.com.au', phone:'0431 877 847', accessLevel:2 },
-  { id:'usr-raphael', name:'Raphael Nacamae', position:'Assistant Project Manager', email:'raphael@dapcor.com.au', phone:'0450 619 896', accessLevel:2 },
+  { id:'usr-alexander', name:'Alexander Han', position:'Assistant Project Manager', email:'alexander@dapcor.com.au', phone:'0434 612 876', accessLevel:3 },
+  { id:'usr-jack', name:'Jack Dwyer', position:'Assistant Project Manager', email:'jackd@dapcor.com.au', phone:'0431 877 847', accessLevel:3 },
+  { id:'usr-raphael', name:'Raphael Nacamae', position:'Assistant Project Manager', email:'raphael@dapcor.com.au', phone:'0450 619 896', accessLevel:3 },
   { id:'usr-ahmed', name:'Ahmed Juma', position:'Site Manager', email:'ahmed@dapcor.com.au', phone:'0405 995 778', accessLevel:2 },
   { id:'usr-harry', name:'Harry Palin', position:'Site Manager', email:'harryp@dapcor.com.au', phone:'0422 452 843', accessLevel:2 },
   { id:'usr-rocco', name:'Rocco Pasqua', position:'Site Manager', email:'rocco@dapcor.com.au', phone:'0414 584 017', accessLevel:2 },
@@ -1189,6 +1277,7 @@ function renderCurrentPage() {
   else if (currentPage === 'assets')    renderAssets();
   else if (currentPage === 'asset-detail') renderAssetDetail();
   else if (currentPage === 'myjobs')    renderMyJobs();
+  else if (currentPage === 'mytoolbox') renderMyToolbox();
   else if (currentPage === 'myyard')    renderMyYard();
   else if (currentPage === 'admin')     renderAdmin();
   else if (currentPage === 'claude')    renderClaude();
@@ -3428,8 +3517,11 @@ function renderNav() {
     claude: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'
   };
 
+  const toolboxSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>';
+
   const foreman = [
     { page:'myjobs', label:'Jobs', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>' },
+    { page:'mytoolbox', label:'Toolbox', svg:toolboxSvg },
     { page:'browse', label:'Browse', svg:svgs.browse },
     { page:'cart', label:'Order', svg:svgs.cart },
     { page:'yard', label:'Yard', svg:svgs.yard },
@@ -4200,12 +4292,8 @@ function getMyJobs() {
   const level = currentUser.accessLevel;
   // Full access — see all jobs
   if (level >= 4) return SEED_JOBSITES;
-  // PM — see assigned jobs
+  // PM level — see assigned jobs (pm or apm)
   if (level >= 3) {
-    const pmCodes = { 'Mitchell Reilly':'MR', 'Steven Wilson':'SW', 'Kata Raju':'KR',
-      'Alexander Han':'AH', 'Jack Dwyer':'JD', 'Raphael Nacamae':'RN',
-      'Ariyan Yousefi':'AY', 'Taj Beesley':'TB', 'Evan Kapatos':'EK',
-      'Nick Bagherinezhad':'NB', 'Alac Kdouh':'AK' };
     return SEED_JOBSITES.filter(j => j.pm === currentUser.name || j.apm === currentUser.name);
   }
   // Foreman/Site Manager — jobs where they are listed as foreman or in notes
@@ -4333,6 +4421,99 @@ function renderMyYard() {
     </div>`;
 }
 
+let toolboxTab = 'mytools';
+
+function renderMyToolbox() {
+  const el = document.getElementById('page-mytoolbox');
+  const user = currentUser;
+  if (!user) { showPage('login'); return; }
+
+  // Get all assets assigned to this user
+  const allCategories = ['cordless','lasers','ladders','machinery','materialHandling','tempPower','investigation','generalTools','tools'];
+  
+  const myTools = [];
+  const jobAssets = [];
+  const myJobs = getMyJobs();
+  const myJobNames = myJobs.map(j => j.address.split(',')[0]);
+
+  // Get harnesses assigned to user
+  SEED_ASSETS.harnesses.forEach(a => {
+    if (a.assignedTo === user.name) myTools.push({...a, category:'harnesses', icon:'🦺', categoryName:'Harness'});
+    else if (myJobNames.some(j => a.location && a.location.includes(j))) jobAssets.push({...a, category:'harnesses', icon:'🦺', categoryName:'Harness'});
+  });
+
+  // Get other assets
+  const catIcons = { cordless:'🔋', lasers:'🔴', ladders:'🪜', machinery:'⚙️', materialHandling:'🏗️', tempPower:'⚡', investigation:'🔬', generalTools:'🔧', tools:'🔧' };
+  const catNames = { cordless:'Cordless Tool', lasers:'Laser', ladders:'Ladder', machinery:'Machinery', materialHandling:'Material Handling', tempPower:'Temp Power', investigation:'Investigation', generalTools:'General Tool', tools:'Tool' };
+
+  allCategories.forEach(cat => {
+    const assets = SEED_ASSETS[cat] || [];
+    assets.forEach(a => {
+      const item = {...a, category:cat, icon:catIcons[cat], categoryName:catNames[cat]};
+      if (a.assignedTo === user.name) myTools.push(item);
+      else if (myJobNames.some(j => a.location && a.location.includes(j)) && a.assignedTo !== 'In Yard') jobAssets.push(item);
+    });
+  });
+
+  const renderAssetCard = (a) => {
+    const status = getAssetStatus({nextCalibration: a.nextCalibration||a.nextTest||a.nextInspection||a.tagTestDue||a.chargerTagTestDue});
+    const statusColor = a.status==='working'?'#085041':a.status==='needs_repair'?'#92400E':'#991B1B';
+    const statusBg = a.status==='working'?'#E1F5EE':a.status==='needs_repair'?'#FEF3C7':'#FEE2E2';
+    const statusLabel = a.status==='working'?'Working Order':a.status==='needs_repair'?'Needs Repair':'Issue';
+    
+    return `
+    <div style="background:var(--card);border:0.5px solid ${a.status!=='working'?'#f97316':'var(--border)'};border-radius:12px;overflow:hidden;margin-bottom:10px">
+      <div style="background:var(--card2);height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;position:relative">
+        <span style="font-size:40px">${a.icon}</span>
+        <div style="text-align:right">
+          <div style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;background:${statusBg};color:${statusColor}">${statusLabel}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">${a.assetNumber||''}</div>
+        </div>
+      </div>
+      <div style="padding:10px 12px">
+        <div style="font-size:13px;font-weight:600;color:var(--text)">${a.name}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:1px">${a.brand||''} ${a.model||''} · S/N: ${a.serial||'—'}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">📍 ${a.location}</div>
+        ${status?.urgent ? `<div style="font-size:11px;color:#ef4444;margin-top:4px">⚠️ ${a.categoryName} compliance overdue</div>` : ''}
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button onclick="returnGenericAsset('${a.id}','${a.category}')" style="flex:1;padding:7px;background:#E1F5EE;color:#085041;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer">📥 Return to yard</button>
+          <button onclick="changeGenericAssetStatus('${a.id}','${a.category}')" style="padding:7px 10px;background:var(--card2);border:0.5px solid var(--border);color:var(--text);border-radius:8px;font-size:12px;cursor:pointer">⚙️</button>
+          <button onclick="alert('Report damage — coming soon')" style="padding:7px 10px;background:#FEF3C7;border:0.5px solid #f97316;color:#92400E;border-radius:8px;font-size:12px;cursor:pointer">🔧</button>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  el.innerHTML = `
+    <div style="padding:0 1rem 1rem">
+      <div style="font-size:12px;color:var(--text3);font-weight:500;letter-spacing:.05em;text-transform:uppercase;padding:.75rem 0 .5rem">
+        ${user.name.split(' ')[0]}'s toolbox
+      </div>
+      <div class="admin-tabs" style="margin-bottom:12px">
+        <div class="a-tab ${toolboxTab==='mytools'?'active':''}" onclick="toolboxTab='mytools';renderMyToolbox()">🔧 My Tools ${myTools.length?`(${myTools.length})`:''}</div>
+        <div class="a-tab ${toolboxTab==='jobassets'?'active':''}" onclick="toolboxTab='jobassets';renderMyToolbox()">🏗️ Job Assets ${jobAssets.length?`(${jobAssets.length})`:''}</div>
+      </div>
+
+      ${toolboxTab === 'mytools' ? `
+        ${myTools.length ? myTools.map(a => renderAssetCard(a)).join('') : `
+        <div class="card" style="text-align:center;padding:2rem 1rem">
+          <div style="font-size:32px;margin-bottom:.75rem">🔧</div>
+          <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:.5rem">No tools assigned yet</div>
+          <div style="font-size:13px;color:var(--text3)">Ben will assign tools to you from the Assets page</div>
+        </div>`}
+      ` : `
+        ${jobAssets.length ? `
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px">Assets on your job sites</div>
+        ${jobAssets.map(a => renderAssetCard(a)).join('')}` : `
+        <div class="card" style="text-align:center;padding:2rem 1rem">
+          <div style="font-size:32px;margin-bottom:.75rem">🏗️</div>
+          <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:.5rem">No assets on your sites yet</div>
+          <div style="font-size:13px;color:var(--text3)">Infrastructure assigned to your sites will appear here</div>
+        </div>`}
+      `}
+    </div>`;
+}
+
 function renderMyJobs() {
   const el = document.getElementById('page-myjobs');
   const jobs = getMyJobs();
@@ -4340,53 +4521,197 @@ function renderMyJobs() {
 
   // Mock data for demo
   const mockOrders = {
+    '25044': [
+      { name:'Ardex WPM300 × 10', date:'17 Jun', supplier:'Ardex', amount:'$5,134', status:'En route', statusColor:'#085041', statusBg:'#E1F5EE' },
+      { name:'GP Cement × 1 pallet', date:'15 Jun', supplier:'Sandhub', amount:'$801', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
+    ],
+    '25008': [
+      { name:'Coreflute 1800x1200 × 100', date:'16 Jun', supplier:'Protrade', amount:'$650', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
+    ],
+    '25011': [
+      { name:'Ardex RA050 × 20', date:'17 Jun', supplier:'Ardex', amount:'$385', status:'Processing', statusColor:'#633806', statusBg:'#FAEEDA' }
+    ],
+    '24103': [
+      { name:'Fosroc HB40 × 10', date:'16 Jun', supplier:'Parchem', amount:'$588', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' },
+      { name:'Ardex CA20P × 60', date:'15 Jun', supplier:'Ardex', amount:'$1,408', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
+    ],
+    '24094': [
+      { name:'Ardex WPM270 × 20', date:'16 Jun', supplier:'Ardex', amount:'$5,782', status:'En route', statusColor:'#085041', statusBg:'#E1F5EE' },
+      { name:'Fosroc LA55 × 10', date:'15 Jun', supplier:'Parchem', amount:'$476', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
+    ],
     '25105': [
       { name:'Ardex WPM270 × 20', date:'16 Jun', supplier:'Ardex', amount:'$5,782', status:'En route', statusColor:'#085041', statusBg:'#E1F5EE' },
       { name:'Fosroc LA55 × 10', date:'15 Jun', supplier:'Parchem', amount:'$476', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
     ],
+    'F25005': [
+      { name:'Sikaflex Pro SSG × 100', date:'17 Jun', supplier:'Komerco', amount:'$1,795', status:'Processing', statusColor:'#633806', statusBg:'#FAEEDA' }
+    ],
+    '25049': [
+      { name:'Ardex WA98 × 5', date:'16 Jun', supplier:'Ardex', amount:'$1,558', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' },
+      { name:'Coreflute × 50', date:'15 Jun', supplier:'Protrade', amount:'$325', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
+    ],
+    '24105': [
+      { name:'Fosroc Cemtop GP × 10', date:'17 Jun', supplier:'Parchem', amount:'$360', status:'En route', statusColor:'#085041', statusBg:'#E1F5EE' }
+    ],
     '25109': [
       { name:'Coreflute 1800x1200 × 50', date:'14 Jun', supplier:'Protrade', amount:'$892', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
-    ]
+    ],
+    '25088': [
+      { name:'Ardex RA050 × 40', date:'16 Jun', supplier:'Ardex', amount:'$771', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' },
+      { name:'Fosroc ST06 × 5', date:'15 Jun', supplier:'Parchem', amount:'$294', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
+    ],
+    '25003': [
+      { name:'Brickies Sand × 20 bags', date:'17 Jun', supplier:'Skippens', amount:'$130', status:'En route', statusColor:'#085041', statusBg:'#E1F5EE' },
+      { name:'Off White Cement × 10 bags', date:'16 Jun', supplier:'Skippens', amount:'$135', status:'Delivered', statusColor:'#185FA5', statusBg:'#E6F1FB' }
+    ],
+    '25127': [
+      { name:'Ardex WPM300 × 5', date:'17 Jun', supplier:'Ardex', amount:'$2,567', status:'Processing', statusColor:'#633806', statusBg:'#FAEEDA' }
+    ],
   };
 
   const mockCal = {
-    '25105': [
+    '25044': [
+      { day:'16', dayName:'MON', title:'Waterproofing — Balcony Level 3', sub:'7am · JMB Waterproofing', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'19', dayName:'THU', title:'Ardex WPM300 delivery', sub:'7:30am · Anthony', type:'Delivery', typeColor:'#085041', typeBg:'#E1F5EE' },
+    ],
+    '25008': [
+      { day:'17', dayName:'TUE', title:'Scaffold inspection', sub:'Morning · Oceania', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'20', dayName:'FRI', title:'Tiling — Ground floor', sub:'7am · Lim Tiling', type:'Tiling', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+    ],
+    '25011': [
+      { day:'17', dayName:'TUE', title:'Rendering — East elevation', sub:'7am · X-Ray Rendering', type:'Rendering', typeColor:'#633806', typeBg:'#FAEEDA' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'19', dayName:'THU', title:'Ardex RA050 delivery', sub:'9am · Anthony', type:'Delivery', typeColor:'#085041', typeBg:'#E1F5EE' },
+    ],
+    '24103': [
+      { day:'16', dayName:'MON', title:'Concrete repair — Columns B2-B6', sub:'7am · Cemecrete', type:'Concrete', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'20', dayName:'FRI', title:'Engineer inspection', sub:'10am · On site', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+    ],
+    '24094': [
       { day:'16', dayName:'MON', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
       { day:'16', dayName:'MON', title:'JMB Waterproofing — Courtyard', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
       { day:'17', dayName:'TUE', title:'Tiling — Unit 1 & 2', sub:'7am · Lim Tiling', type:'Tiling', typeColor:'#3C3489', typeBg:'#EEEDFE' },
       { day:'17', dayName:'TUE', title:'ELD Testing — Unit 1 & 2', sub:'Morning · Inspector on site', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
-      { day:'17', dayName:'TUE', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
       { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
       { day:'18', dayName:'WED', title:'JMB Waterproofing — Unit 1 & 2 balcony', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
-      { day:'18', dayName:'WED', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
       { day:'19', dayName:'THU', title:'JMB Waterproofing — Unit 3 & 4 balcony', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
-      { day:'19', dayName:'THU', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
       { day:'20', dayName:'FRI', title:'JMB Waterproofing — Unit 12 & 13 balcony', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
-      { day:'20', dayName:'FRI', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
+    ],
+    '25105': [
+      { day:'16', dayName:'MON', title:'DC Demo — Unit 3, 4, 12, 13, 18, 22', sub:'All day · Tom Trayers', type:'Demolition', typeColor:'#633806', typeBg:'#FAEEDA' },
+      { day:'17', dayName:'TUE', title:'Tiling — Unit 1 & 2', sub:'7am · Lim Tiling', type:'Tiling', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'18', dayName:'WED', title:'JMB Waterproofing — Unit 1 & 2 balcony', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'19', dayName:'THU', title:'JMB Waterproofing — Unit 3 & 4 balcony', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'20', dayName:'FRI', title:'JMB Waterproofing — Unit 12 & 13 balcony', sub:'7am · Joe Brady', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+    ],
+    'F25005': [
+      { day:'17', dayName:'TUE', title:'Fire door installation — Levels 1-3', sub:'7am · Solomons', type:'Fire', typeColor:'#ef4444', typeBg:'#FEE2E2' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'19', dayName:'THU', title:'Electrical — Common areas', sub:'7am · Neoline', type:'Electrical', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+    ],
+    '25049': [
+      { day:'16', dayName:'MON', title:'Waterproofing — Podium deck', sub:'7am · Staples Waterproofing', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'19', dayName:'THU', title:'Tiling — Podium deck', sub:'7am · Precision Tiling', type:'Tiling', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'20', dayName:'FRI', title:'Engineer walkthrough', sub:'2pm · On site', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+    ],
+    '24105': [
+      { day:'17', dayName:'TUE', title:'Concrete repair — Car park columns', sub:'7am', type:'Concrete', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'19', dayName:'THU', title:'Fosroc Cemtop delivery', sub:'8am · Anthony', type:'Delivery', typeColor:'#085041', typeBg:'#E1F5EE' },
     ],
     '25109': [
       { day:'17', dayName:'TUE', title:'Waterproofing inspection — Level 2', sub:'9am · Engineer on site', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
       { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
       { day:'18', dayName:'WED', title:'Truck delivery — protection materials', sub:'8am · Anthony', type:'Delivery', typeColor:'#085041', typeBg:'#E1F5EE' },
       { day:'19', dayName:'THU', title:'Ardex WPM270 delivery', sub:'7:30am · Anthony', type:'Delivery', typeColor:'#085041', typeBg:'#E1F5EE' },
-      { day:'20', dayName:'FRI', title:'Scaffold inspection', sub:'Morning · Oceania scaffolding', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
-    ]
+      { day:'20', dayName:'FRI', title:'Scaffold inspection', sub:'Morning · Oceania', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+    ],
+    '25088': [
+      { day:'16', dayName:'MON', title:'Bricklaying — South wall', sub:'7am · Treaty Bricklaying', type:'Brickwork', typeColor:'#633806', typeBg:'#FAEEDA' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'19', dayName:'THU', title:'Waterproofing — Planter boxes', sub:'7am · JMB', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+    ],
+    '25003': [
+      { day:'16', dayName:'MON', title:'Brickwork — Boundary wall', sub:'7am · KMT', type:'Brickwork', typeColor:'#633806', typeBg:'#FAEEDA' },
+      { day:'17', dayName:'TUE', title:'Brickies sand delivery', sub:'7am · Anthony', type:'Delivery', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'20', dayName:'FRI', title:'Rendering — Boundary wall', sub:'7am · Abbas Rendering', type:'Rendering', typeColor:'#633806', typeBg:'#FAEEDA' },
+    ],
+    '25127': [
+      { day:'17', dayName:'TUE', title:'Waterproofing — Rooftop terrace', sub:'7am · Staples', type:'Waterproofing', typeColor:'#085041', typeBg:'#E1F5EE' },
+      { day:'18', dayName:'WED', title:'Site meeting', sub:'8am · All foremen', type:'Meeting', typeColor:'#3C3489', typeBg:'#EEEDFE' },
+      { day:'19', dayName:'THU', title:'Engineer inspection — Rooftop', sub:'11am · On site', type:'Inspection', typeColor:'#185FA5', typeBg:'#E6F1FB' },
+      { day:'20', dayName:'FRI', title:'Ardex WPM300 delivery', sub:'7:30am · Anthony', type:'Delivery', typeColor:'#085041', typeBg:'#E1F5EE' },
+    ],
   };
 
   const mockTradies = {
+    '25044': [
+      { initials:'JB', name:'Joe Brady', trade:'JMB Waterproofing', phone:'0431436561', color:'#085041', bg:'#E1F5EE' },
+    ],
+    '25008': [
+      { initials:'LT', name:'Lim', trade:'Lim Tiling', phone:'0413294540', color:'#3C3489', bg:'#EEEDFE' },
+    ],
+    '25011': [
+      { initials:'XR', name:'X-Ray Rendering', trade:'Rendering', phone:'', color:'#633806', bg:'#FAEEDA' },
+    ],
+    '24103': [
+      { initials:'CC', name:'Cemecrete', trade:'Concrete Repair', phone:'', color:'#185FA5', bg:'#E6F1FB' },
+    ],
+    '24094': [
+      { initials:'JB', name:'Joe Brady', trade:'JMB Waterproofing', phone:'0431436561', color:'#085041', bg:'#E1F5EE' },
+      { initials:'TT', name:'Tom Trayers', trade:'DC Demo', phone:'0423912544', color:'#633806', bg:'#FAEEDA' },
+      { initials:'LT', name:'Lim', trade:'Lim Tiling', phone:'0413294540', color:'#3C3489', bg:'#EEEDFE' }
+    ],
     '25105': [
       { initials:'JB', name:'Joe Brady', trade:'JMB Waterproofing', phone:'0431436561', color:'#085041', bg:'#E1F5EE' },
       { initials:'TT', name:'Tom Trayers', trade:'DC Demo', phone:'0423912544', color:'#633806', bg:'#FAEEDA' },
       { initials:'LT', name:'Lim', trade:'Lim Tiling', phone:'0413294540', color:'#3C3489', bg:'#EEEDFE' }
     ],
+    'F25005': [
+      { initials:'SF', name:'Solomons Fire Doors', trade:'Fire Doors', phone:'', color:'#ef4444', bg:'#FEE2E2' },
+      { initials:'NE', name:'Arthur', trade:'Neoline Electrical', phone:'0455055636', color:'#185FA5', bg:'#E6F1FB' },
+    ],
+    '25049': [
+      { initials:'SW', name:'Staples Waterproofing', trade:'Waterproofing', phone:'', color:'#085041', bg:'#E1F5EE' },
+      { initials:'PT', name:'Precision Tiling', trade:'Tiling', phone:'', color:'#3C3489', bg:'#EEEDFE' },
+    ],
+    '24105': [],
     '25109': [
       { initials:'JB', name:'Joe Brady', trade:'JMB Waterproofing', phone:'0431436561', color:'#085041', bg:'#E1F5EE' }
+    ],
+    '25088': [
+      { initials:'TB', name:'Treaty Bricklaying', trade:'Brickwork', phone:'', color:'#633806', bg:'#FAEEDA' },
+      { initials:'JB', name:'Joe Brady', trade:'JMB Waterproofing', phone:'0431436561', color:'#085041', bg:'#E1F5EE' },
+    ],
+    '25003': [
+      { initials:'KM', name:'KMT', trade:'Brickwork', phone:'', color:'#633806', bg:'#FAEEDA' },
+      { initials:'AR', name:'Abbas Rendering', trade:'Rendering', phone:'', color:'#185FA5', bg:'#E6F1FB' },
+    ],
+    '25127': [
+      { initials:'SW', name:'Staples Waterproofing', trade:'Waterproofing', phone:'', color:'#085041', bg:'#E1F5EE' },
     ],
   };
 
   const mockExp = {
+    '25044': { budget:220000, spent:58000, billable:42000, protection:10000, ppe:6000 },
+    '25008': { budget:180000, spent:32000, billable:24000, protection:5500, ppe:2500 },
+    '25011': { budget:145000, spent:67000, billable:51000, protection:11000, ppe:5000 },
+    '24103': { budget:290000, spent:124000, billable:95000, protection:20000, ppe:9000 },
+    '24094': { budget:380000, spent:89000, billable:64000, protection:18000, ppe:7000 },
     '25105': { budget:180000, spent:42800, billable:31200, protection:7400, ppe:4200 },
-    '25109': { budget:95000, spent:12400, billable:8900, protection:2100, ppe:1400 }
+    'F25005':{ budget:165000, spent:41000, billable:32000, protection:6500, ppe:2500 },
+    '25049': { budget:320000, spent:156000, billable:118000, protection:27000, ppe:11000 },
+    '24105': { budget:210000, spent:78000, billable:59000, protection:13000, ppe:6000 },
+    '25109': { budget:95000, spent:12400, billable:8900, protection:2100, ppe:1400 },
+    '25088': { budget:175000, spent:52000, billable:39000, protection:9000, ppe:4000 },
+    '25003': { budget:240000, spent:103000, billable:79000, protection:17000, ppe:7000 },
+    '25127': { budget:195000, spent:28000, billable:21000, protection:5000, ppe:2000 },
   };
 
   if (!currentJobSite && jobs.length === 1) currentJobSite = jobs[0].procore;
@@ -4566,57 +4891,260 @@ function renderAssets() {
       </div>`}
 
       <div class="admin-tabs" style="margin-bottom:12px">
-        <div class="a-tab ${assetsTab==='harnesses'?'active':''}" onclick="assetsTab='harnesses';renderAssets()">Harnesses</div>
-        <div class="a-tab ${assetsTab==='calibration'?'active':''}" onclick="assetsTab='calibration';renderAssets()">Calibration</div>
-        <div class="a-tab ${assetsTab==='tagtest'?'active':''}" onclick="assetsTab='tagtest';renderAssets()">Tag & Test</div>
-        <div class="a-tab ${assetsTab==='tools'?'active':''}" onclick="assetsTab='tools';renderAssets()">Tools</div>
+        <div class="a-tab ${assetsTab==='harnesses'?'active':''}" onclick="assetsTab='harnesses';renderAssets()">🦺 Harnesses</div>
+        <div class="a-tab ${assetsTab==='cordless'?'active':''}" onclick="assetsTab='cordless';renderAssets()">🔋 Cordless</div>
+        <div class="a-tab ${assetsTab==='lasers'?'active':''}" onclick="assetsTab='lasers';renderAssets()">🔴 Lasers</div>
+        <div class="a-tab ${assetsTab==='ladders'?'active':''}" onclick="assetsTab='ladders';renderAssets()">🪜 Ladders</div>
+        <div class="a-tab ${assetsTab==='machinery'?'active':''}" onclick="assetsTab='machinery';renderAssets()">⚙️ Machinery</div>
+        <div class="a-tab ${assetsTab==='materialHandling'?'active':''}" onclick="assetsTab='materialHandling';renderAssets()">🏗️ Handling</div>
+        <div class="a-tab ${assetsTab==='tempPower'?'active':''}" onclick="assetsTab='tempPower';renderAssets()">⚡ Power</div>
+        <div class="a-tab ${assetsTab==='investigation'?'active':''}" onclick="assetsTab='investigation';renderAssets()">🔬 Testing</div>
+        <div class="a-tab ${assetsTab==='generalTools'?'active':''}" onclick="assetsTab='generalTools';renderAssets()">🔧 General</div>
       </div>
 
-      ${assetsTab === 'harnesses' ? renderHarnessTab(harnesses) :
-        assetsTab === 'calibration' ? renderCalibrationTab(calibration) :
-        assetsTab === 'tagtest' ? renderTagTestTab(tagtest) :
-        renderToolsTab(tools)}
+      ${assetsTab === 'harnesses' ? renderHarnessTab(SEED_ASSETS.harnesses) :
+        assetsTab === 'cordless' ? renderGenericAssetTab(SEED_ASSETS.cordless, 'Cordless Tools', '🔋') :
+        assetsTab === 'lasers' ? renderGenericAssetTab(SEED_ASSETS.lasers, 'Lasers', '🔴', true) :
+        assetsTab === 'ladders' ? renderGenericAssetTab(SEED_ASSETS.ladders, 'Ladders', '🪜', false, true) :
+        assetsTab === 'machinery' ? renderGenericAssetTab(SEED_ASSETS.machinery, 'Machinery', '⚙️') :
+        assetsTab === 'materialHandling' ? renderGenericAssetTab(SEED_ASSETS.materialHandling, 'Material Handling', '🏗️') :
+        assetsTab === 'tempPower' ? renderGenericAssetTab(SEED_ASSETS.tempPower, 'Temp Power Boards', '⚡', false, false, true) :
+        assetsTab === 'investigation' ? renderGenericAssetTab(SEED_ASSETS.investigation, 'Investigation Equipment', '🔬', true) :
+        renderGenericAssetTab(SEED_ASSETS.generalTools, 'General Tools', '🔧')}
     </div>`;
 }
 
 function renderHarnessTab(harnesses) {
   return harnesses.map(h => {
     const fullStatus = getAssetStatus({nextFullInspection: h.nextFullInspection});
-    const strapStatus = getAssetStatus({nextFullInspection: h.nextStrapInspection});
-    const worst = fullStatus.urgent ? fullStatus : strapStatus.urgent ? strapStatus : fullStatus;
+    const isYardOrMitch = getUserAccessLevel() >= 4;
+
     return `
-    <div onclick="selectedAssetId='${h.id}';selectedAssetType='harness';inspectionAnswers={};showPage('asset-detail')"
-         style="background:var(--card);border:0.5px solid ${worst.urgent?'#ef4444':'var(--border)'};border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span style="font-size:20px">🦺</span>
-            <div>
-              <div style="font-size:14px;font-weight:600;color:var(--text)">${h.brand} ${h.model} — ${h.number}</div>
-              <div style="font-size:11px;color:var(--text3)">S/N: ${h.serial}</div>
-            </div>
+    <div style="background:var(--card);border:0.5px solid ${fullStatus.urgent?'#ef4444':'var(--border)'};border-radius:12px;overflow:hidden;margin-bottom:12px">
+      
+      <!-- Photo -->
+      <div style="width:100%;height:160px;background:var(--card2);display:flex;align-items:center;justify-content:center;position:relative">
+        <span style="font-size:64px">🦺</span>
+        <span style="position:absolute;top:8px;right:8px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:${h.status==='working'?'#E1F5EE':h.status==='needs_repair'?'#FEF3C7':h.status==='lost'?'#FEE2E2':h.status==='stolen'?'#FEE2E2':'#F3F4F6'};color:${h.status==='working'?'#085041':h.status==='needs_repair'?'#92400E':'#991B1B'}">${h.status==='working'?'Working Order':h.status==='needs_repair'?'Needs Repair':h.status==='lost'?'Lost':h.status==='stolen'?'Stolen':'Decommissioned'}</span>
+      </div>
+
+      <div style="padding:12px">
+        <!-- Asset info -->
+        <div style="font-size:16px;font-weight:600;color:var(--text);margin-bottom:2px">${h.brand} ${h.model}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;margin-bottom:10px">
+          <div style="background:var(--card2);border-radius:8px;padding:8px 10px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Asset number</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">${h.number}</div>
           </div>
-          <div style="font-size:12px;color:var(--text3);margin-bottom:8px">📍 ${h.assignedTo} · ${h.location}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div style="background:${fullStatus.bg};border-radius:8px;padding:6px 8px">
-              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Full inspection</div>
-              <div style="font-size:11px;font-weight:600;color:${fullStatus.color}">${fullStatus.icon} ${fullStatus.label}</div>
-              <div style="font-size:10px;color:var(--text3)">${new Date(h.nextFullInspection).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
-            </div>
-            <div style="background:${strapStatus.bg};border-radius:8px;padding:6px 8px">
-              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Strap inspection</div>
-              <div style="font-size:11px;font-weight:600;color:${strapStatus.color}">${strapStatus.icon} ${strapStatus.label}</div>
-              <div style="font-size:10px;color:var(--text3)">${new Date(h.nextStrapInspection).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
-            </div>
+          <div style="background:var(--card2);border-radius:8px;padding:8px 10px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Serial number</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">${h.serial}</div>
+          </div>
+          <div style="background:var(--card2);border-radius:8px;padding:8px 10px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Assigned to</div>
+            <div style="font-size:13px;font-weight:500;color:var(--text)">${h.assignedTo}</div>
+          </div>
+          <div style="background:var(--card2);border-radius:8px;padding:8px 10px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Location</div>
+            <div style="font-size:13px;font-weight:500;color:var(--text)">${h.location}</div>
           </div>
         </div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+
+        <!-- Compliance status -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:${fullStatus.bg};border-radius:8px;margin-bottom:10px">
+          <div style="font-size:12px;color:${fullStatus.color};font-weight:500">${fullStatus.icon} Inspection ${fullStatus.label}</div>
+          <div style="font-size:11px;color:${fullStatus.color}">Due ${new Date(h.nextFullInspection).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:8px">
+          ${h.assignedTo === 'In Yard' ? `
+          <button onclick="borrowHarness('${h.id}')" style="flex:1;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer">📤 Borrow</button>
+          ` : `
+          <button onclick="returnHarness('${h.id}')" style="flex:1;padding:10px;background:#E1F5EE;color:#085041;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer">📥 Return to yard</button>
+          `}
+          ${isYardOrMitch ? `
+          <button onclick="selectedAssetId='${h.id}';selectedAssetType='harness';inspectionAnswers={};showPage('asset-detail')" style="flex:1;padding:10px;background:var(--card2);border:0.5px solid var(--border);color:var(--text);border-radius:8px;font-size:13px;cursor:pointer">🔍 Inspect</button>
+          <button onclick="changeAssetStatus('${h.id}','harness')" style="padding:10px;background:var(--card2);border:0.5px solid var(--border);color:var(--text);border-radius:8px;font-size:13px;cursor:pointer">⚙️</button>
+          ` : ''}
+        </div>
       </div>
     </div>`;
-  }).join('') + `<button onclick="alert('Add harness — coming soon')" class="btn btn-primary btn-full" style="margin-top:4px">+ Register new harness</button>`;
+  }).join('') + `
+  ${getUserAccessLevel() >= 4 ? `<button onclick="alert('Register new harness — coming soon')" class="btn btn-primary btn-full" style="margin-top:4px">+ Register new harness</button>` : ''}`;
 }
 
-function renderCalibrationTab(items) {
+function borrowHarness(id) {
+  const h = SEED_ASSETS.harnesses.find(h => h.id === id);
+  if (!h) return;
+  const myJobs = getMyJobs();
+  const job = myJobs.length === 1 ? myJobs[0].address.split(',')[0] : prompt('Which site?', myJobs[0]?.address.split(',')[0]||'');
+  if (!job) return;
+  h.assignedTo = currentUser?.name || 'Unknown';
+  h.location = job;
+  h.status = 'working';
+  showToast('✓ ' + h.number + ' borrowed — assigned to ' + h.assignedTo);
+  renderAssets();
+}
+
+function returnHarness(id) {
+  const h = SEED_ASSETS.harnesses.find(h => h.id === id);
+  if (!h) return;
+  h.assignedTo = 'In Yard';
+  h.location = 'Botany Yard';
+  showToast('✓ ' + h.number + ' returned to yard');
+  renderAssets();
+}
+
+function changeAssetStatus(id, type) {
+  const statuses = ['working', 'needs_repair', 'lost', 'stolen', 'decommissioned'];
+  const labels = ['Working Order', 'Needs Repair', 'Lost', 'Stolen', 'Decommissioned'];
+  const choice = prompt('Set status:\n1. Working Order\n2. Needs Repair\n3. Lost\n4. Stolen\n5. Decommissioned\n\nEnter number:', '1');
+  if (!choice) return;
+  const idx = parseInt(choice) - 1;
+  if (idx < 0 || idx >= statuses.length) return;
+  const asset = SEED_ASSETS.harnesses.find(h => h.id === id);
+  if (!asset) return;
+  asset.status = statuses[idx];
+  if (idx >= 2) {
+    // Lost, stolen, decommissioned — notify management
+    showToast('⚠️ Status updated — Mitch, Ariyan, Oliver and Gina have been notified');
+  }
+  renderAssets();
+}
+
+function renderGenericAssetTab(assets, title, icon, hasCalibration=false, hasInspection=false, hasTagTest=false) {
+  if (!assets || !assets.length) return `<div class="empty"><p>No ${title.toLowerCase()} registered yet</p></div>`;
+  
+  const statusLabel = s => s==='working'?'Working Order':s==='needs_repair'?'Needs Repair':s==='lost'?'Lost':s==='stolen'?'Stolen':'Decommissioned';
+  const statusColor = s => s==='working'?'#085041':s==='needs_repair'?'#92400E':'#991B1B';
+  const statusBg = s => s==='working'?'#E1F5EE':s==='needs_repair'?'#FEF3C7':'#FEE2E2';
+
+  return assets.map(a => {
+    const compDate = a.nextCalibration || a.nextTest || a.nextInspection || a.chargerTagTestDue;
+    const compStatus = compDate ? getAssetStatus({nextCalibration: compDate}) : null;
+    const photoCount = (a.photos||[]).filter(p=>p).length;
+    const photosOk = photoCount >= 2;
+
+    return `
+    <div style="background:var(--card);border:0.5px solid ${compStatus?.urgent?'#ef4444':a.status!=='working'?'#f97316':'var(--border)'};border-radius:12px;overflow:hidden;margin-bottom:10px">
+      
+      <!-- Photo strip -->
+      <div style="background:var(--card2);height:100px;display:flex;align-items:center;justify-content:center;position:relative">
+        ${photosOk ? `<span style="font-size:48px">${icon}</span>` : `
+        <div style="text-align:center">
+          <span style="font-size:32px">${icon}</span>
+          <div style="font-size:11px;color:#f97316;margin-top:4px">⚠️ Photos required</div>
+        </div>`}
+        <span style="position:absolute;top:8px;right:8px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;background:${statusBg(a.status)};color:${statusColor(a.status)}">${statusLabel(a.status)}</span>
+        <span style="position:absolute;top:8px;left:8px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;background:rgba(0,0,0,0.5);color:#fff">${a.assetNumber}</span>
+      </div>
+
+      <div style="padding:10px 12px">
+        <!-- Core fields -->
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">${a.brand} ${a.model} — ${a.name}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+          <div style="background:var(--card2);border-radius:6px;padding:6px 8px">
+            <div style="font-size:10px;color:var(--text3)">Serial number</div>
+            <div style="font-size:12px;font-weight:500;color:var(--text)">${a.serial}</div>
+          </div>
+          <div style="background:var(--card2);border-radius:6px;padding:6px 8px">
+            <div style="font-size:10px;color:var(--text3)">Assigned to</div>
+            <div style="font-size:12px;font-weight:500;color:var(--text)">${a.assignedTo}</div>
+          </div>
+          <div style="background:var(--card2);border-radius:6px;padding:6px 8px">
+            <div style="font-size:10px;color:var(--text3)">Location</div>
+            <div style="font-size:12px;font-weight:500;color:var(--text)">${a.location}</div>
+          </div>
+          <div style="background:var(--card2);border-radius:6px;padding:6px 8px">
+            <div style="font-size:10px;color:var(--text3)">Purchased from</div>
+            <div style="font-size:12px;font-weight:500;color:var(--text)">${a.supplier||'—'}</div>
+          </div>
+          <div style="background:var(--card2);border-radius:6px;padding:6px 8px">
+            <div style="font-size:10px;color:var(--text3)">Purchase date</div>
+            <div style="font-size:12px;color:var(--text)">${a.purchaseDate ? new Date(a.purchaseDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'}) : '—'}</div>
+          </div>
+          <div style="background:var(--card2);border-radius:6px;padding:6px 8px">
+            <div style="font-size:10px;color:var(--text3)">Photos</div>
+            <div style="font-size:12px;font-weight:500;color:${photosOk?'#085041':'#f97316'}">${photosOk?'✓ '+photoCount+' photos':'⚠️ '+photoCount+'/2 min'}</div>
+          </div>
+        </div>
+
+        <!-- Compliance badges -->
+        ${compStatus ? `<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+          <span style="font-size:11px;font-weight:500;padding:3px 8px;border-radius:10px;background:${compStatus.bg};color:${compStatus.color}">${compStatus.icon} ${hasCalibration?'Calibration':hasTagTest?'Tag & Test':hasInspection?'Inspection':'Due'}: ${compStatus.label}</span>
+          <span style="font-size:11px;color:var(--text3)">Due ${new Date(compDate).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</span>
+        </div>` : ''}
+        ${a.chargerTagTestDue ? `<div style="font-size:11px;color:var(--text3);margin-bottom:8px">⚡ Charger T&T: ${new Date(a.chargerTagTestDue).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</div>` : ''}
+
+        <!-- Actions -->
+        <div style="display:flex;gap:6px">
+          ${a.assignedTo === 'In Yard' ? `
+          <button onclick="borrowGenericAsset('${a.id}','${assetsTab}')" style="flex:1;padding:8px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer">📤 Borrow</button>
+          ` : `
+          <button onclick="returnGenericAsset('${a.id}','${assetsTab}')" style="flex:1;padding:8px;background:#E1F5EE;color:#085041;border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer">📥 Return</button>
+          `}
+          ${getUserAccessLevel() >= 4 ? `
+          <button onclick="addAssetPhotos('${a.id}','${assetsTab}')" style="padding:8px 10px;background:var(--card2);border:0.5px solid ${photosOk?'var(--border)':'#f97316'};color:${photosOk?'var(--text)':'#f97316'};border-radius:8px;font-size:12px;cursor:pointer">📷</button>
+          <button onclick="changeGenericAssetStatus('${a.id}','${assetsTab}')" style="padding:8px 10px;background:var(--card2);border:0.5px solid var(--border);color:var(--text);border-radius:8px;font-size:12px;cursor:pointer">⚙️</button>
+          ` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('') + `
+  ${getUserAccessLevel() >= 4 ? `<button onclick="alert('Register new ${title.toLowerCase()} — coming soon')" class="btn btn-primary btn-full" style="margin-top:4px">+ Register new item</button>` : ''}`;
+}
+
+function addAssetPhotos(id, category) {
+  const assets = SEED_ASSETS[category];
+  const a = assets?.find(a => a.id === id);
+  if (!a) return;
+  if (!a.photos) a.photos = [];
+  // On hosted version this will open camera — for now simulate
+  const type = a.photos.length === 0 ? 'Main photo' : a.photos.length === 1 ? 'Serial number photo' : 'Additional photo';
+  a.photos.push('added');
+  showToast('✓ ' + type + ' added to ' + a.assetNumber);
+  renderAssets();
+}
+
+function borrowGenericAsset(id, category) {
+  const assets = SEED_ASSETS[category];
+  const a = assets?.find(a => a.id === id);
+  if (!a) return;
+  const myJobs = getMyJobs();
+  const job = myJobs.length === 1 ? myJobs[0].address.split(',')[0] : prompt('Which site?', myJobs[0]?.address.split(',')[0]||'');
+  if (!job) return;
+  a.assignedTo = currentUser?.name || 'Unknown';
+  a.location = job;
+  showToast('✓ ' + a.assetNumber + ' borrowed — ' + a.assignedTo);
+  renderAssets();
+}
+
+function returnGenericAsset(id, category) {
+  const assets = SEED_ASSETS[category];
+  const a = assets?.find(a => a.id === id);
+  if (!a) return;
+  a.assignedTo = 'In Yard';
+  a.location = 'Botany Yard';
+  showToast('✓ ' + a.assetNumber + ' returned to yard');
+  renderAssets();
+}
+
+function changeGenericAssetStatus(id, category) {
+  const assets = SEED_ASSETS[category];
+  const a = assets?.find(a => a.id === id);
+  if (!a) return;
+  const choice = prompt('Set status:\n1. Working Order\n2. Needs Repair\n3. Lost\n4. Stolen\n5. Decommissioned\n\nEnter number:', '1');
+  if (!choice) return;
+  const statuses = ['working','needs_repair','lost','stolen','decommissioned'];
+  const idx = parseInt(choice) - 1;
+  if (idx < 0 || idx >= statuses.length) return;
+  a.status = statuses[idx];
+  if (idx >= 2) showToast('⚠️ Status updated — management notified');
+  renderAssets();
+}
+
+function _oldCalibrationTab_removed(items) {
   return items.map(c => {
     const status = getAssetStatus({nextCalibration: c.nextCalibration});
     return `
@@ -4784,16 +5312,29 @@ function submitHarnessInspection(id) {
 
 async function fetchCalendarEvents() {
   try {
-    const calId = encodeURIComponent(DAPCOR_CALENDAR_ID);
-    // Try iCal feed first — works if calendar is public or domain-shared
-    const icalUrl = `https://calendar.google.com/calendar/ical/${calId}/public/basic.ics`;
-    const res = await fetch(icalUrl);
+    const scriptUrl = getSetting('scriptUrl');
+    if (!scriptUrl) return null;
+
+    // Try Taj's Apps Script endpoint
+    const res = await fetch(scriptUrl + '?action=getCalendar');
     if (res.ok) {
-      const ical = await res.text();
+      const data = await res.json();
+      if (data && data.events) return data.events;
+    }
+
+    // Try iCal feed as fallback
+    const calId = encodeURIComponent(DAPCOR_CALENDAR_ID);
+    const icalUrl = `https://calendar.google.com/calendar/ical/${calId}/public/basic.ics`;
+    const icalRes = await fetch(icalUrl);
+    if (icalRes.ok) {
+      const ical = await icalRes.text();
       return parseIcal(ical);
     }
     return null;
-  } catch(e) { return null; }
+  } catch(e) {
+    console.log('Calendar fetch error:', e);
+    return null;
+  }
 }
 
 function parseIcal(ical) {
